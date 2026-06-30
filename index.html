@@ -756,9 +756,9 @@
         sendBtn.innerText = "भेजा जा रहा है...";
 
         const inputs = e.target.querySelectorAll('input, textarea');
-        const nameData = inputs[0].value;
-        const emailData = inputs[1].value;
-        const messageData = inputs[2].value;
+        const nameData = inputs[1].value;
+        const emailData = inputs[2].value;
+        const messageData = inputs[3].value;
 
         const { error } = await supabase.from('messages').insert([{
             name: nameData,
