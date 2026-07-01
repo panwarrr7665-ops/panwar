@@ -271,11 +271,13 @@
     </form>
 </section>
 <!-- फायरबेस मॉड्यूल और लॉजिक स्क्रिप्ट -->
-<script type="module">
-    import { initializeApp } from "https://gstatic.com";
-    import { getFirestore, collection, query, where, getDocs, addDoc } from "https://gstatic.com";
+<!-- 1. फ़ायरबेस की मुख्य लाइब्रेरी लोड करें (यह CORS एरर नहीं देगी) -->
+<script src="https://gstatic.com"></script>
+<script src="https://gstatic.com"></script>
 
-    // आपके असली फायरबेस क्रेडेंशियल्स
+<!-- 2. आपकी वेबसाइट का असली लॉजिक -->
+<script>
+    // आपके असली फ़ायरबेस क्रेडेंशियल्स
     const firebaseConfig = {
         apiKey: "AIzaSyCyac4YWyEu6ynewYyJnIF3ftfjOYAU_w4",
         authDomain: "://firebaseapp.com",
@@ -286,22 +288,22 @@
         measurementId: "G-8VF4JRTPW7"
     };
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+    // फ़ायरबेस को शुरू करना (Compat वर्ज़न के अनुसार)
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
 
-    // बटन क्लिक होने पर फायरबेस से सही नोट्स का URL खोलने का फंक्शन
+    // बटन क्लिक होने पर नोट्स का लिंक खोलने का फंक्शन
     window.openCategory = async function(categoryName) {
         try {
             console.log("फायरबेस से डेटा लाया जा रहा है: " + categoryName);
-            const q = query(collection(db, "notes"), where("category", "==", categoryName));
-            const querySnapshot = await getDocs(q);
+            const snapshot = await db.collection("notes").where("category", "==", categoryName).get();
             
-            if (querySnapshot.empty) {
+            if (snapshot.empty) {
                 alert("इस केटेगरी में एडमिन द्वारा अभी कोई फाइल अपलोड नहीं की गई है!");
                 return;
             }
 
-            querySnapshot.forEach((doc) => {
+            snapshot.forEach((doc) => {
                 const noteData = doc.data();
                 if(noteData.fileUrl) {
                     window.open(noteData.fileUrl, '_blank');
@@ -310,12 +312,12 @@
                 }
             });
         } catch (error) {
-            console.error("फायरबेस से कनेक्ट करने में एरर आया: ", error);
+            console.error("एरर आया: ", error);
             alert("डेटा लोड करने में समस्या आई।");
         }
     };
 
-    // कांटेक्ट फॉर्म सबमिट होने पर फायरबेस में मैसेज भेजने का लॉजिक
+    // कांटेक्ट फॉर्म सबमिट होने पर मैसेज भेजने का लॉजिक
     document.getElementById('contactForm').addEventListener('submit', async (e) => {
         e.preventDefault();
 
@@ -324,7 +326,8 @@
         const uMsg = document.getElementById('message').value;
 
         try {
-            await addDoc(collection(db, "messages"), {
+            // 'messages' कलेक्शन में नया मैसेज जोड़ना
+            await db.collection("messages").add({
                 name: uName,
                 email: uEmail,
                 message: uMsg,
@@ -344,6 +347,3 @@
         alert("यह मेनू बटन है। यहाँ आप लॉगआउट या एडमिन पैनल का लिंक जोड़ सकते हैं!");
     });
 </script>
-
-</body>
-</html>
