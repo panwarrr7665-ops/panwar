@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Help Through Science Guruji</title>
-    <!-- आइकॉन के लिए FontAwesome CDN -->
-    <link rel="stylesheet" href="https://cloudflare.com">
     
     <style>
         /* पूरी साइट का बेसिक सेटअप */
@@ -33,12 +31,20 @@
             z-index: 1000;
         }
 
-        /* वेबसाइट का बड़ा नाम (लोगो टेक्स्ट) */
+        /* वेबसाइट का नाम और लोगो कंटेनर */
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+        .logo-emoji {
+            font-size: 28px; /* मुख्य साइंस लोगो का साइज */
+        }
         .nav-logo {
-            color: #8B1E1E; /* आपके लोगो का मरून लाल रंग */
+            color: #8B1E1E; /* मरून लाल रंग */
             font-size: 22px;
             font-weight: 700;
-            text-decoration: none;
             letter-spacing: 0.5px;
         }
 
@@ -61,20 +67,20 @@
             font-size: 14px;
             color: #333;
         }
-        .search-container i {
-            color: #64748b;
+        .search-container .search-icon {
             margin-right: 8px;
             font-size: 15px;
         }
 
         /* कोने का 3-डॉट्स मेनू बटन */
         .menu-dots {
-            font-size: 20px;
+            font-size: 22px;
             color: #333;
             cursor: pointer;
-            padding: 5px 10px;
+            padding: 5px 12px;
             border-radius: 50px;
             transition: background 0.2s;
+            font-weight: bold;
         }
         .menu-dots:hover {
             background-color: #f1f5f9;
@@ -126,7 +132,7 @@
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
         }
 
-        /* आइकॉन के पीछे का गोल/चौकोर डिब्बा */
+        /* इमोजी के पीछे का गोल/चौकोर डिब्बा */
         .icon-wrapper {
             width: 65px;
             height: 65px;
@@ -134,15 +140,15 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 26px;
+            font-size: 32px; /* डिब्बों के अंदर के इमोजी का साइज */
             margin-bottom: 25px;
         }
 
-        /* स्क्रीनशॉट के अनुसार हर बॉक्स का अलग बॉर्डर और बैकग्राउंड रंग */
-        .icon-orange { background-color: #FFF6ED; color: #D97706; border: 2px solid #D97706; }
-        .icon-blue { background-color: #EFF6FF; color: #2563EB; border: 2px solid #2563EB; }
-        .icon-cyan { background-color: #ECFEFF; color: #0891B2; border: 2px solid #0891B2; }
-        .icon-gold { background-color: #FEFCE8; color: #CA8A04; border: 2px solid #CA8A04; }
+        /* हर बॉक्स का अलग बॉर्डर और बैकग्राउंड रंग */
+        .icon-orange { background-color: #FFF6ED; border: 2px solid #D97706; }
+        .icon-blue { background-color: #EFF6FF; border: 2px solid #2563EB; }
+        .icon-cyan { background-color: #ECFEFF; border: 2px solid #0891B2; }
+        .icon-gold { background-color: #FEFCE8; border: 2px solid #CA8A04; }
 
         /* टेक्स्ट के रंग */
         .text-orange { color: #D97706; }
@@ -195,19 +201,20 @@
 
 <!-- ऊपर का हेडर (Navbar) सेक्शन -->
 <header class="navbar">
-    <!-- बाईं तरफ का नाम -->
-    <a href="#" class="nav-logo">Help Through Science Guruji</a>
+    <!-- बाईं तरफ का नाम + 🔬 (Microscope) लोगो -->
+    <a href="#" class="logo-container">
+        <span class="logo-emoji">🔬</span>
+        <span class="nav-logo">Help Through Science Guruji</span>
+    </a>
     
     <!-- बीच का सर्च बार -->
     <div class="search-container">
-        <i class="fa-solid fa-magnifying-glass"></i>
+        <span class="search-icon">🔍</span>
         <input type="text" placeholder="Search notes, PDFs...">
     </div>
     
-    <!-- दाईं तरफ का 3-डॉट मेनू -->
-    <div class="menu-dots">
-        <i class="fa-solid fa-ellipsis-vertical"></i>
-    </div>
+    <!-- दाईं तरफ का 3-डॉट मेनू (इमोजी स्टाइल) -->
+    <div class="menu-dots">⋮</div>
 </header>
 
 <!-- मुख्य 4 डिब्बों का सेक्शन -->
@@ -216,40 +223,40 @@
     <p class="section-subtitle">Learn anytime, anywhere with us</p>
 
     <div class="cards-container">
-        <!-- 1. Class Notes & PDF -->
+        <!-- 1. Class Notes & PDF -> 📁 फ़ोल्डर इमोजी -->
         <div class="card">
             <div class="icon-wrapper icon-orange">
-                <i class="fa-solid fa-folder-open"></i>
+                <span>📁</span>
             </div>
             <h3 class="card-title text-orange">Class Notes & PDF</h3>
             <p class="card-desc">Notes of Other Subject & PDF.</p>
             <a class="know-more text-orange" onclick="openCategory('class_notes')">Know More</a>
         </div>
 
-        <!-- 2. Other Study Material -->
+        <!-- 2. Other Study Material -> 📖 खुली किताब इमोजी -->
         <div class="card">
             <div class="icon-wrapper icon-blue">
-                <i class="fa-solid fa-book-open"></i>
+                <span>📖</span>
             </div>
             <h3 class="card-title text-blue">Other Study Material</h3>
             <p class="card-desc">Additional Questions And Explanation About Human Body.</p>
             <a class="know-more text-blue" onclick="openCategory('study_material')">Know More</a>
         </div>
 
-        <!-- 3. Downloads -->
+        <!-- 3. Downloads -> 📥 इनबॉक्स/डाउनलोड इमोजी -->
         <div class="card">
             <div class="icon-wrapper icon-cyan">
-                <i class="fa-solid fa-cloud-arrow-down"></i>
+                <span>📥</span>
             </div>
             <h3 class="card-title text-cyan">Downloads</h3>
             <p class="card-desc">Access to files, resources, and materials.</p>
             <a class="know-more text-cyan" onclick="openCategory('downloads')">Know More</a>
         </div>
 
-        <!-- 4. Suggested Notes -->
+        <!-- 4. Suggested Notes -> 💡 जलता हुआ बल्ब इमोजी -->
         <div class="card">
             <div class="icon-wrapper icon-gold">
-                <i class="fa-solid fa-lightbulb"></i>
+                <span>💡</span>
             </div>
             <h3 class="card-title text-gold">Suggested Notes</h3>
             <p class="card-desc">Recommended Important Notes And Diagrams.</p>
@@ -262,7 +269,7 @@
     import { initializeApp } from "https://gstatic.com";
     import { getFirestore, collection, query, where, getDocs } from "https://gstatic.com";
 
-    // आपके द्वारा भेजे गए स्क्रीनशॉट के अनुसार असली क्रेडेंशियल्स
+    // आपके असली फायरबेस क्रेडेंशियल्स
     const firebaseConfig = {
         apiKey: "AIzaSyCyac4YWyEu6ynewYyJnIF3ftfjOYAU_w4",
         authDomain: "://firebaseapp.com",
@@ -304,7 +311,7 @@
         }
     }
 
-    // 3-डॉट मेनू पर क्लिक करने पर एक छोटा मैसेज दिखाना (आप यहाँ अपनी सेटिंग जोड़ सकते हैं)
+    // 3-डॉट मेनू क्लिक हैंडलर
     document.querySelector('.menu-dots').addEventListener('click', () => {
         alert("यह मेनू बटन है। यहाँ आप लॉगआउट या एडमिन पैनल का लिंक जोड़ सकते हैं!");
     });
