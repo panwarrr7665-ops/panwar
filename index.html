@@ -267,7 +267,7 @@
 <!-- फायरबेस मॉड्यूल और लॉजिक स्क्रिप्ट -->
 <script type="module">
     import { initializeApp } from "https://gstatic.com";
-    import { getFirestore, collection, query, where, getDocs } from "https://gstatic.com";
+    import { getFirestore, collection, query, where, getDocs,addDoc } from "https://gstatic.com";
 
     // आपके असली फायरबेस क्रेडेंशियल्स
     const firebaseConfig = {
@@ -282,6 +282,61 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
+
+// बटन क्लिक होने पर फायरबेस से सही डेटा लोड करने का फंक्शन
+window.openCategory = async function(categoryName) {
+    try {
+        console.log("फायरबेस से डेटा लाया जा रहा है: " + categoryName);
+        
+        const q = query(collection(db, "notes"), where("category", "==", categoryName));
+        const querySnapshot = await getDocs(q);
+        
+        if (querySnapshot.empty) {
+            alert("इस केटेगरी में एडमिन द्वारा अभी कोई फाइल अपलोड नहीं की गई है!");
+            return;
+        }
+
+        querySnapshot.forEach((doc) => {
+            const noteData = doc.data();
+            if(noteData.fileUrl) {
+                window.open(noteData.fileUrl, '_blank');
+            } else {
+                alert("फाइल का लिंक नहीं मिला!");
+            }
+        });
+
+    } catch (error) {
+        console.error("फायरबेस से कनेक्ट करने में एरर आया: ", error);
+        alert("डेटा लोड करने में समस्या आई।");
+    }
+}
+
+// कांटेक्ट फॉर्म सबमिट होने पर फायरबेस में मैसेज भेजने का लॉजिक
+document.getElementById('contactForm').addEventListener('submit', async (e) => {
+    e.preventDefault(); // पेज को रीफ्रेश होने से रोकने के लिए
+
+    // आपके फॉर्म से छात्र का नाम, ईमेल और मैसेज उठाना
+    const uName = document.getElementById('name').value;
+    const uEmail = document.getElementById('email').value;
+    const uMsg = document.getElementById('message').value;
+
+    try {
+        // फायरबेस के 'messages' कलेक्शन में डेटा सुरक्षित करना
+        await addDoc(collection(db, "messages"), {
+            name: uName,
+            email: uEmail,
+            message: uMsg,
+            time: new Date() // मैसेज आने का समय
+        });
+
+        alert("आपका मैसेज सफलतापूर्वक भेज दिया गया है!");
+        document.getElementById('contactForm').reset(); // फॉर्म को वापस खाली करने के लिए
+
+    } catch (error) {
+        console.error("मैसेज भेजने में समस्या आई: ", error);
+        alert("मैसेज नहीं भेजा जा सका, कृपया दोबारा कोशिश करें।");
+    }
+});
 
     // बटन क्लिक होने पर फायरबेस से सही डेटा लोड करने का फंक्शन
     window.openCategory = async function(categoryName) {
