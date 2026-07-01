@@ -270,80 +270,90 @@
         <button type="submit" style="background-color: #8B1E1E; color: white; border: none; padding: 12px; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer;">Send Message</button>
     </form>
 </section>
-<!-- फायरबेस मॉड्यूल और लॉजिक स्क्रिप्ट -->
-<!-- 1. फ़ायरबेस की मुख्य लाइब्रेरी लोड करें (यह CORS एरर नहीं देगी) -->
+<!-- 1. फ़ायरबेस की मुख्य लाइब्रेरी लोड करें -->
 <script src="https://gstatic.com"></script>
 <script src="https://gstatic.com"></script>
 
-<!-- 2. आपकी वेबसाइट का असली लॉजिक -->
+<!-- 2. आपकी वेबसाइट का लॉजिक (स्क्रिप्ट लोड होने के इंतज़ार के साथ) -->
 <script>
-    // आपके असली फ़ायरबेस क्रेडेंशियल्स
-    const firebaseConfig = {
-        apiKey: "AIzaSyCyac4YWyEu6ynewYyJnIF3ftfjOYAU_w4",
-        authDomain: "://firebaseapp.com",
-        projectId: "panwar-b2450",
-        storageBucket: "panwar-b2450.firebasestorage.app",
-        messagingSenderId: "588815882908",
-        appId: "1:588815882908:web:24d0cfaab6ec207607e5b9",
-        measurementId: "G-8VF4JRTPW7"
-    };
+    // जब तक इंटरनेट से फ़ायरबेस की फाइलें पूरी तरह लोड न हों, तब तक इंतज़ार करें
+    window.addEventListener('DOMContentLoaded', () => {
+        // आपके असली फ़ायरबेस क्रेडेंशियल्स
+        const firebaseConfig = {
+            apiKey: "AIzaSyCyac4YWyEu6ynewYyJnIF3ftfjOYAU_w4",
+            authDomain: "://firebaseapp.com",
+            projectId: "panwar-b2450",
+            storageBucket: "panwar-b2450.firebasestorage.app",
+            messagingSenderId: "588815882908",
+            appId: "1:588815882908:web:24d0cfaab6ec207607e5b9",
+            measurementId: "G-8VF4JRTPW7"
+        };
 
-    // फ़ायरबेस को शुरू करना (Compat वर्ज़न के अनुसार)
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
+        // फ़ायरबेस को शुरू करना
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
 
-    // बटन क्लिक होने पर नोट्स का लिंक खोलने का फंक्शन
-    window.openCategory = async function(categoryName) {
-        try {
-            console.log("फायरबेस से डेटा लाया जा रहा है: " + categoryName);
-            const snapshot = await db.collection("notes").where("category", "==", categoryName).get();
-            
-            if (snapshot.empty) {
-                alert("इस केटेगरी में एडमिन द्वारा अभी कोई फाइल अपलोड नहीं की गई है!");
-                return;
+        // बटन क्लिक होने पर नोट्स का लिंक खोलने का फंक्शन
+        window.openCategory = async function(categoryName) {
+            try {
+                console.log("फायरबेस से डेटा लाया जा रहा है: " + categoryName);
+                const snapshot = await db.collection("notes").where("category", "==", categoryName).get();
+                
+                if (snapshot.empty) {
+                    alert("इस केटेगरी में एडमिन द्वारा अभी कोई फाइल अपलोड नहीं की गई है!");
+                    return;
+                }
+
+                snapshot.forEach((doc) => {
+                    const noteData = doc.data();
+                    if(noteData.fileUrl) {
+                        window.open(noteData.fileUrl, '_blank');
+                    } else {
+                        alert("फाइल का लिंक नहीं मिला!");
+                    }
+                });
+            } catch (error) {
+                console.error("एरर आया: ", error);
+                alert("डेटा लोड करने में समस्या आई।");
             }
+        };
 
-            snapshot.forEach((doc) => {
-                const noteData = doc.data();
-                if(noteData.fileUrl) {
-                    window.open(noteData.fileUrl, '_blank');
-                } else {
-                    alert("फाइल का लिंक नहीं मिला!");
+        // कांटेक्ट फॉर्म सबमिट होने पर मैसेज भेजने का लॉजिक
+        const contactForm = document.getElementById('contactForm');
+        if (contactForm) {
+            contactForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                const uName = document.getElementById('name').value;
+                const uEmail = document.getElementById('email').value;
+                const uMsg = document.getElementById('message').value;
+
+                try {
+                    await db.collection("messages").add({
+                        name: uName,
+                        email: uEmail,
+                        message: uMsg,
+                        time: new Date()
+                    });
+
+                    alert("आपका मैसेज सफलतापूर्वक भेज दिया गया है!");
+                    contactForm.reset();
+                } catch (error) {
+                    console.error("मैसेज भेजने में समस्या आई: ", error);
+                    alert("मैसेज नहीं भेजा जा सका, कृपया दोबारा कोशिश करें।");
                 }
             });
-        } catch (error) {
-            console.error("एरर आया: ", error);
-            alert("डेटा लोड करने में समस्या आई।");
         }
-    };
 
-    // कांटेक्ट फॉर्म सबमिट होने पर मैसेज भेजने का लॉजिक
-    document.getElementById('contactForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-
-        const uName = document.getElementById('name').value;
-        const uEmail = document.getElementById('email').value;
-        const uMsg = document.getElementById('message').value;
-
-        try {
-            // 'messages' कलेक्शन में नया मैसेज जोड़ना
-            await db.collection("messages").add({
-                name: uName,
-                email: uEmail,
-                message: uMsg,
-                time: new Date()
+        // 3-डॉट मेनू क्लिक हैंडलर
+        const menuDots = document.querySelector('.menu-dots');
+        if (menuDots) {
+            menuDots.addEventListener('click', () => {
+                alert("यह मेनू बटन है। यहाँ आप लॉगआउट या एडमिन पैनल का लिंक जोड़ सकते हैं!");
             });
-
-            alert("आपका मैसेज सफलतापूर्वक भेज दिया गया है!");
-            document.getElementById('contactForm').reset();
-        } catch (error) {
-            console.error("मैसेज भेजने में समस्या आई: ", error);
-            alert("मैसेज नहीं भेजा जा सका, कृपया दोबारा कोशिश करें।");
         }
-    });
-
-    // 3-डॉट मेनू क्लिक हैंडलर
-    document.querySelector('.menu-dots').addEventListener('click', () => {
-        alert("यह मेनू बटन है। यहाँ आप लॉगआउट या एडमिन पैनल का लिंक जोड़ सकते हैं!");
     });
 </script>
+
+</body>
+</html>
