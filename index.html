@@ -282,8 +282,18 @@
 </section>
 <!-- फायरबेस मॉड्यूल और लॉजिक स्क्रिप्ट -->
 <script type="module">
-    import { initializeApp } from "https://gstatic.com";
-    import { getFirestore, collection, query, where, getDocs,addDoc } from "https://gstatic.com";
+    // फायरबेस को बिना इम्पोर्ट एरर के लोड करने का सीधा तरीका
+    const firebaseAppScript = document.createElement('script');
+    firebaseAppScript.src = "https://gstatic.com";
+    document.head.appendChild(firebaseAppScript);
+
+     const firestoreScript = document.createElement('script');
+      firestoreScript.src = "https://gstatic.com";
+      document.head.appendChild(firestoreScript);
+
+// स्क्रिप्ट लोड होने के बाद फायरबेस चालू करने के लिए
+firebaseAppScript.onload = () => {
+    // यहाँ आपका const firebaseConfig = { ... } पहले से लिखा हुआ है
 
     // आपके असली फायरबेस क्रेडेंशियल्स
     const firebaseConfig = {
