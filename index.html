@@ -39,10 +39,10 @@
             text-decoration: none;
         }
         .logo-emoji {
-            font-size: 28px; /* मुख्य साइंस लोगो का साइज */
+            font-size: 28px;
         }
         .nav-logo {
-            color: #8B1E1E; /* मरून लाल रंग */
+            color: #8B1E1E;
             font-size: 22px;
             font-weight: 700;
             letter-spacing: 0.5px;
@@ -140,7 +140,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 32px; /* डिब्बों के अंदर के इमोजी का साइज */
+            font-size: 32px;
             margin-bottom: 25px;
         }
 
@@ -201,19 +201,16 @@
 
 <!-- ऊपर का हेडर (Navbar) सेक्शन -->
 <header class="navbar">
-    <!-- बाईं तरफ का नाम + 🔬 (Microscope) लोगो -->
     <a href="#" class="logo-container">
         <span class="logo-emoji">🔬</span>
         <span class="nav-logo">Help Through Science Guruji</span>
     </a>
     
-    <!-- बीच का सर्च बार -->
     <div class="search-container">
         <span class="search-icon">🔍</span>
         <input type="text" placeholder="Search notes, PDFs...">
     </div>
     
-    <!-- दाईं तरफ का 3-डॉट मेनू (इमोजी स्टाइल) -->
     <div class="menu-dots">⋮</div>
 </header>
 
@@ -223,7 +220,6 @@
     <p class="section-subtitle">Learn anytime, anywhere with us</p>
 
     <div class="cards-container">
-        <!-- 1. Class Notes & PDF -> 📁 फ़ोल्डर इमोजी -->
         <div class="card">
             <div class="icon-wrapper icon-orange">
                 <span>📁</span>
@@ -233,7 +229,6 @@
             <a class="know-more text-orange" onclick="openCategory('class_notes')">Know More</a>
         </div>
 
-        <!-- 2. Other Study Material -> 📖 खुली किताब इमोजी -->
         <div class="card">
             <div class="icon-wrapper icon-blue">
                 <span>📖</span>
@@ -243,7 +238,6 @@
             <a class="know-more text-blue" onclick="openCategory('study_material')">Know More</a>
         </div>
 
-        <!-- 3. Downloads -> 📥 इनबॉक्स/डाउनलोड इमोजी -->
         <div class="card">
             <div class="icon-wrapper icon-cyan">
                 <span>📥</span>
@@ -253,7 +247,6 @@
             <a class="know-more text-cyan" onclick="openCategory('downloads')">Know More</a>
         </div>
 
-        <!-- 4. Suggested Notes -> 💡 जलता हुआ बल्ब इमोजी -->
         <div class="card">
             <div class="icon-wrapper icon-gold">
                 <span>💡</span>
@@ -264,36 +257,23 @@
         </div>
     </div>
 </section>
-<!-- 📞 Contact Us फॉर्म का पूरा सेक्शन -->
-<section style="max-width: 600px; margin: 50px auto; padding: 30px; background: #fff; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); text-align: center; font-family: sans-serif;">
+
+<!-- 📞 Contact Us फॉर्म का सेक्शन -->
+<section style="max-width: 600px; margin: 50px auto; padding: 30px; background: #fff; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); text-align: center;">
     <h2 style="color: #8B1E1E; margin-bottom: 10px; font-size: 26px;">Contact Us</h2>
     <p style="color: #666; margin-bottom: 25px; font-size: 14px;">If you have any questions, feel free to drop a message!</p>
     
     <form id="contactForm" style="display: flex; flex-direction: column; gap: 15px;">
-        <input type="text" id="name" placeholder="Your Name" required style="padding: 12px 15px; border: 1px solid #cbd5e1; border-radius: 8px; outline: none; font-size: 14px;">
-        
-        <input type="email" id="email" placeholder="Your Email" required style="padding: 12px 15px; border: 1px solid #cbd5e1; border-radius: 8px; outline: none; font-size: 14px;">
-        
-        <textarea id="message" placeholder="Your Message" rows="5" required style="padding: 12px 15px; border: 1px solid #cbd5e1; border-radius: 8px; outline: none; font-size: 14px; resize: none;"></textarea>
-        
-        <!-- 🚀 सेंड मैसेज बटन -->
-        <button type="submit" style="background-color: #8B1E1E; color: white; border: none; padding: 12px; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; transition: background 0.2s;">Send Message</button>
+        <input type="text" id="name" placeholder="Your Name" required style="padding: 12px 15px; border: 1px solid #cbd5e1; border-radius: 8px; outline: none;">
+        <input type="email" id="email" placeholder="Your Email" required style="padding: 12px 15px; border: 1px solid #cbd5e1; border-radius: 8px; outline: none;">
+        <textarea id="message" placeholder="Your Message" rows="5" required style="padding: 12px 15px; border: 1px solid #cbd5e1; border-radius: 8px; outline: none; resize: none;"></textarea>
+        <button type="submit" style="background-color: #8B1E1E; color: white; border: none; padding: 12px; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer;">Send Message</button>
     </form>
 </section>
 <!-- फायरबेस मॉड्यूल और लॉजिक स्क्रिप्ट -->
 <script type="module">
-    // फायरबेस को बिना इम्पोर्ट एरर के लोड करने का सीधा तरीका
-    const firebaseAppScript = document.createElement('script');
-    firebaseAppScript.src = "https://gstatic.com";
-    document.head.appendChild(firebaseAppScript);
-
-     const firestoreScript = document.createElement('script');
-      firestoreScript.src = "https://gstatic.com";
-      document.head.appendChild(firestoreScript);
-
-// स्क्रिप्ट लोड होने के बाद फायरबेस चालू करने के लिए
-firebaseAppScript.onload = () => {
-    // यहाँ आपका const firebaseConfig = { ... } पहले से लिखा हुआ है
+    import { initializeApp } from "https://gstatic.com";
+    import { getFirestore, collection, query, where, getDocs, addDoc } from "https://gstatic.com";
 
     // आपके असली फायरबेस क्रेडेंशियल्स
     const firebaseConfig = {
@@ -309,66 +289,10 @@ firebaseAppScript.onload = () => {
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-// बटन क्लिक होने पर फायरबेस से सही डेटा लोड करने का फंक्शन
-window.openCategory = async function(categoryName) {
-    try {
-        console.log("फायरबेस से डेटा लाया जा रहा है: " + categoryName);
-        
-        const q = query(collection(db, "notes"), where("category", "==", categoryName));
-        const querySnapshot = await getDocs(q);
-        
-        if (querySnapshot.empty) {
-            alert("इस केटेगरी में एडमिन द्वारा अभी कोई फाइल अपलोड नहीं की गई है!");
-            return;
-        }
-
-        querySnapshot.forEach((doc) => {
-            const noteData = doc.data();
-            if(noteData.fileUrl) {
-                window.open(noteData.fileUrl, '_blank');
-            } else {
-                alert("फाइल का लिंक नहीं मिला!");
-            }
-        });
-
-    } catch (error) {
-        console.error("फायरबेस से कनेक्ट करने में एरर आया: ", error);
-        alert("डेटा लोड करने में समस्या आई।");
-    }
-}
-
-// कांटेक्ट फॉर्म सबमिट होने पर फायरबेस में मैसेज भेजने का लॉजिक
-document.getElementById('contactForm').addEventListener('submit', async (e) => {
-    e.preventDefault(); // पेज को रीफ्रेश होने से रोकने के लिए
-
-    // आपके फॉर्म से छात्र का नाम, ईमेल और मैसेज उठाना
-    const uName = document.getElementById('name').value;
-    const uEmail = document.getElementById('email').value;
-    const uMsg = document.getElementById('message').value;
-
-    try {
-        // फायरबेस के 'messages' कलेक्शन में डेटा सुरक्षित करना
-        await addDoc(collection(db, "messages"), {
-            name: uName,
-            email: uEmail,
-            message: uMsg,
-            time: new Date() // मैसेज आने का समय
-        });
-
-        alert("आपका मैसेज सफलतापूर्वक भेज दिया गया है!");
-        document.getElementById('contactForm').reset(); // फॉर्म को वापस खाली करने के लिए
-
-    } catch (error) {
-        console.error("मैसेज भेजने में समस्या आई: ", error);
-        alert("मैसेज नहीं भेजा जा सका, कृपया दोबारा कोशिश करें।");
-    }
-});
-
-    // बटन क्लिक होने पर फायरबेस से सही डेटा लोड करने का फंक्शन
+    // बटन क्लिक होने पर फायरबेस से सही नोट्स का URL खोलने का फंक्शन
     window.openCategory = async function(categoryName) {
         try {
             console.log("फायरबेस से डेटा लाया जा रहा है: " + categoryName);
-            
             const q = query(collection(db, "notes"), where("category", "==", categoryName));
             const querySnapshot = await getDocs(q);
             
@@ -385,12 +309,35 @@ document.getElementById('contactForm').addEventListener('submit', async (e) => {
                     alert("फाइल का लिंक नहीं मिला!");
                 }
             });
-
         } catch (error) {
             console.error("फायरबेस से कनेक्ट करने में एरर आया: ", error);
             alert("डेटा लोड करने में समस्या आई।");
         }
-    }
+    };
+
+    // कांटेक्ट फॉर्म सबमिट होने पर फायरबेस में मैसेज भेजने का लॉजिक
+    document.getElementById('contactForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const uName = document.getElementById('name').value;
+        const uEmail = document.getElementById('email').value;
+        const uMsg = document.getElementById('message').value;
+
+        try {
+            await addDoc(collection(db, "messages"), {
+                name: uName,
+                email: uEmail,
+                message: uMsg,
+                time: new Date()
+            });
+
+            alert("आपका मैसेज सफलतापूर्वक भेज दिया गया है!");
+            document.getElementById('contactForm').reset();
+        } catch (error) {
+            console.error("मैसेज भेजने में समस्या आई: ", error);
+            alert("मैसेज नहीं भेजा जा सका, कृपया दोबारा कोशिश करें।");
+        }
+    });
 
     // 3-डॉट मेनू क्लिक हैंडलर
     document.querySelector('.menu-dots').addEventListener('click', () => {
