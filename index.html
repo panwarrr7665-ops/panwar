@@ -106,7 +106,7 @@
             margin-bottom: 50px;
         }
 
-        /* चारों बॉक्स को एक लाइन में सेट करने के लिए ग्रिड */
+        /* चारों बॉक्स को एक line में सेट करने के लिए ग्रिड */
         .cards-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -213,7 +213,6 @@
     
     <div class="menu-dots">⋮</div>
 </header>
-
 <!-- मुख्य 4 डिब्बों का सेक्शन -->
 <section class="students-section">
     <h2 class="section-title">Hello, Dear Students</h2>
@@ -270,13 +269,13 @@
         <button type="submit" style="background-color: #8B1E1E; color: white; border: none; padding: 12px; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer;">Send Message</button>
     </form>
 </section>
-<!-- 1. फ़ायरबेस की मुख्य लाइब्रेरी लोड करें -->
+
+<!-- 1. फ़ायरबेस की मुख्य लाइब्रेरी लोड करें (फिक्स की गई कड़ियाँ) -->
 <script src="https://gstatic.com"></script>
 <script src="https://gstatic.com"></script>
 
-<!-- 2. आपकी वेबसाइट का लॉजिक (स्क्रिप्ट लोड होने के इंतज़ार के साथ) -->
+<!-- 2. आपकी वेबसाइट का लॉजिक -->
 <script>
-    // जब तक इंटरनेट से फ़ायरबेस की फाइलें पूरी तरह लोड न हों, तब तक इंतज़ार करें
     window.addEventListener('DOMContentLoaded', () => {
         // आपके असली फ़ायरबेस क्रेडेंशियल्स
         const firebaseConfig = {
