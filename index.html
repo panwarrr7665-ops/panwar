@@ -270,9 +270,9 @@
     </form>
 </section>
 
-<!-- 1. फ़ायरबेस की मुख्य लाइब्रेरी लोड करें (फिक्स की गई कड़ियाँ) -->
-<script src="https://gstatic.com"></script>
-<script src="https://gstatic.com"></script>
+<!-- 1. फ़ायरबेस की मुख्य लाइब्रेरी लोड करें (defer के साथ लोड एरर फिक्स) -->
+<script src="https://gstatic.com" defer></script>
+<script src="https://gstatic.com" defer></script>
 
 <!-- 2. आपकी वेबसाइट का लॉजिक -->
 <script>
@@ -335,7 +335,8 @@
                         time: new Date()
                     });
 
-                    alert("आपका मैसेज सफलतापूर्वक भेज दिया गया है!");
+                    // छात्रों के पूरे भरोसे के लिए नया स्पष्ट कन्फर्मेशन मैसेज
+                    alert("Success! Your message has been sent successfully. Science Guruji team will contact you soon.");
                     contactForm.reset();
                 } catch (error) {
                     console.error("मैसेज भेजने में समस्या आई: ", error);
