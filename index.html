@@ -196,6 +196,10 @@
             }
         }
     </style>
+    
+    <!-- लोड एरर को हमेशा के लिए ठीक करने के लिए फ़ायरबेस की लाइब्रेरी को सीधे head टैग में डाला गया है -->
+    <script src="https://gstatic.com"></script>
+    <script src="https://gstatic.com"></script>
 </head>
 <body>
 
@@ -270,13 +274,10 @@
     </form>
 </section>
 
-<!-- 1. फ़ायरबेस की मुख्य लाइब्रेरी लोड करें (defer के साथ लोड एरर फिक्स) -->
-<script src="https://gstatic.com" defer></script>
-<script src="https://gstatic.com" defer></script>
-
-<!-- 2. आपकी वेबसाइट का लॉजिक -->
+<!-- वेबसाइट का फिक्स किया हुआ असली लॉजिक -->
 <script>
-    window.addEventListener('DOMContentLoaded', () => {
+    // यह सुनिश्चित करेगा कि फ़ायरबेस पूरी तरह लोड होने के बाद ही कोड काम करे
+    function initializeAppLogic() {
         // आपके असली फ़ायरबेस क्रेडेंशियल्स
         const firebaseConfig = {
             apiKey: "AIzaSyCyac4YWyEu6ynewYyJnIF3ftfjOYAU_w4",
@@ -335,7 +336,7 @@
                         time: new Date()
                     });
 
-                    // छात्रों के पूरे भरोसे के लिए नया स्पष्ट कन्फर्मेशन मैसेज
+                    // छात्र को दिखने वाला पूरा कन्फर्मेशन मैसेज
                     alert("Success! Your message has been sent successfully. Science Guruji team will contact you soon.");
                     contactForm.reset();
                 } catch (error) {
@@ -352,7 +353,20 @@
                 alert("यह मेनू बटन है। यहाँ आप लॉगआउट या एडमिन पैनल का लिंक जोड़ सकते हैं!");
             });
         }
-    });
+    }
+
+    // ब्राउज़र में फ़ायरबेस लोड होते ही फंक्शन को सेफ़ली रन करना
+    if (typeof firebase !== 'undefined') {
+        initializeAppLogic();
+    } else {
+        window.addEventListener('load', () => {
+            if (typeof firebase !== 'undefined') {
+                initializeAppLogic();
+            } else {
+                console.error("फ़ायरबेस लोड करने में कोई गंभीर समस्या है। कृपया इंटरनेट कनेक्शन या स्क्रिप्ट पाथ जांचें।");
+            }
+        });
+    }
 </script>
 
 </body>
