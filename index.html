@@ -463,85 +463,123 @@
 </div>
 
 <script>
-           <!-- आपके पुराने चारों कार्ड्स (Boxes) का बंद होने वाला टैग यहाँ है -->
-    </div> 
+        <!-- 🔴 यहाँ आपका पुराना चारों डिब्बों (Cards) वाला सेक्शन खत्म हो रहा है -->
+        </div> 
 
-    <!-- 🟢 मुकेश पंवार स्पेशल - 100% सीक्रेट लाइव गूगल डॉक्स मल्टी-पेज शो मोर सेक्शन शुरू -->
-    <div style="margin: 40px auto; max-width: 100%; width: 100%; padding: 0 5%; box-sizing: border-box; font-family: 'Inter', sans-serif;">
-        
-        <div style="background: rgba(30, 41, 59, 0.45); border: 1px solid rgba(255, 255, 255, 0.08); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-radius: 24px; padding: 15px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); position: relative; width: 100%;">
+        <!-- 🟢 इसके ठीक नीचे यह पूरा नया "Apps Script" वाला कोड पेस्ट कर दीजिए -->
+        <div style="margin: 40px auto; max-width: 100%; width: 100%; padding: 0 5%; box-sizing: border-box; font-family: 'Inter', sans-serif;">
             
-            <h2 style="color: #ffffff; font-size: 22px; font-weight: 700; margin-bottom: 20px; text-align: center; letter-spacing: 0.5px;">
-                📖 Live Textbook & Diagrams
-            </h2>
-            
-            <!-- 🗂️ मुख्य विंडो बॉक्स: शुरुआत में यह बिल्कुल गूगल डॉक के 1 पेज (लगभग 550px की हाइट) पर लॉक रहेगा -->
-            <div id="docs-window-wrapper" style="max-height: 550px; overflow: hidden; position: relative; border-radius: 16px; transition: max-height 0.6s cubic-bezier(0.16, 1, 0.3, 1); width: 100%;">
+            <div id="apps-script-content-wrapper" style="position: relative; width: 100%;">
                 
-                <!-- 🌐 यह आपके Google Doc को बिल्कुल फुल स्क्रीन में और डार्क मोड में ढालकर लाइव दिखाएगा -->
-                <iframe id="googleDocsIframe" src="https://script.google.com/macros/s/AKfycbxHIR8KqNEqSpK3kfcPLpseQolCGV8oydS_w3ricyds5muFBL_ZHrOqUlHAnR6CBqXB/exec" 
-                        style="width: 100%; height: 6000px; border: none; background: #ffffff; filter: invert(0.9) hue-rotate(180deg); box-shadow: inset 0 0 20px rgba(0,0,0,0.1); display: block;">
-                </iframe>
+                <h2 style="color: #ffffff; font-size: 24px; margin-bottom: 20px; text-align: center; font-weight: 700; letter-spacing: 0.5px;">
+                    📖 Live Textbook & Diagrams
+                </h2>
                 
-                <!-- 🌗 नीचे से पेज धुंधला (Fade) दिखने के लिए डार्क स्लेट ग्लास इफ़ेक्ट -->
-                <div id="docs-fade-overlay" style="position: absolute; bottom: 0; left: 0; width: 100%; height: 120px; background: linear-gradient(transparent, #131d2f); pointer-events: none;"></div>
+                <div id="apps-script-text" style="color: #cbd5e1; line-height: 1.8; font-size: 16px; text-align: left; width: 100%;">
+                    🔄 कृपया प्रतीक्षा करें, Apps Script से लाइव नोट्स और डायग्राम लोड हो रहे हैं...
+                </div>
+                
+                <div id="apps-script-fade" style="position: absolute; bottom: 0; left: 0; width: 100%; height: 80px; background: linear-gradient(transparent, #0f172a); pointer-events: none; display: none;"></div>
             </div>
 
-            <!-- 🔄 सिंगल शो मोर कंट्रोल बटन -->
-            <div style="text-align: center; margin-top: 25px;">
-                <button id="docsShowMoreBtn" onclick="handleDocsPageScroll()" style="background: linear-gradient(135deg, #ff4e50, #f9d423); color: #0f172a; border: none; padding: 12px 35px; font-size: 15px; font-weight: 700; border-radius: 50px; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(249, 212, 35, 0.3);">
+            <div style="text-align: center; margin-top: 30px;">
+                <button id="appsScriptBtn" onclick="showNextPageOfBook()" style="background: linear-gradient(135deg, #ff4e50, #f9d423); color: #0f172a; border: none; padding: 12px 35px; font-size: 15px; font-weight: 700; border-radius: 50px; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(249, 212, 35, 0.3); display: none;">
                     Show More 👇 (Read Next Page)
                 </button>
             </div>
-
         </div>
-    </div>
 
-    <script>
-        // 🎯 प्रति पेज हाइट सेट करना (550px गूगल डॉक के 1 पूरे पेज या 500 शब्दों के बराबर होता है)
-        const DOC_HEIGHT_PER_PAGE = 550; 
-        let currentVisibleDocHeight = DOC_HEIGHT_PER_PAGE; // अभी स्क्रीन पर कितनी हाइट दिख रही है
+        <script>
+            const APPS_SCRIPT_WEB_URL = 'https://script.google.com/macros/s/AKfycbxHIR8KqNEqSpK3kfcPLpseQolCGV8oydS_w3ricyds5muFBL_ZHrOqUlHAnR6CBqXB/exec';
 
-        function handleDocsPageScroll() {
-            const wrapper = document.getElementById('docs-window-wrapper');
-            const btn = document.getElementById('docsShowMoreBtn');
-            const overlay = document.getElementById('docs-fade-overlay');
-            
-            // अधिकतम हाइट (कल को आप बहुत बड़ा चैप्टर लिखेंगे तो यह हाइट बढ़ा सकते हैं)
-            const maxEstimatedHeight = 5500; 
+            let allBookParagraphs = []; 
+            let currentParagraphIndex = 0; 
+            const WORDS_PER_PAGE = 500; 
 
-            if (currentVisibleDocHeight < maxEstimatedHeight) {
-                // 🎯 हर बार बटन दबाने पर अगला पूरा 1 पेज (550px / 500 शब्द) नीचे और खुल जाएगा
-                currentVisibleDocHeight += DOC_HEIGHT_PER_PAGE;
-                wrapper.style.maxHeight = currentVisibleDocHeight + 'px';
-                
-                // नया पेज खुलते ही स्क्रीन को हल्के से नीचे खिसकाना ताकि यूजर अगले पेज पर आ जाए
-                setTimeout(() => {
-                    window.scrollBy({ top: DOC_HEIGHT_PER_PAGE - 80, behavior: 'smooth' });
-                }, 100);
+            async function loadTextFromAppsScript() {
+                try {
+                    const response = await fetch(APPS_SCRIPT_WEB_URL);
+                    const data = await response.json();
 
-                btn.innerHTML = 'Show More 👇 (Read Next Page)';
+                    if (data && data.text_content) {
+                        let originalText = data.text_content;
+
+                        let textWithImages = originalText.replace(/\[IMAGE:\s*([^\]]+)\]/g, function(match, url) {
+                            return `</p><div style="text-align:center; margin:30px 0; width:100%;">
+                                        <img src="${url.trim()}" style="max-width:100%; width:auto; height:auto; max-height:550px; border-radius:16px; border:1px solid rgba(255,255,255,0.1); box-shadow:0 10px 30px rgba(0,0,0,0.4); display:block; margin:0 auto;">
+                                        <p style="color:#94a3b8; font-size:14px; font-style:italic; margin-top:10px;">चित्र: विवरण से संबंधित महत्वपूर्ण डायग्राम</p>
+                                    </div><p>`;
+                        });
+
+                        allBookParagraphs = textWithImages.split('\n').filter(p => p.trim() !== '');
+                        
+                        document.getElementById('apps-script-text').innerHTML = '';
+                        currentParagraphIndex = 0;
+                        
+                        showNextPageOfBook(); 
+                    }
+                } catch (error) {
+                    console.error("Apps Script से डेटा लोड करने में एरर आई:", error);
+                    document.getElementById('apps-script-text').innerHTML = "<p style='color:#ef4444; text-align:center;'>❌ नोट्स लोड नहीं हो सके। कृपया अपना Apps Script कोड और अनुमति (Anyone) चेक करें।</p>";
+                }
             }
 
-            // 🔄 अगर छात्र काफी नीचे आ चुका है, तो बटन को रीसेट (Close Book) विकल्प दे दें
-            if (currentVisibleDocHeight >= 3300) {
-                btn.innerHTML = 'Reset / Close Book 👆';
-                overlay.style.display = 'none'; // धुंधलापन हटा दो
+            function showNextPageOfBook() {
+                let textContainer = document.getElementById('apps-script-text');
+                let btn = document.getElementById('appsScriptBtn');
+                let overlay = document.getElementById('apps-script-fade');
                 
-                // रीसेट बटन दबाने पर वापस किताब बंद करके पहले पेज पर ले जाओ
-                btn.onclick = function() {
-                    currentVisibleDocHeight = DOC_HEIGHT_PER_PAGE;
-                    wrapper.style.maxHeight = DOC_HEIGHT_PER_PAGE + 'px';
-                    overlay.style.display = 'block';
-                    btn.innerHTML = 'Show More 👇 (Read Next Page)';
-                    wrapper.scrollIntoView({ behavior: 'smooth' });
+                let wordCountThisStep = 0;
+                let htmlToAppend = '';
+                let startParagraph = currentParagraphIndex;
+
+                while (currentParagraphIndex < allBookParagraphs.length && wordCountThisStep < WORDS_PER_PAGE) {
+                    let pText = allBookParagraphs[currentParagraphIndex];
                     
-                    // बटन का काम वापस सामान्य स्क्रॉल पर सेट करना
-                    btn.setAttribute('onclick', 'handleDocsPageScroll()');
-                };
+                    let wordsInP = pText.split(/\s+/).length;
+                    wordCountThisStep += wordsInP;
+                    
+                    htmlToAppend += `<p style="margin-bottom:15px;">${pText}</p>`;
+                    currentParagraphIndex++;
+                }
+
+                if (startParagraph === 0) {
+                    textContainer.innerHTML = htmlToAppend;
+                } else {
+                    let tempWrapper = document.createElement('div');
+                    tempWrapper.innerHTML = htmlToAppend;
+                    textContainer.appendChild(tempWrapper);
+                    
+                    setTimeout(() => {
+                        tempWrapper.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }, 50);
+                }
+
+                if (currentParagraphIndex < allBookParagraphs.length) {
+                    btn.style.display = 'inline-block';
+                    btn.innerHTML = 'Show More 👇 (Read Next Page)';
+                    overlay.style.display = 'block'; 
+                } else {
+                    btn.innerHTML = 'Reset / Close Book 👆';
+                    overlay.style.display = 'none'; 
+                }
             }
-        }
-    
+
+            function toggleAppsScriptContent() {
+                if (currentParagraphIndex >= allBookParagraphs.length) {
+                    document.getElementById('apps-script-text').innerHTML = '';
+                    currentParagraphIndex = 0;
+                    showNextPageOfBook();
+                    document.getElementById('apps-script-content-wrapper').scrollIntoView({ behavior: 'smooth' });
+                } else {
+                    showNextPageOfBook();
+                }
+            }
+            
+            document.getElementById('appsScriptBtn').setAttribute('onclick', 'toggleAppsScriptContent()');
+            window.addEventListener('DOMContentLoaded', loadTextFromAppsScript);
+        </script>
+
 </script>
 <!-- मुकेश पंवार स्पेशल प्रीमियम फूटर (साइट का अंत) -->
 <footer class="site-footer">
