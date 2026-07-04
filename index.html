@@ -15,18 +15,19 @@
         }
         
         body {
-            background-color: #0f172a; /* प्रीमियम डार्क स्लेट बैकग्राउंड जो आँखों को बहुत अच्छा लगता है */
+            background-color: #0f172a; /* प्रीमियम डार्क स्लेट बैकग्राउंड */
             color: #f8fafc;
-            /* पूरी स्क्रीन पर एक ही सुंदर और सीधी प्रीमियम एजुकेशनल इमेज, जो डार्क थीम के साथ परफेक्ट मैच होगी */
             background-image: linear-gradient(rgba(15, 23, 42, 0.90), rgba(15, 23, 42, 0.90)), url('https://unsplash.com');
             background-attachment: fixed;
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
             min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
-        /* 1. ऊपर का आधुनिक हेडर (Navbar) स्टाइलिंग */
+        /* 1. ऊपर का आधुनिक हेडर (Navbar) स्टाइलिंग (3-dots Removed) */
         .navbar {
             display: flex;
             align-items: center;
@@ -77,8 +78,8 @@
             border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 50px;
             padding: 10px 20px;
-            width: 38%;
-            max-width: 450px;
+            width: 45%;
+            max-width: 500px;
             transition: all 0.3s ease;
         }
         .search-container:focus-within {
@@ -102,27 +103,13 @@
             font-size: 16px;
         }
 
-        /* कोने का 3-डॉट्स मेनू बटन */
-        .menu-dots {
-            font-size: 24px;
-            color: #94a3b8;
-            cursor: pointer;
-            padding: 8px 15px;
-            border-radius: 50px;
-            transition: all 0.2s;
-            font-weight: bold;
-        }
-        .menu-dots:hover {
-            background-color: rgba(255, 255, 255, 0.08);
-            color: #ffffff;
-        }
-
         /* मुख्य सेक्शन और टाइटल स्टाइलिंग */
         .students-section {
             text-align: center;
-            padding: 70px 20px;
+            padding: 70px 20px 40px 20px;
             max-width: 1200px;
             margin: 0 auto;
+            width: 100%;
         }
         .section-title {
             background: linear-gradient(to right, #ffffff, #cbd5e1);
@@ -150,7 +137,7 @@
 
         /* सिंगल प्रीमियम बॉक्स (Card) की स्टाइलिंग - ग्लास इफ़ेक्ट */
         .card {
-            background: rgba(30, 41, 59, 0.4.5);
+            background: rgba(30, 41, 59, 0.45);
             border: 1px solid rgba(255, 255, 255, 0.06);
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
@@ -164,6 +151,7 @@
             align-items: center;
             position: relative;
             overflow: hidden;
+            cursor: pointer; /* डिब्बे पर टैप करने योग्य बनाने के लिए */
         }
         .card:hover {
             transform: translateY(-8px);
@@ -213,7 +201,6 @@
             margin-bottom: 30px;
             min-height: 45px;
         }
-
         /* Know More प्रीमियम बटन स्टाइलिंग */
         .know-more {
             font-size: 14px;
@@ -233,19 +220,114 @@
             box-shadow: 0 4px 15px rgba(255,255,255,0.2);
         }
 
-        /* मोबाइल के लिए रिस्पॉन्सिव डिज़ाइन */
+        /* 🆕 सर्च रिजल्ट न मिलने पर दिखने वाला सुंदर डिब्बा */
+        .no-result-box {
+            display: none;
+            grid-column: 1 / -1;
+            background: rgba(30, 41, 59, 0.45);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-radius: 24px;
+            padding: 40px;
+            text-align: center;
+            color: #f8fafc;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        .no-result-icon {
+            font-size: 45px;
+            margin-bottom: 15px;
+        }
+        .no-result-text {
+            font-size: 18px;
+            font-weight: 700;
+            color: #cbd5e1;
+        }
+
+        /* 🆕 पीडीएफ को बिल्कुल साफ लिखे हुए पन्ने जैसा दिखाने की स्टाइलिंग */
+        .notes-popup {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            z-index: 2000;
+            align-items: center; justify-content: center;
+            padding: 20px;
+        }
+        .popup-content {
+            background: #ffffff !important; /* किताब के पन्ने जैसा साफ़ सफ़ेद लुक */
+            color: #0f172a !important;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 24px;
+            width: 100%; max-width: 900px;
+            padding: 30px;
+            position: relative;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+            display: flex; flex-direction: column; gap: 15px;
+        }
+        .close-popup {
+            position: absolute; top: 15px; right: 20px;
+            font-size: 28px; color: #64748b; cursor: pointer; transition: 0.2s;
+        }
+        .close-popup:hover { color: #0f172a; }
+        .pdf-frame {
+            width: 100%; height: 500px; border-radius: 12px; border: none; background: #f8fafc;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.05);
+        }
+        .popup-btn-container {
+            display: flex; gap: 15px; justify-content: flex-end;
+        }
+        .action-btn {
+            padding: 12px 25px; border-radius: 50px; font-weight: 700; cursor: pointer; border: none; text-decoration: none; font-size: 14px;
+        }
+        .download-action-btn {
+            background: linear-gradient(135deg, #ff4e50, #f9d423); color: #0f172a; box-shadow: 0 4px 15px rgba(249, 212, 35, 0.2);
+        }
+
+        /* 🆕 मुकेश पंवार स्पेशल प्रीमियम फूटर स्टाइलिंग */
+        .site-footer {
+            margin-top: auto;
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 40px 20px;
+            text-align: center;
+            width: 100%;
+        }
+        .footer-welcome {
+            font-size: 18px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ff4e50, #f9d423);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 15px;
+            letter-spacing: 0.5px;
+        }
+        .footer-info {
+            color: #94a3b8;
+            font-size: 14px;
+            max-width: 600px;
+            margin: 0 auto 20px auto;
+            line-height: 1.6;
+        }
+        .footer-address {
+            color: #cbd5e1;
+            font-size: 13px;
+            font-style: normal;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding-top: 15px;
+        }
+
+        /* मोबाइल रिस्पॉन्सिव */
         @media (max-width: 768px) {
-            .navbar {
-                flex-direction: column;
-                gap: 15px;
-                padding: 15px 20px;
-            }
-            .search-container {
-                width: 100%;
-            }
-            .section-title {
-                font-size: 32px;
-            }
+            .navbar { flex-direction: column; gap: 15px; padding: 15px 20px; }
+            .search-container { width: 100%; }
+            .section-title { font-size: 32px; }
+            .popup-content { height: 85vh; padding: 20px; }
+            .pdf-frame { height: 100%; }
         }
     </style>
 </head>
@@ -253,7 +335,6 @@
 
 <header class="navbar">
     <a href="#" class="logo-container">
-        <!-- गोल डायरेक्ट इमोजी लोगो -->
         <div class="logo-circle">
             <span class="logo-emoji">🔬</span>
         </div>
@@ -261,47 +342,68 @@
     </a>
     <div class="search-container">
         <span class="search-icon">🔍</span>
-        <input type="text" id="searchInput" placeholder="Search notes, PDFs...">
+        <input type="text" id="searchInput" placeholder="सर्च करें नोट्स, महत्वपूर्ण प्रश्न...">
     </div>
-    <div class="menu-dots">⋮</div>
 </header>
 
 <section class="students-section">
     <h2 class="section-title">Hello, Dear Students</h2>
     <p class="section-subtitle">Learn anytime, anywhere with us</p>
 
-    <div class="cards-container">
-        <div class="card">
+    <div class="cards-container" id="cardsContainer">
+        <!-- डिब्बा 1 -->
+        <div class="card" onclick="openCategory('class_notes')">
             <div class="icon-wrapper icon-orange"><span>📁</span></div>
             <h3 class="card-title">Class Notes & PDF</h3>
             <p class="card-desc" id="desc_class_notes">Notes of Other Subject & PDF.</p>
-            <a class="know-more text-orange" onclick="openCategory('class_notes')">Know More</a>
+            <a class="know-more text-orange">Know More</a>
         </div>
 
-        <div class="card">
+        <!-- डिब्बा 2 -->
+        <div class="card" onclick="openCategory('study_material')">
             <div class="icon-wrapper icon-blue"><span>📖</span></div>
             <h3 class="card-title">Other Study Material</h3>
             <p class="card-desc" id="desc_study_material">Additional Questions And Explanation About Human Body.</p>
-            <a class="know-more text-blue" onclick="openCategory('study_material')">Know More</a>
+            <a class="know-more text-blue">Know More</a>
         </div>
 
-        <div class="card">
+        <!-- डिब्बा 3 -->
+        <div class="card" onclick="openCategory('downloads')">
             <div class="icon-wrapper icon-cyan"><span>📥</span></div>
             <h3 class="card-title">Downloads</h3>
             <p class="card-desc" id="desc_downloads">Access to files, resources, and materials.</p>
-            <a class="know-more text-cyan" onclick="openCategory('downloads')">Know More</a>
+            <a class="know-more text-cyan">Know More</a>
         </div>
 
-        <div class="card">
+        <!-- डिब्बा 4 -->
+        <div class="card" onclick="openCategory('suggested_notes')">
             <div class="icon-wrapper icon-gold"><span>💡</span></div>
             <h3 class="card-title">Suggested Notes</h3>
             <p class="card-desc" id="desc_suggested_notes">Recommended Important Notes And Diagrams.</p>
-            <a class="know-more text-gold" onclick="openCategory('suggested_notes')">Know More</a>
+            <a class="know-more text-gold">Know More</a>
+        </div>
+
+        <!-- 🆕 सर्च रिजल्ट खाली होने पर संदेश देने वाला छुपा हुआ डिब्बा -->
+        <div class="no-result-box" id="noResultBox">
+            <div class="no-result-icon">⚠️</div>
+            <div class="no-result-text">क्षमा करें, इसके बारे में अभी जानकारी उपलब्ध नहीं है।</div>
         </div>
     </div>
 </section>
+    <!-- 🆕 पीडीएफ व्यूअर का ग्लास पॉपअप डिब्बा -->
+<div id="notesPopup" class="notes-popup">
+    <div class="popup-content">
+        <span class="close-popup" onclick="closeNotesPopup()">&times;</span>
+        <h3 id="popupTitle" style="font-size: 22px; font-weight: 800; margin-bottom: 5px;">Loading Notes...</h3>
+        <!-- rm=minimal ट्रिक के साथ गूगल ड्राइव को छुपा कर साफ़ टेक्स्ट पन्ने जैसा दिखाने वाला फ्रेम -->
+        <iframe id="pdfViewer" class="pdf-frame" src=""></iframe>
+        <div class="popup-btn-container">
+            <a id="popupDownloadBtn" class="action-btn download-action-btn" href="#" target="_blank">Download Notes</a>
+        </div>
+    </div>
+</div>
 
-<!-- प्रीमियम ग्लास डिज़ाइन कांटेक्ट फॉर्म -->
+<!-- कांटेक्ट फॉर्म सेक्शन -->
 <section style="max-width: 600px; margin: 60px auto; padding: 40px 30px; background: rgba(30, 41, 59, 0.45); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); text-align: center; position: relative; z-index: 10;">
     <h2 style="color: #ffffff; margin-bottom: 10px; font-size: 28px; font-weight: 800;">Contact Us</h2>
     <p style="color: #94a3b8; margin-bottom: 30px; font-size: 15px; font-weight: 500;">If you have any questions, feel free to drop a message!</p>
@@ -315,20 +417,32 @@
     </form>
 </section>
 
+<!-- 🆕 मुकेश पंवार स्पेशल प्रीमियम फूटर (साइट का अंत) -->
+<footer class="site-footer">
+    <div class="footer-welcome">✨ मुकेश पंवार आपका स्वागत करता है साइट पर विजिट करने पर ✨</div>
+    <p class="footer-info">यह एक आधुनिक ऑनलाइन एजुकेशनल प्लेटफॉर्म है, जहाँ छात्रों को बेहतरीन विज्ञान और अन्य विषयों के नोट्स और स्टडी मटेरियल बिल्कुल आसान भाषा में उपलब्ध कराए जाते हैं।</p>
+    <div class="footer-address">
+        © Help Through Science Guruji | एड्रेस: राजस्थान, भारत | Powered by Vercel & GitHub
+    </div>
+</footer>
+
 <script>
-    // आपका असली Google Web App URL
+    // ⚠️ अपना असली Google Web App URL यहाँ 'https://google.com' की जगह पेस्ट करें
     const scriptURL = 'https://script.google.com/macros/s/AKfycbzsym6DpTrLH-Ivv8_EShc7DiKTC0td3sNz6ZS8wyQLXdTJqZCS5nsp40bq6zFR24j3/exec';
 
     let notesDataStore = {};
 
-    // 1. वेबसाइट लोड होते ही एडमिन पैनल द्वारा सेट किए गए नोट्स लोड करना
+    // 1. वेबसाइट लोड होते ही गूगल शीट से नोट्स का लाइव डेटा फेच करना
     async function loadLiveNotes() {
         try {
             const response = await fetch(`${scriptURL}?action=getNotes`);
             const data = await response.json();
             
             data.forEach(item => {
-                notesDataStore[item.category] = item.driveLink;
+                notesDataStore[item.category] = {
+                    link: item.driveLink,
+                    title: item.title || "Study Material"
+                };
                 
                 const descElement = document.getElementById(`desc_${item.category}`);
                 if (descElement && item.title) {
@@ -337,50 +451,82 @@
             });
         } catch (error) {
             console.error("नोट्स डेटा लोड करने में विफल:", error);
+            // टेस्टिंग के लिए डमी डेटा (यदि बैकएंड सेट न हो):
+            notesDataStore['class_notes'] = { link: 'https://google.com', title: 'विज्ञान कक्षा 10 नोट्स (Hindi)' };
         }
     }
 
     window.addEventListener('DOMContentLoaded', loadLiveNotes);
 
-    // 2. Google Drive / Sheet से नोट्स खोलने के लिए फंक्शन
+    // 2. गूगल ड्राइव को पूरी तरह छिपाकर सीधे सफ़ेद लिखे पन्ने जैसा दिखाने वाला फंक्शन
     window.openCategory = function(categoryName) {
-        const link = notesDataStore[categoryName];
-        if (link) {
-            window.open(link, '_blank');
+        const item = notesDataStore[categoryName];
+        if (item && item.link) {
+            let originalLink = item.link;
+            let fileId = "";
+
+            const match = originalLink.match(/\/d\/([^/]+)/);
+            if (match && match[1]) {
+                fileId = match[1];
+            }
+
+            if (fileId) {
+                // rm=minimal ट्रिक जो ड्राइव की काली पट्टी, नाम और एक्स्ट्रा बटन को हटा देती है
+                const embedLink = `https://google.com{fileId}/preview?rm=minimal`;
+                const directDownloadLink = `https://google.com{fileId}`;
+
+                document.getElementById('popupTitle').innerText = item.title;
+                document.getElementById('pdfViewer').src = embedLink;
+                document.getElementById('popupDownloadBtn').href = directDownloadLink;
+
+                document.getElementById('notesPopup').style.display = 'flex';
+            } else {
+                window.open(originalLink, '_blank');
+            }
         } else {
-            alert("इस केटेगरी में एडमिन द्वारा अभी कोई ... ");
+            alert("इस केटेगरी में अभी कोई नोट्स अपलोड नहीं किए गए हैं।");
         }
     };
 
-    // 3. लाइव सर्च बार फ़िल्टर (Search Box Functionality)
-    const searchInput = document.getElementById('searchInput');
-    if (searchInput) {
-        // इनपुट बॉक्स के फोकस इफ़ेक्ट की स्टाइलिंग जावास्क्रिप्ट से संभालना
-        searchInput.addEventListener('focus', () => {
-            searchInput.parentElement.style.borderColor = '#f9d423';
-        });
-        searchInput.addEventListener('blur', () => {
-            searchInput.parentElement.style.borderColor = 'rgba(255, 255, 255, 0.15)';
-        });
+    // पॉपअप डिब्बा बंद करने का फंक्शन
+    window.closeNotesPopup = function() {
+        document.getElementById('notesPopup').style.display = 'none';
+        document.getElementById('pdfViewer').src = ''; // आईफ्रेम खाली करना ताकि बैकग्राउंड में लोड न रहे
+    };
 
+    // 3. लाइव सर्च बार फ़िल्टर (Exact & No-Result Message Functionality)
+    const searchInput = document.getElementById('searchInput');
+    const noResultBox = document.getElementById('noResultBox');
+
+    if (searchInput) {
         searchInput.addEventListener('input', function(e) {
             const searchText = e.target.value.toLowerCase().trim();
             const cards = document.querySelectorAll('.card');
+            let matchCount = 0;
 
             cards.forEach(card => {
                 const titleText = card.querySelector('.card-title').innerText.toLowerCase();
                 const descText = card.querySelector('.card-desc').innerText.toLowerCase();
 
+                // चेक करना कि सर्च किया हुआ टेक्स्ट टाइटल या डिस्क्रिप्शन में है या नहीं
                 if (titleText.includes(searchText) || descText.includes(searchText)) {
                     card.style.display = 'flex';
+                    matchCount++;
                 } else {
                     card.style.display = 'none';
                 }
             });
+
+            // यदि कोई भी डिब्बा मैच नहीं हुआ तो सुंदर एरर मैसेज दिखाना
+            if (matchCount === 0) {
+                noResultBox.style.display = 'block';
+            } else {
+                noResultBox.style.display = 'none';
+            }
         });
     }
 
-    // 4. कांटेक्ट फॉर्म को गूगल शीट और ईमेल से जोड़ने का स्क्रिप्ट
+    // 4. कांटेक्ट फॉर्म को गूगल शीट से जोड़ने का बिल्कुल सही स्क्रिप्ट
     const contactForm = document.getElementById('contactForm');
     const submitBtn = document.getElementById('submitBtn');
 
@@ -395,19 +541,16 @@
             const uEmail = document.getElementById('email').value;
             const uMsg = document.getElementById('message').value;
 
+            const formData = new URLSearchParams();
+            formData.append('action', 'contactMessage');
+            formData.append('name', uName);
+            formData.append('email', uEmail);
+            formData.append('message', uMsg);
+
             try {
                 await fetch(scriptURL, {
                     method: 'POST',
-                    mode: 'no-cors',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        action: "contactMessage",
-                        name: uName,
-                        email: uEmail,
-                        message: uMsg
-                    })
+                    body: formData
                 });
 
                 alert("Success! Your message has been sent successfully. Science Guruji team will contact you soon.");
@@ -421,15 +564,8 @@
             }
         });
     }
-
-    // 5. थ्री-डॉट्स मेनू का पुराना क्लिक हैंडलर (सिर्फ अलर्ट दिखाने के लिए)
-    const menuDots = document.querySelector('.menu-dots');
-    if (menuDots) {
-        menuDots.addEventListener('click', () => {
-            alert("यह मेनू बटन है। यहाँ आप लॉगआउट या एडमिन पैनल का लिंक जोड़ सकते हैं!");
-        });
-    }
 </script>
 
 </body>
 </html>
+
