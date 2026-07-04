@@ -419,14 +419,11 @@
 <!-- मुकेश पंवार स्पेशल प्रीमियम फूटर (साइट का अंत) -->
 <footer class="site-footer">
     <div class="footer-welcome">THANKS</div>
-    <p class="footer-info">यह एक आधुनिक ऑनलाइन एजुकेशनल प्लेटफॉर्म है, जहाँ छात्रों को बेहतरीन विज्ञान और अन्य विषयों के नोट्स और स्टडी मटेरियल बिल्कुल आसान भाषा में उपलब्ध कराए जाते हैं।</p>
+    <p class="footer-info">यह एक आधुनिक ऑनलाइन एजुकेशनल प्लेटफॉर्म है, जहाँ छात्रों को बेहतरीन विज्ञान और अन्य विषयों के नोट्स और स्टडी material बिल्कुल आसान भाषा में उपलब्ध कराए जाते हैं।</p>
     <div class="footer-address">
-        © Help Through Science Guruji | एड्रेस:  भारत | Powered by PANWAR GROUP
-    </div>
-</footer>
-<script>
-    // ⚠️ आपका बिल्कुल नया वाला Google Web App URL यहाँ पहले से सुरक्षित सेट है
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbweciG9pWgS1DUJv8DRd3Qs5ho29CqAwIEGQO2uLenbwBJrY-5nyfb7mR03xsLd4TmS/exec';
+        © Help Through Science Guruji | एड्रेस: भारत | Powered by PANWAR GROUP<script>
+    // ⚠️ आपका बिल्कुल नया फिक्स Google Web App URL यहाँ पहले से सेट है
+    const scriptURL = 'https://google.com';
 
     // वेबसाइट के डिब्बों का डेटा रखने के लिए स्टोर
     let notesDataStore = {};
@@ -463,7 +460,11 @@
     window.openCategory = function(categoryName) {
         // आपकी सुविधा के लिए कोडिंग नामों को शीट की केटेगरी से 100% मैच करना
         let key = categoryName; 
-        
+        if (categoryName === 'class_notes') key = 'class_notes';
+        if (categoryName === 'study_material') key = 'study_material';
+        if (categoryName === 'downloads') key = 'downloads';
+        if (categoryName === 'suggested_notes') key = 'suggested_notes';
+
         const item = notesDataStore[key];
         if (item && item.link) {
             const popupTitle = document.getElementById('popupTitle');
@@ -492,7 +493,7 @@
                 let fileId = "";
                 const match = item.link.match(/\/d\/([^/]+)/);
                 if (match && match) {
-                    fileId = match[1];
+                    fileId = match;
                 }
 
                 if (fileId) {
@@ -508,7 +509,7 @@
                     return;
                 }
             } else {
-                // ✍️ यह टेक्स्ट मोड है: PDF और डाउनलोड बटन छुपाओ, सीधे शब्द दिखाओ
+                // ✍️ यह टेक्स्ट मोड है: PDF और下載 बटन छुपाओ, सीधे शब्द दिखाओ
                 pdfViewer.style.display = 'none';
                 popupDownloadBtn.style.display = 'none';
                 textDiv.style.display = 'block';
@@ -604,3 +605,6 @@
 
 </body>
 </html>
+
+    </div>
+</footer>
