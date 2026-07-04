@@ -210,6 +210,7 @@
     </div>
     <div class="menu-dots">⋮</div>
 </header>
+
 <section class="students-section">
     <h2 class="section-title">Hello, Dear Students</h2>
     <p class="section-subtitle">Learn anytime, anywhere with us</p>
@@ -253,81 +254,64 @@
         <input type="text" id="name" placeholder="Your Name" required style="padding: 12px 15px; border: 1px solid #cbd5e1; border-radius: 8px; outline: none;">
         <input type="email" id="email" placeholder="Your Email" required style="padding: 12px 15px; border: 1px solid #cbd5e1; border-radius: 8px; outline: none;">
         <textarea id="message" placeholder="Your Message" rows="5" required style="padding: 12px 15px; border: 1px solid #cbd5e1; border-radius: 8px; outline: none; resize: none;"></textarea>
-        <button type="submit" style="background-color: #8B1E1E; color: white; border: none; padding: 12px; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer;">Send Message</button>
+        <button type="submit" id="submitBtn" style="background-color: #8B1E1E; color: white; border: none; padding: 12px; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer;">Send Message</button>
     </form>
 </section>
+<script>
+    // आपका असली Google Web App URL यहाँ जुड़ चुका है
+    const scriptURL = 'https://google.com';
 
-<!-- आपके असली फ़ायरबेस क्रेडेंशियल्स के साथ 100% वर्किंग मॉड्यूल स्क्रिप्ट -->
-<script type="module">
-    import { initializeApp } from "https://gstatic.com";
-    import { getFirestore, collection, addDoc, getDocs, query, where } from "https://gstatic.com";
-
-    // आपके असली क्रेडेंशियल्स (पूरी तरह फिक्स किए हुए)
-    const firebaseConfig = {
-        apiKey: "AIzaSyCyac4YWyEu6ynewYyJnIF3ftfjOYAU_w4",
-        authDomain: "panwar-b2450.firebaseapp.com",
-        databaseURL: "https://panwar-b2450-default-rtdb.asia-southeast1.firebasedatabase.app",
-        projectId: "panwar-b2450",
-        storageBucket: "panwar-b2450.firebasestorage.app",
-        messagingSenderId: "588819582908",
-        appId: "1:588819582908:web:24d0cfaab6ec207607e5b9",
-        measurementId: "G-8VF4JRTPW7"
+    // 1. Google Drive / Sheet से नोट्स खोलने के लिए फंक्शन (जिसे हम अगले स्टेप में सेटअप करेंगे)
+    window.openCategory = function(categoryName) {
+        alert("इस केटेगरी (" + categoryName + ") को हम सीधे Google Drive या Sheet से लिंक करेंगे, जैसा आप आगे बोलेंगे।");
     };
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-
-    window.openCategory = async function(categoryName) {
-        try {
-            const notesRef = collection(db, "notes");
-            const q = query(notesRef, where("category", "==", categoryName));
-            const snapshot = await getDocs(q);
-            
-            if (snapshot.empty) {
-                alert("इस केटेगरी में एडमिन द्वारा अभी कोई फाइल अपलोड नहीं की गई है!");
-                return;
-            }
-
-            snapshot.forEach((doc) => {
-                const noteData = doc.data();
-                if(noteData.fileUrl) {
-                    window.open(noteData.fileUrl, '_blank');
-                } else {
-                    alert("फाइल का link नहीं मिला!");
-                }
-            });
-        } catch (error) {
-            console.error(error);
-            alert("डेटा लोड करने में समस्या आई।");
-        }
-    };
-
+    // 2. कांटेक्ट फॉर्म को गूगल शीट और ईमेल से जोड़ने का स्क्रिप्ट
     const contactForm = document.getElementById('contactForm');
+    const submitBtn = document.getElementById('submitBtn');
+
     if (contactForm) {
         contactForm.addEventListener('submit', async (e) => {
             e.preventDefault();
+
+            // बटन को डिसेबल करना ताकि छात्र बार-बार क्लिक न करे
+            submitBtn.disabled = true;
+            submitBtn.innerText = "Sending Message...";
 
             const uName = document.getElementById('name').value;
             const uEmail = document.getElementById('email').value;
             const uMsg = document.getElementById('message').value;
 
             try {
-                await addDoc(collection(db, "messages"), {
-                    name: uName,
-                    email: uEmail,
-                    message: uMsg,
-                    time: new Date()
+                // डेटा को Google Apps Script URL पर भेजना
+                await fetch(scriptURL, {
+                    method: 'POST',
+                    mode: 'no-cors', // CORS समस्या से बचने के लिए सबसे सुरक्षित तरीका
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        name: uName,
+                        email: uEmail,
+                        message: uMsg
+                    })
                 });
 
+                // सफ़ल संदेश दिखाना
                 alert("Success! Your message has been sent successfully. Science Guruji team will contact you soon.");
                 contactForm.reset();
             } catch (error) {
-                console.error(error);
+                console.error('Error!', error.message);
                 alert("मैसेज नहीं भेजा जा सका, कृपया दोबारा कोशिश करें।");
+            } finally {
+                // बटन को वापस सामान्य स्थिति में लाना
+                submitBtn.disabled = false;
+                submitBtn.innerText = "Send Message";
             }
         });
     }
 
+    // 3. थ्री-डॉट्स मेनू का क्लिक हैंडलर
     const menuDots = document.querySelector('.menu-dots');
     if (menuDots) {
         menuDots.addEventListener('click', () => {
