@@ -27,7 +27,7 @@
             flex-direction: column;
         }
 
-        /* 1. ऊपर का आधुनिक हेडर (Navbar) स्टाइलिंग (3-dots Removed) */
+        /* ऊपर का आधुनिक हेडर (Navbar) स्टाइलिंग (3-dots Removed) */
         .navbar {
             display: flex;
             align-items: center;
@@ -418,155 +418,120 @@
 
 <!-- मुकेश पंवार स्पेशल प्रीमियम फूटर (साइट का अंत) -->
 <footer class="site-footer">
-    <div class="footer-welcome">THANKS❤️</div>
+    <div class="footer-welcome">THANKS</div>
     <p class="footer-info">यह एक आधुनिक ऑनलाइन एजुकेशनल प्लेटफॉर्म है, जहाँ छात्रों को बेहतरीन विज्ञान और अन्य विषयों के नोट्स और स्टडी मटेरियल बिल्कुल आसान भाषा में उपलब्ध कराए जाते हैं।</p>
     <div class="footer-address">
-        © Help Through Science Guruji | एड्रेस: भारत | Powered by PANWAR GROUP
+        © Help Through Science Guruji | एड्रेस:  भारत | Powered by PANWAR GROUP
     </div>
 </footer>
 <script>
-<script>
-    // ⚠️ यहाँ अपना नया वाला लिंक पेस्ट करें जो अभी स्टेप 2 के न्यू डिप्लॉयमेंट से मिला है
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbxDKbiTwVhrcT_zrf_aypye-CaVgXWB7GVB6V2zbGdQWi-nm25rmqFDPP3iQsXHYPl0/exec';
+    // ⚠️ आपका बिल्कुल नया वाला Google Web App URL यहाँ पहले से सुरक्षित सेट है
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbweciG9pWgS1DUJv8DRd3Qs5ho29CqAwIEGQO2uLenbwBJrY-5nyfb7mR03xsLd4TmS/exec';
 
-    let allNotesData = {};
+    // वेबसाइट के डिब्बों का डेटा रखने के लिए स्टोर
+    let notesDataStore = {};
 
-    // 1. वेबसाइट लोड होते ही गूगल शीट से सभी जगह का डेटा एक साथ लाना
+    // 1. वेबसाइट लोड होते ही गूगल शीट की सभी शीट्स से लाइव डेटा फ़ेच करना
     async function loadLiveNotes() {
         try {
+            // बिना किसी कस्टम हेडर के एकदम सेफ़ गेट रिक्वेस्ट
             const response = await fetch(`${scriptURL}?action=getNotes`);
-            allNotesData = await response.json();
-            console.log("सभी शीट्स का डेटा लोड हुआ:", allNotesData);
+            const data = await response.json();
+            
+            // डेटा को मैप करना (प्रत्येक श्रेणी के पहले आइटम को सीधे उठाना)
+            data.forEach(item => {
+                notesDataStore[item.category] = {
+                    link: item.driveLink,
+                    title: item.title || "Study Material"
+                };
+                
+                // वेबसाइट के डिब्बे पर सीधे हिंदी टाइटल नाम अपडेट करना
+                const descElement = document.getElementById(`desc_${item.category}`);
+                if (descElement && item.title) {
+                    descElement.innerText = item.title;
+                }
+            });
+            console.log("सभी डिब्बों का डेटा सफलतापूर्वक सिंक हुआ:", notesDataStore);
         } catch (error) {
-            console.error("डेटा लोड करने में विफल:", error);
+            console.error("गूगल शीट से डेटा लोड करने में विफल:", error);
         }
     }
 
     window.addEventListener('DOMContentLoaded', loadLiveNotes);
 
-    // 2. डिब्बे पर क्लिक करने पर सही अलग शीट की लिस्ट दिखाने वाला फंक्शन
+    // 2. प्रत्येक डिब्बे पर टैप करते ही सीधे पहले डिब्बे की तरह नोट्स खोलने वाला फंक्शन
     window.openCategory = function(categoryName) {
-        let filteredItems = [];
+        // आपकी सुविधा के लिए कोडिंग नामों को शीट की केटेगरी से 100% मैच करना
+        let key = categoryName; 
         
-        // 🔍 डिब्बे के अनुसार सही अलग-अलग शीट्स का डेटा मैप करना
-        if (categoryName === 'class_notes') {
-            // अगर पुराना डेटा NotesData में है, तो वहां से सिर्फ class_notes छांटना
-            const oldNotes = allNotesData["NotesData"] || [];
-            filteredItems = oldNotes.filter(item => item.category === categoryName);
-        } 
-        else if (categoryName === 'study_material') {
-            filteredItems = allNotesData["StudyMaterial"] || [];
-        } 
-        else if (categoryName === 'downloads') {
-            filteredItems = allNotesData["Downloads"] || [];
-        } 
-        else if (categoryName === 'suggested_notes') {
-            filteredItems = allNotesData["SuggestedNotes"] || [];
-        }
-        
-        const popupTitle = document.getElementById('popupTitle');
-        const pdfViewer = document.getElementById('pdfViewer');
-        const popupDownloadBtn = document.getElementById('popupDownloadBtn');
-        
-        pdfViewer.style.display = 'none';
-        pdfViewer.src = '';
-        popupDownloadBtn.style.display = 'none';
-        
-        let textDiv = document.getElementById('popupTextNotes');
-        if (!textDiv) {
-            textDiv = document.createElement('div');
-            textDiv.id = 'popupTextNotes';
-            textDiv.style.color = '#0f172a';
-            textDiv.style.fontSize = '16px';
-            textDiv.style.lineHeight = '1.8';
-            textDiv.style.whiteSpace = 'pre-wrap';
-            textDiv.style.maxHeight = '450px';
-            textDiv.style.overflowY = 'auto';
-            textDiv.style.padding = '10px 5px';
-            pdfViewer.after(textDiv);
-        }
-        textDiv.innerHTML = ''; 
-
-        if (filteredItems.length > 0) {
-            popupTitle.innerText = "उपलब्ध टॉपिक्स की सूची (चुनें)";
+        const item = notesDataStore[key];
+        if (item && item.link) {
+            const popupTitle = document.getElementById('popupTitle');
+            const pdfViewer = document.getElementById('pdfViewer');
+            const popupDownloadBtn = document.getElementById('popupDownloadBtn');
             
-            const listContainer = document.createElement('div');
-            listContainer.style.display = 'flex';
-            listContainer.style.flexDirection = 'column';
-            listContainer.style.gap = '12px';
-            listContainer.style.marginTop = '15px';
+            popupTitle.innerText = item.title;
 
-            filteredItems.forEach((item) => {
-                const btn = document.createElement('button');
-                btn.innerText = item.title;
-                btn.style.width = '100%';
-                btn.style.padding = '14px 20px';
-                btn.style.background = 'rgba(15, 23, 42, 0.05)';
-                btn.style.border = '1px solid rgba(15, 23, 42, 0.1)';
-                btn.style.borderRadius = '12px';
-                btn.style.color = '#0f172a';
-                btn.style.fontSize = '15px';
-                btn.style.fontWeight = '700';
-                btn.style.textAlign = 'left';
-                btn.style.cursor = 'pointer';
-                btn.style.transition = 'all 0.2s';
+            // पहले से बने हुए टेक्स्ट बॉक्स को ढूँढना या नया बनाना
+            let textDiv = document.getElementById('popupTextNotes');
+            if (!textDiv) {
+                textDiv = document.createElement('div');
+                textDiv.id = 'popupTextNotes';
+                textDiv.style.color = '#0f172a';
+                textDiv.style.fontSize = '16px';
+                textDiv.style.lineHeight = '1.8';
+                textDiv.style.whiteSpace = 'pre-wrap';
+                textDiv.style.maxHeight = '450px';
+                textDiv.style.overflowY = 'auto';
+                textDiv.style.padding = '10px 5px';
+                pdfViewer.after(textDiv);
+            }
+
+            // 🔍 चेक करना कि गूगल ड्राइव का लिंक है या सीधे शब्द लिखे हैं
+            if (item.link.includes('://google.com')) {
+                let fileId = "";
+                const match = item.link.match(/\/d\/([^/]+)/);
+                if (match && match) {
+                    fileId = match[1];
+                }
+
+                if (fileId) {
+                    // 📄 यह PDF मोड है: शब्द बॉक्स छुपाओ, PDF दिखाओ
+                    textDiv.style.display = 'none';
+                    pdfViewer.style.display = 'block';
+                    popupDownloadBtn.style.display = 'inline-block';
+                    
+                    pdfViewer.src = `https://://google.com/file/d/${fileId}/preview?rm=minimal`;
+                    popupDownloadBtn.href = `https://://google.com/uc?export=download&id=${fileId}`;
+                } else {
+                    window.open(item.link, '_blank');
+                    return;
+                }
+            } else {
+                // ✍️ यह टेक्स्ट मोड है: PDF और डाउनलोड बटन छुपाओ, सीधे शब्द दिखाओ
+                pdfViewer.style.display = 'none';
+                popupDownloadBtn.style.display = 'none';
+                textDiv.style.display = 'block';
                 
-                btn.onmouseover = () => { btn.style.background = 'linear-gradient(135deg, #ff4e50, #f9d423)'; btn.style.color = '#0f172a'; };
-                btn.onmouseout = () => { btn.style.background = 'rgba(15, 23, 42, 0.05)'; btn.style.color = '#0f172a'; };
-                
-                btn.onclick = () => { showActualContent(item); };
-                listContainer.appendChild(btn);
-            });
-            
-            textDiv.appendChild(listContainer);
+                textDiv.innerText = item.link; // यहाँ शीट से सीधे लिखे शब्द आ जायेंगे
+            }
+
+            // डिब्बा स्क्रीन पर दिखाना
             document.getElementById('notesPopup').style.display = 'flex';
         } else {
-            alert("इस श्रेणी में अभी कोई नोट्स उपलब्ध नहीं हैं।");
+            alert("इस केटेगरी में अभी कोई नोट्स अपलोड नहीं किए गए हैं या श्रेणी नाम गलत है।");
         }
     };
 
-    // 3. असली नोट्स दिखाने वाला फंक्शन
-    function showActualContent(item) {
-        const popupTitle = document.getElementById('popupTitle');
-        const pdfViewer = document.getElementById('pdfViewer');
-        const popupDownloadBtn = document.getElementById('popupDownloadBtn');
-        const textDiv = document.getElementById('popupTextNotes');
-        
-        popupTitle.innerText = item.title;
-        textDiv.innerHTML = ''; 
-
-        let contentLink = item.driveLink || item.link || "";
-
-        if (contentLink.includes('://google.com')) {
-            let fileId = "";
-            const match = contentLink.match(/\/d\/([^/]+)/);
-            if (match && match) { fileId = match; }
-
-            if (fileId) {
-                textDiv.style.display = 'none';
-                pdfViewer.style.display = 'block';
-                popupDownloadBtn.style.display = 'inline-block';
-                pdfViewer.src = `https://://google.com/file/d/${fileId}/preview?rm=minimal`;
-                popupDownloadBtn.href = `https://://google.com/uc?export=download&id=${fileId}`;
-            } else {
-                window.open(contentLink, '_blank');
-            }
-        } else {
-            pdfViewer.style.display = 'none';
-            popupDownloadBtn.style.display = 'none';
-            textDiv.style.display = 'block';
-            textDiv.innerText = contentLink; 
-        }
-    }
-
+    // पॉपअप बंद करने का सही क्लीनर फंक्शन
     window.closeNotesPopup = function() {
         document.getElementById('notesPopup').style.display = 'none';
         document.getElementById('pdfViewer').src = '';
         const textDiv = document.getElementById('popupTextNotes');
-        if (textDiv) textDiv.innerHTML = '';
+        if (textDiv) textDiv.innerText = '';
     };
 
-    // 4. लाइव सर्च बार फ़िल्टर
+    // 3. लाइव सर्च बार फ़िल्टर
     const searchInput = document.getElementById('searchInput');
     const noResultBox = document.getElementById('noResultBox');
 
@@ -588,17 +553,22 @@
                 }
             });
 
-            if (matchCount === 0) { noResultBox.style.display = 'block'; } else { noResultBox.style.display = 'none'; }
+            if (matchCount === 0) {
+                noResultBox.style.display = 'block';
+            } else {
+                noResultBox.style.display = 'none';
+            }
         });
     }
 
-    // 5. कांटेक्ट फॉर्म स्क्रिप्ट
+    // 4. कांटेक्ट फॉर्म को गूगल शीट से जोड़ने का फ़िक्स स्क्रिप्ट
     const contactForm = document.getElementById('contactForm');
     const submitBtn = document.getElementById('submitBtn');
 
     if (contactForm) {
         contactForm.addEventListener('submit', async (e) => {
             e.preventDefault();
+
             submitBtn.disabled = true;
             submitBtn.innerText = "Sending Message...";
 
@@ -613,10 +583,16 @@
             formData.append('message', uMsg);
 
             try {
-                await fetch(scriptURL, { method: 'POST', body: formData, mode: 'no-cors' });
-                alert("Success! Your message has been sent successfully.");
+                await fetch(scriptURL, {
+                    method: 'POST',
+                    body: formData,
+                    mode: 'no-cors' // सेफ़ नो-कोर्स सबमिशन
+                });
+
+                alert("Success! Your message has been sent successfully. Science Guruji team will contact you soon.");
                 contactForm.reset();
             } catch (error) {
+                console.error('Error!', error.message);
                 alert("मैसेज नहीं भेजा जा सका, कृपया दोबारा कोशिश करें।");
             } finally {
                 submitBtn.disabled = false;
@@ -625,3 +601,6 @@
         });
     }
 </script>
+
+</body>
+</html>
