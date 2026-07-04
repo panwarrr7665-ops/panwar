@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Science Guruji</title>
+    
+    <style>
+        /* पूरे एडमिन पैनल का प्रीमियम डार्क थीम सेटअप */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+        }
+        body {
+            background-color: #0f172a; /* प्रीमियम डार्क बैकग्राउंड */
+            color: #f8fafc;
+            min-height: 100vh;
+            background-image: linear-gradient(rgba(15, 23, 42, 0.95), rgba(15, 23, 42, 0.95)), url('https://unsplash.com');
+            background-attachment: fixed;
+            background-size: cover;
+            background-position: center;
+        }
+
+        /* 1. सुरक्षित लॉगिन स्क्रीन डिज़ाइन (ग्लास इफ़ेक्ट) */
+        .login-container {
+            max-width: 420px;
+            margin: 120px auto;
+            padding: 50px 35px;
+            background: rgba(30, 41, 59, 0.45);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+            text-align: center;
+        }
+        .login-title {
+            font-size: 26px;
+            font-weight: 800;
+            margin-bottom: 30px;
+            background: linear-gradient(135deg, #ff4e50, #f9d423);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .login-input {
+            width: 100%;
+            padding: 14px 18px;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: #ffffff;
+            margin-bottom: 25px;
+            outline: none;
+            font-size: 16px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        .login-input:focus {
+            border-color: #f9d423;
+            box-shadow: 0 0 15px rgba(249, 212, 35, 0.2);
+        }
+        .login-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #ff4e50, #f9d423);
+            color: #0f172a;
+            border: none;
+            padding: 14px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(249, 212, 35, 0.2);
+            transition: all 0.3s;
+        }
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(249, 212, 35, 0.3);
+        }
+
+        /* 2. मुख्य एडमिन डैशबोर्ड लेआउट */
+        .dashboard {
+            display: none; /* लॉगिन के बाद जावास्क्रिप्ट से दिखेगा */
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 25px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            margin-bottom: 40px;
+        }
+        .admin-title {
+            font-size: 30px;
+            font-weight: 800;
+            background: linear-gradient(to right, #ffffff, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #f1f5f9;
+            padding: 10px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        .logout-btn:hover {
+            background: #ef4444;
+            color: white;
+            border-color: #ef4444;
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+        }
+
+        /* टैब बटन सिस्टम */
+        .tabs {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 35px;
+        }
+        .tab-btn {
+            padding: 12px 24px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 700;
+            color: #94a3b8;
+            font-size: 15px;
+            transition: all 0.3s;
+        }
+        .tab-btn.active {
+            background: #ffffff;
+            color: #0f172a;
+            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.15);
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1. सुरक्षित लॉगिन स्क्रीन -->
+    <div class="login-container" id="loginScreen">
+        <h2 class="login-title">🔬 Science Guruji Admin Login</h2>
+        <input type="password" id="adminPassword" class="login-input" placeholder="अपना सीक्रेट पासवर्ड डालें" required>
+        <button onclick="checkPassword()" class="login-btn">लॉगिन करें</button>
+    </div>
+
+    <!-- 2. मुख्य एडमिन डैशबोर्ड (लॉगिन के बाद दिखेगा) -->
+    <div class="dashboard" id="adminDashboard">
+        <header class="admin-header">
+            <h1 class="admin-title">🛠️ Admin Control Center</h1>
+            <button onclick="logout()" class="logout-btn">लॉगआउट</button>
+        </header>
+
+        <!-- टैब स्विच करने के बटन्स -->
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('messagesTab', this)">📩 छात्रों के मैसेज देखें</button>
+            <button class="tab-btn" onclick="switchTab('notesTab', this)">📁 4 डिब्बों की जानकारी बदलें</button>
+        </div>
+
+        <!-- सेक्शन 1: छात्रों के मैसेज देखने की टेबल (ग्लास डिज़ाइन) -->
+        <div id="messagesTab" class="tab-content active">
+            <div style="background: rgba(30, 41, 59, 0.45); border: 1px solid rgba(255, 255, 255, 0.08); padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); overflow-x: auto;">
+                <h3 style="color: #ffffff; margin-bottom: 25px; font-weight: 800; font-size: 20px;">📩 आए हुए संदेशों की सूची:</h3>
+                <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 14px; min-width: 600px;">
+                    <thead>
+                        <tr style="background-color: rgba(15, 23, 42, 0.6); color: #94a3b8; border-bottom: 1px solid rgba(255, 255, 255, 0.1);">
+                            <th style="padding: 14px; font-weight: 700;">समय (Timestamp)</th>
+                            <th style="padding: 14px; font-weight: 700;">नाम (Name)</th>
+                            <th style="padding: 14px; font-weight: 700;">ईमेल (Email)</th>
+                            <th style="padding: 14px; font-weight: 700;">मैसेज (Message)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="messagesTableBody">
+                        <tr>
+                            <td colspan="4" style="padding: 25px; text-align: center; color: #94a3b8;">मैसेज लोड हो रहे हैं, कृपया प्रतीक्षा करें...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- सेक्शन 2: चारों बॉक्स की जानकारी लाइव बदलने का फॉर्म -->
+        <div id="notesTab" class="tab-content">
+            <div style="max-width: 600px; background: rgba(30, 41, 59, 0.45); border: 1px solid rgba(255, 255, 255, 0.08); padding: 40px 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
+                <h3 style="color: #ffffff; margin-bottom: 25px; font-weight: 800; font-size: 20px;">📁 किसी भी डिब्बे की जानकारी लाइव अपडेट करें:</h3>
+                
+                <form id="uploadNotesForm" style="display: flex; flex-direction: column; gap: 20px;">
+                    <div>
+                        <label style="display: block; font-weight: 700; margin-bottom: 8px; color: #cbd5e1; font-size: 14px;">वेबसाइट का डिब्बा (Category) चुनें:</label>
+                        <select id="noteCategory" required style="width: 100%; padding: 14px 18px; background: #1e293b; border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 12px; color: #ffffff; outline: none; font-size: 15px;">
+                            <option value="class_notes">Class Notes & PDF (ऑरेंज बॉक्स)</option>
+                            <option value="study_material">Other Study Material (ब्लू बॉक्स)</option>
+                            <option value="downloads">Downloads (स्यान बॉक्स)</option>
+                            <option value="suggested_notes">Suggested Notes (गोल्ड बॉक्स)</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label style="display: block; font-weight: 700; margin-bottom: 8px; color: #cbd5e1; font-size: 14px;">डिब्बे का नया नाम या छोटा विवरण (New Description):</label>
+                        <input type="text" id="noteTitle" placeholder="उदा: Class 10 Science Chapter 1 Notes Available" required style="width: 100%; padding: 14px 18px; background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; color: #ffffff; outline: none; font-size: 15px;">
+                    </div>
+
+                    <div>
+                        <label style="display: block; font-weight: 700; margin-bottom: 8px; color: #cbd5e1; font-size: 14px;">Google Drive PDF / Folder लिंक:</label>
+                        <input type="url" id="noteDriveLink" placeholder="https://google.com..." required style="width: 100%; padding: 14px 18px; background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; color: #ffffff; outline: none; font-size: 15px;">
+                    </div>
+
+                    <button type="submit" id="updateBtn" style="background: linear-gradient(135deg, #ff4e50, #f9d423); color: #0f172a; border: none; padding: 14px; border-radius: 12px; font-size: 16px; font-weight: 800; cursor: pointer; box-shadow: 0 4px 15px rgba(249, 212, 35, 0.2); transition: all 0.3s; margin-top: 10px;">वेबसाइट पर लाइव अपडेट करें</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+<script>
+    // 1. अपनी पसंद का सीक्रेट एडमिन पासवर्ड यहाँ सेट करें
+    const SECRET_PASSWORD = "admin123"; 
+
+    // 2. आपका वही पुराना असली Google Web App URL यहाँ लगा हुआ है
+    const scriptURL = 'https://google.com';
+
+    // लॉगिन चेक करने का फंक्शन
+    function checkPassword() {
+        const passwordInput = document.getElementById('adminPassword').value;
+        if (passwordInput === SECRET_PASSWORD) {
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('adminDashboard').style.display = 'block';
+            loadMessages(); // लॉगिन होते ही संदेश लोड करें
+        } else {
+            alert("गलत पासवर्ड! कृपया दोबारा कोशिश करें।");
+        }
+    }
+
+    // एंटर की (Enter Key) दबाने पर भी लॉगिन हो जाए
+    document.getElementById('adminPassword').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') checkPassword();
+    });
+
+    // लॉगआउट फंक्शन
+    function logout() {
+        document.getElementById('adminPassword').value = '';
+        document.getElementById('adminDashboard').style.display = 'none';
+        document.getElementById('loginScreen').style.display = 'block';
+    }
+
+    // टैब स्विच करने का फंक्शन
+    function switchTab(tabId, btn) {
+        document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        
+        document.getElementById(tabId).classList.add('active');
+        btn.classList.add('active');
+
+        if(tabId === 'messagesTab') loadMessages();
+    }
+
+    // गूगल शीट से छात्रों के मैसेज लोड करके टेबल में दिखाने का फंक्शन
+    async function loadMessages() {
+        const tbody = document.getElementById('messagesTableBody');
+        tbody.innerHTML = '<tr><td colspan="4" style="padding: 25px; text-align: center; color: #94a3b8;">मैसेज लोड हो रहे हैं, कृपया प्रतीक्षा करें...</td></tr>';
+        
+        try {
+            const response = await fetch(`${scriptURL}?action=getMessages`);
+            const data = await response.json();
+            
+            if (data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" style="padding: 25px; text-align: center; color: #94a3b8;">अभी तक कोई मैसेज नहीं आया है।</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = '';
+            // नए मैसेज सबसे ऊपर दिखाने के लिए लिस्ट को उल्टा (Reverse) करना
+            data.reverse().forEach(row => {
+                const tr = document.createElement('tr');
+                tr.style.borderBottom = '1px solid rgba(255, 255, 255, 0.05)';
+                
+                const formattedDate = row.timestamp ? new Date(row.timestamp).toLocaleString('hi-IN') : 'N/A';
+                
+                tr.innerHTML = `
+                    <td style="padding: 14px; color: #94a3b8;">${formattedDate}</td>
+                    <td style="padding: 14px; font-weight: 600; color: #ffffff;">${row.name || ''}</td>
+                    <td style="padding: 14px; color: #60a5fa;">${row.email || ''}</td>
+                    <td style="padding: 14px; color: #cbd5e1;">${row.message || ''}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        } catch (error) {
+            console.error(error);
+            tbody.innerHTML = '<tr><td colspan="4" style="padding: 25px; text-align: center; color: #f87171;">मैसेज लोड करने में समस्या आई। कृपया रिफ्रेश करें।</td></tr>';
+        }
+    }
+
+    // एडमिन पैनल से नोट्स और ड्राइव लिंक गूगल शीट में अपडेट करने का स्क्रिप्ट
+    const uploadNotesForm = document.getElementById('uploadNotesForm');
+    const updateBtn = document.getElementById('updateBtn');
+
+    if (uploadNotesForm) {
+        uploadNotesForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            updateBtn.disabled = true;
+            updateBtn.innerText = "अपडेट हो रहा है...";
+
+            const category = document.getElementById('noteCategory').value;
+            const title = document.getElementById('noteTitle').value;
+            const driveLink = document.getElementById('noteDriveLink').value;
+
+            try {
+                await fetch(scriptURL, {
+                    method: 'POST',
+                    mode: 'no-cors',
