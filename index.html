@@ -126,7 +126,6 @@
             margin-bottom: 60px;
             font-weight: 500;
         }
-
         /* चारों BOX को एक लाइन में सेट करने के लिए ग्रिड */
         .cards-container {
             display: grid;
@@ -201,6 +200,7 @@
             margin-bottom: 30px;
             min-height: 45px;
         }
+
         /* Know More प्रीमियम बटन स्टाइलिंग */
         .know-more {
             font-size: 14px;
@@ -220,7 +220,7 @@
             box-shadow: 0 4px 15px rgba(255,255,255,0.2);
         }
 
-        /* 🆕 सर्च रिजल्ट न मिलने पर दिखने वाला सुंदर डिब्बा */
+        /* सर्च रिजल्ट न मिलने पर दिखने वाला सुंदर डिब्बा */
         .no-result-box {
             display: none;
             grid-column: 1 / -1;
@@ -244,7 +244,7 @@
             color: #cbd5e1;
         }
 
-        /* 🆕 पीडीएफ को बिल्कुल साफ लिखे हुए पन्ने जैसा दिखाने की स्टाइलिंग */
+        /* पीडीएफ और सीधे लिखे शब्दों को दिखाने वाला पॉपअप बॉक्स */
         .notes-popup {
             display: none;
             position: fixed;
@@ -286,7 +286,7 @@
             background: linear-gradient(135deg, #ff4e50, #f9d423); color: #0f172a; box-shadow: 0 4px 15px rgba(249, 212, 35, 0.2);
         }
 
-        /* 🆕 मुकेश पंवार स्पेशल प्रीमियम फूटर स्टाइलिंग */
+        /* मुकेश पंवार स्पेशल प्रीमियम फूटर स्टाइलिंग */
         .site-footer {
             margin-top: auto;
             background: rgba(30, 41, 59, 0.7);
@@ -383,19 +383,19 @@
             <a class="know-more text-gold">Know More</a>
         </div>
 
-        <!-- 🆕 सर्च रिजल्ट खाली होने पर संदेश देने वाला छुपा हुआ डिब्बा -->
+        <!-- सर्च रिजल्ट खाली होने पर संदेश देने वाला छुपा हुआ डिब्बा -->
         <div class="no-result-box" id="noResultBox">
             <div class="no-result-icon">⚠️</div>
             <div class="no-result-text">क्षमा करें, इसके बारे में अभी जानकारी उपलब्ध नहीं है।</div>
         </div>
     </div>
 </section>
-    <!-- 🆕 पीडीएफ व्यूअर का ग्लास पॉपअप डिब्बा -->
+
+<!-- पीडीएफ और सीधा टेक्स्ट दिखाने वाला पॉपअप बॉक्स स्ट्रक्चर -->
 <div id="notesPopup" class="notes-popup">
     <div class="popup-content">
         <span class="close-popup" onclick="closeNotesPopup()">&times;</span>
         <h3 id="popupTitle" style="font-size: 22px; font-weight: 800; margin-bottom: 5px;">Loading Notes...</h3>
-        <!-- rm=minimal ट्रिक के साथ गूगल ड्राइव को छुपा कर साफ़ टेक्स्ट पन्ने जैसा दिखाने वाला फ्रेम -->
         <iframe id="pdfViewer" class="pdf-frame" src=""></iframe>
         <div class="popup-btn-container">
             <a id="popupDownloadBtn" class="action-btn download-action-btn" href="#" target="_blank">Download Notes</a>
@@ -417,83 +417,14 @@
     </form>
 </section>
 
-<!-- 🆕 मुकेश पंवार स्पेशल प्रीमियम फूटर (साइट का अंत) -->
+<!-- मुकेश पंवार स्पेशल प्रीमियम फूटर (साइट का अंत) -->
 <footer class="site-footer">
-    <div class="footer-welcome">✨ मुकेश पंवार आपका स्वागत करता है साइट पर विजिट करने पर ✨</div>
+    <div class="footer-welcome">THANKS❤️</div>
     <p class="footer-info">यह एक आधुनिक ऑनलाइन एजुकेशनल प्लेटफॉर्म है, जहाँ छात्रों को बेहतरीन विज्ञान और अन्य विषयों के नोट्स और स्टडी मटेरियल बिल्कुल आसान भाषा में उपलब्ध कराए जाते हैं।</p>
     <div class="footer-address">
         © Help Through Science Guruji | एड्रेस: राजस्थान, भारत | Powered by Vercel & GitHub
     </div>
 </footer>
-
-<script>
-    // ⚠️ अपना असली Google Web App URL यहाँ 'https://google.com' की जगह पेस्ट करें
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbzsym6DpTrLH-Ivv8_EShc7DiKTC0td3sNz6ZS8wyQLXdTJqZCS5nsp40bq6zFR24j3/exec';
-
-    let notesDataStore = {};
-
-    // 1. वेबसाइट लोड होते ही गूगल शीट से नोट्स का लाइव डेटा फेच करना
-    async function loadLiveNotes() {
-        try {
-            const response = await fetch(`${scriptURL}?action=getNotes`);
-            const data = await response.json();
-            
-            data.forEach(item => {
-                notesDataStore[item.category] = {
-                    link: item.driveLink,
-                    title: item.title || "Study Material"
-                };
-                
-                const descElement = document.getElementById(`desc_${item.category}`);
-                if (descElement && item.title) {
-                    descElement.innerText = item.title;
-                }
-            });
-        } catch (error) {
-            console.error("नोट्स डेटा लोड करने में विफल:", error);
-            // टेस्टिंग के लिए डमी डेटा (यदि बैकएंड सेट न हो):
-            notesDataStore['class_notes'] = { link: 'https://google.com', title: 'विज्ञान कक्षा 10 नोट्स (Hindi)' };
-        }
-    }
-
-    window.addEventListener('DOMContentLoaded', loadLiveNotes);
-
-  <!-- 🆕 पीडीएफ व्यूअर का ग्लास पॉपअप डिब्बा -->
-<div id="notesPopup" class="notes-popup">
-    <div class="popup-content">
-        <span class="close-popup" onclick="closeNotesPopup()">&times;</span>
-        <h3 id="popupTitle" style="font-size: 22px; font-weight: 800; margin-bottom: 5px;">Loading Notes...</h3>
-        <!-- rm=minimal ट्रिक के साथ गूगल ड्राइव को छुपा कर साफ़ टेक्स्ट पन्ने जैसा दिखाने वाला फ्रेम -->
-        <iframe id="pdfViewer" class="pdf-frame" src=""></iframe>
-        <div class="popup-btn-container">
-            <a id="popupDownloadBtn" class="action-btn download-action-btn" href="#" target="_blank">Download Notes</a>
-        </div>
-    </div>
-</div>
-
-<!-- कांटेक्ट फॉर्म सेक्शन -->
-<section style="max-width: 600px; margin: 60px auto; padding: 40px 30px; background: rgba(30, 41, 59, 0.45); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); text-align: center; position: relative; z-index: 10;">
-    <h2 style="color: #ffffff; margin-bottom: 10px; font-size: 28px; font-weight: 800;">Contact Us</h2>
-    <p style="color: #94a3b8; margin-bottom: 30px; font-size: 15px; font-weight: 500;">If you have any questions, feel free to drop a message!</p>
-    
-    <form id="contactForm" style="display: flex; flex-direction: column; gap: 20px;">
-        <input type="text" id="name" placeholder="Your Name" required style="padding: 14px 18px; background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; color: #ffffff; outline: none; font-size: 15px; transition: all 0.3s;">
-        <input type="email" id="email" placeholder="Your Email" required style="padding: 14px 18px; background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; color: #ffffff; outline: none; font-size: 15px; transition: all 0.3s;">
-        <textarea id="message" placeholder="Your Message" rows="5" required style="padding: 14px 18px; background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; color: #ffffff; outline: none; font-size: 15px; resize: none; transition: all 0.3s;"></textarea>
-        
-        <button type="submit" id="submitBtn" style="background: linear-gradient(135deg, #ff4e50, #f9d423); color: #0f172a; border: none; padding: 14px; border-radius: 12px; font-size: 16px; font-weight: 800; cursor: pointer; box-shadow: 0 4px 15px rgba(249, 212, 35, 0.2); transition: all 0.3s;">Send Message</button>
-    </form>
-</section>
-
-<!-- 🆕 मुकेश पंवार स्पेशल प्रीमियम फूटर (साइट का अंत) -->
-<footer class="site-footer">
-    <div class="footer-welcome">✨ मुकेश पंवार आपका स्वागत करता है साइट पर विजिट करने पर ✨</div>
-    <p class="footer-info">यह एक आधुनिक ऑनलाइन एजुकेशनल प्लेटफॉर्म है, जहाँ छात्रों को बेहतरीन विज्ञान और अन्य विषयों के नोट्स और स्टडी मटेरियल बिल्कुल आसान भाषा में उपलब्ध कराए जाते हैं।</p>
-    <div class="footer-address">
-        © Help Through Science Guruji | एड्रेस: राजस्थान, भारत | Powered by Vercel & GitHub
-    </div>
-</footer>
-
 <script>
     // ⚠️ अपना असली Google Web App URL यहाँ 'https://google.com' की जगह पेस्ट करें
     const scriptURL = 'https://google.com';
@@ -507,6 +438,7 @@
             const data = await response.json();
             
             data.forEach(item => {
+                // पूरा ऑब्जेक्ट स्टोर कर रहे हैं ताकि टाइटल और लिंक/टेक्स्ट दोनों मिल सकें
                 notesDataStore[item.category] = {
                     link: item.driveLink,
                     title: item.title || "Study Material"
@@ -526,7 +458,7 @@
 
     window.addEventListener('DOMContentLoaded', loadLiveNotes);
 
-    // 2. 🆕 पीडीएफ और सीधा टेक्स्ट (दोनों) दिखाने वाला स्मार्ट फंक्शन
+    // 2. पीडीएफ और सीधे शब्द (दोनों) को बिना ड्राइव नाम के दिखाने वाला स्मार्ट फंक्शन
     window.openCategory = function(categoryName) {
         const item = notesDataStore[categoryName];
         if (item && item.link) {
@@ -634,32 +566,6 @@
             e.preventDefault();
 
             submitBtn.disabled = true;
-            submitBtn.innerText = "Sending Message...";
-
-            const uName = document.getElementById('name').value;
-            const uEmail = document.getElementById('email').value;
-            const uMsg = document.getElementById('message').value;
-
-            const formData = new URLSearchParams();
-            formData.append('action', 'contactMessage');
-            formData.append('name', uName);
-            formData.append('email', uEmail);
-            formData.append('message', uMsg);
-
-            try {
-                await fetch(scriptURL, {
-                    method: 'POST',
-                    body: formData
-                });
-
-                alert("Success! Your message has been sent successfully. Science Guruji team will contact you soon.");
-                contactForm.reset();
-            } catch (error) {
-                console.error('Error!', error.message);
-                alert("मैसेज नहीं भेजा जा सका, कृपया दोबारा कोशिश करें।");
-            } finally {
-                submitBtn.disabled = false;
-
             submitBtn.innerText = "Sending Message...";
 
             const uName = document.getElementById('name').value;
