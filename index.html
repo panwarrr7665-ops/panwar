@@ -439,8 +439,36 @@
 </div>
 
 <script>
-    // 🔴 ⚠️ यहाँ 'YOUR_LINK_HERE' को हटाकर अपना वो Apps Script वाला लिंक पेस्ट कर दीजिए
+  <!-- 🟢 मुकेश पंवार स्पेशल - डायनामिक वर्ड-काउंटर शो मोर सेक्शन -->
+<div style="margin: 40px auto; max-width: 100%; width: 100%; padding: 0 5%; box-sizing: border-box; font-family: 'Inter', sans-serif;">
+    
+    <!-- 📖 मुख्य कंटेनर: यहाँ सारा टेक्स्ट टुकड़ों में लोड होगा -->
+    <div id="full-screen-wrapper" style="position: relative; width: 100%;">
+        
+        <!-- ✍️ यहाँ गूगल डॉक का डेटा टुकड़ों में जुड़ता चला जाएगा -->
+        <div id="apps-script-text" style="color: #cbd5e1; line-height: 1.8; font-size: 16px; text-align: left; width: 100%;">
+            <p style="color: #94a3b8; text-align: center;">🔄 कृपया प्रतीक्षा करें, लाइव नोट्स और डायग्राम लोड हो रहे हैं...</p>
+        </div>
+        
+        <!-- 🌗 नीचे से हल्का धुंधला इफ़ेक्ट (सिर्फ तब दिखेगा जब और पेज बाकी होंगे) -->
+        <div id="apps-script-fade" style="position: absolute; bottom: 0; left: 0; width: 100%; height: 70px; background: linear-gradient(transparent, #0f172a); pointer-events: none; display: none;"></div>
+    </div>
+
+    <!-- 🔄 डायनामिक कंट्रोल बटन (यह हर 300 शब्द पर नया पेज खोलेगा) -->
+    <div style="text-align: center; margin-top: 30px;">
+        <button id="appsScriptBtn" onclick="showNextPageOfBook()" style="background: linear-gradient(135deg, #ff4e50, #f9d423); color: #0f172a; border: none; padding: 12px 35px; font-size: 15px; font-weight: 700; border-radius: 50px; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(249, 212, 35, 0.3); display: none;">
+            Show More 👇 (Load Next Page)
+        </button>
+    </div>
+</div>
+
+<script>
+    // 🔴 ⚠️ यहाँ अपना Apps Script वाला लिंक पेस्ट कर दीजिए
     const APPS_SCRIPT_WEB_URL = 'https://script.google.com/macros/s/AKfycbxHIR8KqNEqSpK3kfcPLpseQolCGV8oydS_w3ricyds5muFBL_ZHrOqUlHAnR6CBqXB/exec';
+
+    let allBookParagraphs = []; // गूगल डॉक के सारे पैराग्राफ यहाँ स्टोर होंगे
+    let currentParagraphIndex = 0; // अभी हम किस पैराग्राफ पर हैं
+    const WORDS_PER_PAGE = 300; // 🎯 एक बार में करीब कितने शब्दों का पेज दिखाना है
 
     async function loadTextFromAppsScript() {
         try {
@@ -450,44 +478,93 @@
             if (data && data.text_content) {
                 let originalText = data.text_content;
 
-                // 🔍 जादुई लॉजिक: [IMAGE: link] को असली सुन्दर रिस्पॉन्सिव डायग्राम में बदलना
-                let formattedHtml = originalText
-                    .replace(/\n/g, '<br>') 
-                    .replace(/\[IMAGE:\s*([^\]]+)\]/g, function(match, url) {
-                        return `<div style="text-align:center; margin:30px 0; width:100%;">
-                                    <img src="${url.trim()}" style="max-width: 100%; width: auto; height: auto; max-height: 550px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 30px rgba(0,0,0,0.4); display: block; margin: 0 auto;">
-                                    <p style="color: #94a3b8; font-size: 14px; font-style: italic; margin-top: 10px;">चित्र: विवरण से संबंधित डायग्राम</p>
-                                </div>`;
-                    });
+                // 🔍 [IMAGE: link] टैग्स को पहले ही असली HTML इमेज टैग्स में बदल देना
+                let textWithImages = originalText.replace(/\[IMAGE:\s*([^\]]+)\]/g, function(match, url) {
+                    return `</p><div style="text-align:center; margin:30px 0; width:100%;">
+                                <img src="${url.trim()}" style="max-width:100%; width:auto; height:auto; max-height:550px; border-radius:16px; border:1px solid rgba(255,255,255,0.1); box-shadow:0 10px 30px rgba(0,0,0,0.4); display:block; margin:0 auto;">
+                                <p style="color:#94a3b8; font-size:14px; font-style:italic; margin-top:10px;">चित्र: विवरण से संबंधित डायग्राम</p>
+                            </div><p>`;
+                });
 
-                // आपकी वेबसाइट के अंदर टेक्स्ट को मिक्स कर देना
-                document.getElementById('apps-script-text').innerHTML = formattedHtml;
-                document.getElementById('appsScriptBtn').style.display = 'inline-block';
+                // पूरे टेक्स्ट को पैराग्राफ्स (\n) के आधार पर टुकड़ों में बांटना
+                allBookParagraphs = textWithImages.split('\n').filter(p => p.trim() !== '');
+                
+                // स्क्रीन साफ करना और पहला पेज लोड करना
+                document.getElementById('apps-script-text').innerHTML = '';
+                currentParagraphIndex = 0;
+                
+                showNextPageOfBook(); // पहला 300 शब्दों का पेज दिखाओ
             }
         } catch (error) {
             console.error("डेटा लोड करने में एरर:", error);
-            document.getElementById('apps-script-text').innerHTML = "<p style='color:#ef4444; text-align:center;'>❌ नोट्स लोड नहीं हो सके। कृपया अपना Apps Script Link चेक करें।</p>";
+            document.getElementById('apps-script-text').innerHTML = "<p style='color:#ef4444; text-align:center;'>❌ नोट्स लोड नहीं हो सके।</p>";
         }
     }
+
+    // 🎯 यह जादुई फंक्शन शब्दों को गिनकर अगला 300 वर्ड का पेज जोड़ेगा
+    function showNextPageOfBook() {
+        let textContainer = document.getElementById('apps-script-text');
+        let btn = document.getElementById('appsScriptBtn');
+        let overlay = document.getElementById('apps-script-fade');
+        
+        let wordCountThisStep = 0;
+        let htmlToAppend = '';
+        let startParagraph = currentParagraphIndex;
+
+        // जब तक 300 शब्द पूरे न हों या पैराग्राफ खत्म न हों, तब तक टेक्स्ट जोड़ते जाओ
+        while (currentParagraphIndex < allBookParagraphs.length && wordCountThisStep < WORDS_PER_PAGE) {
+            let pText = allBookParagraphs[currentParagraphIndex];
+            
+            // शब्दों की गिनती करना (साधारण स्पेस काउंटर)
+            let wordsInP = pText.split(/\s+/).length;
+            wordCountThisStep += wordsInP;
+            
+            htmlToAppend += `<p style="margin-bottom:15px;">${pText}</p>`;
+            currentParagraphIndex++;
+        }
+
+        // वेबसाइट के अंदर नया पेज नीचे जोड़ना (पुरानी चीज़ें डिलीट नहीं होंगी, नीचे जुड़ती जाएंगी)
+        if (startParagraph === 0) {
+            textContainer.innerHTML = htmlToAppend;
+        } else {
+            // नए जोड़े गए कंटेंट का पहला एलिमेंट ढूंढने के लिए एक अस्थायी div
+            let tempDiv = document.createElement('div');
+            tempDiv.innerHTML = htmlToAppend;
+            textContainer.appendChild(tempDiv);
+            
+            // स्मूथली स्क्रॉल करके यूजर को उस नए पैराग्राफ पर ले जाना जहाँ से नया पेज शुरू हुआ है
+            tempDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // चेक करना कि क्या आगे और भी किताब बची है?
+        if (currentParagraphIndex < allBookParagraphs.length) {
+            btn.style.display = 'inline-block';
+            btn.innerHTML = 'Show More 👇 (Load Next Page)';
+            overlay.style.display = 'block'; // और टेक्स्ट है तो नीचे धुंधलापन दिखाओ
+        } else {
+            // अगर पूरी किताब खत्म हो गई, तो बटन को "Show Less" बना दो ताकि वापस छोटा कर सकें
+            btn.innerHTML = 'Reset / Close Book 👆';
+            overlay.style.display = 'none'; // अब धुंधलापन हटा दो
+        }
+    }
+
+    // जब पूरी किताब खत्म हो जाए और छात्र बटन दबाए तो रीसेट करने का लॉजिक
+    function toggleAppsScriptContent() {
+        if (currentParagraphIndex >= allBookParagraphs.length) {
+            // वापस पहले पेज पर ले जाओ
+            document.getElementById('apps-script-text').innerHTML = '';
+            currentParagraphIndex = 0;
+            showNextPageOfBook();
+            document.getElementById('full-screen-wrapper').scrollIntoView({ behavior: 'smooth' });
+        } else {
+            showNextPageOfBook();
+        }
+    }
+    
+    // बटन का क्लिक इवेंट बदल देना ताकि यह हमारे नए लॉजिक से चले
+    document.getElementById('appsScriptBtn').setAttribute('onclick', 'toggleAppsScriptContent()');
 
     window.addEventListener('DOMContentLoaded', loadTextFromAppsScript);
-
-    function toggleAppsScriptContent() {
-        const wrapper = document.getElementById('full-screen-wrapper');
-        const btn = document.getElementById('appsScriptBtn');
-        const overlay = document.getElementById('apps-script-fade');
-
-        if (wrapper.style.maxHeight === '280px' || wrapper.style.maxHeight === '') {
-            wrapper.style.maxHeight = wrapper.scrollHeight + 'px'; // पूरा नीचे तक 100% खोल देगा
-            btn.innerHTML = 'Show Less 👆';
-            overlay.style.display = 'none';
-        } else {
-            wrapper.style.maxHeight = '280px';
-            btn.innerHTML = 'Show More 👇';
-            overlay.style.display = 'block';
-            wrapper.scrollIntoView({ behavior: 'smooth' }); // वापस ऊपर ले जाने के लिए
-        }
-    }
 
 </script>
 <!-- मुकेश पंवार स्पेशल प्रीमियम फूटर (साइट का अंत) -->
