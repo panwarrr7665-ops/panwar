@@ -233,7 +233,7 @@
     const SECRET_PASSWORD = "admin123"; 
     const scriptURL = 'https://google.com';
 
-    // एरर फिक्स: फंक्शन को बिल्कुल सीधे डिक्लेअर किया गया है ताकि HTML ऑनक्लिक इसे ढूंढ सके
+    // इसे सामान्य रूप से डिक्लेअर किया गया है ताकि ऑनक्लिक पर एरर न आए
     function checkPassword() {
         const passwordInput = document.getElementById('adminPassword').value;
         if (passwordInput === SECRET_PASSWORD) {
@@ -245,7 +245,6 @@
         }
     }
 
-    // कीबोर्ड के 'Enter' बटन से लॉगिन करने के लिए
     document.getElementById('adminPassword').addEventListener('keypress', function(e) {
         if (e.key === 'Enter') checkPassword();
     });
@@ -330,3 +329,5 @@
 
                 alert("बधाई हो! वेबसाइट का डिब्बा सफलतापूर्वक लाइव अपडेट हो गया है।");
                 uploadNotesForm.reset();
+            } catch (error) {
+                console.error(error);
