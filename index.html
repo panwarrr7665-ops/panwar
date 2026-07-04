@@ -555,7 +555,7 @@
         });
     }
 
-    // 4. कांटेक्ट फॉर्म को गूगल शीट से जोड़ने का स्क्रिप्ट
+      // 4. कांटेक्ट फॉर्म को गूगल शीट से जोड़ने का बिल्कुल सही और फिक्स स्क्रिप्ट
     const contactForm = document.getElementById('contactForm');
     const submitBtn = document.getElementById('submitBtn');
 
@@ -577,13 +577,17 @@
             formData.append('message', uMsg);
 
             try {
+                // डेटा को सफलतापूर्वक भेजने के लिए fetch रिक्वेस्ट
                 await fetch(scriptURL, {
                     method: 'POST',
-                    body: formData
+                    body: formData,
+                    mode: 'no-cors' // नो-कोर्स मोड में ब्राउज़र रिस्पांस रीड नहीं करता, इसलिए सीधे सक्सेस मानेंगे
                 });
 
+                // 🚀 डेटा शीट में आ रहा है, इसलिए सीधे सक्सेस अलर्ट दिखाएंगे
                 alert("Success! Your message has been sent successfully. Science Guruji team will contact you soon.");
                 contactForm.reset();
+                
             } catch (error) {
                 console.error('Error!', error.message);
                 alert("मैसेज नहीं भेजा जा सका, कृपया दोबारा कोशिश करें।");
