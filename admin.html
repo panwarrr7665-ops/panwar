@@ -14,7 +14,7 @@
             font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
         }
         body {
-            background-color: #0f172a; /* प्रीमियम डार्क बैकग्राउंड */
+            background-color: #0f172a; 
             color: #f8fafc;
             min-height: 100vh;
             background-image: linear-gradient(rgba(15, 23, 42, 0.95), rgba(15, 23, 42, 0.95)), url('https://unsplash.com');
@@ -23,7 +23,7 @@
             background-position: center;
         }
 
-        /* 1. सुरक्षित लॉगिन स्क्रीन डिज़ाइन (ग्लास इफ़ेक्ट) */
+        /* सुरक्षित लॉगिन स्क्रीन डिज़ाइन (ग्लास इफ़ेक्ट) */
         .login-container {
             max-width: 420px;
             margin: 120px auto;
@@ -79,9 +79,9 @@
             box-shadow: 0 6px 20px rgba(249, 212, 35, 0.3);
         }
 
-        /* 2. मुख्य एडमिन डैशबोर्ड लेआउट */
+        /* मुख्य एडमिन डैशबोर्ड लेआउट */
         .dashboard {
-            display: none; /* लॉगिन के बाद जावास्क्रिप्ट से दिखेगा */
+            display: none; 
             max-width: 1200px;
             margin: 0 auto;
             padding: 40px 20px;
@@ -160,11 +160,10 @@
         <input type="password" id="adminPassword" class="login-input" placeholder="अपना सीक्रेट पासवर्ड डालें" required>
         <button onclick="checkPassword()" class="login-btn">लॉगिन करें</button>
     </div>
-
     <!-- 2. मुख्य एडमिन डैशबोर्ड (लॉगिन के बाद दिखेगा) -->
     <div class="dashboard" id="adminDashboard">
         <header class="admin-header">
-            <h1 class="admin-title">🛠 shrink Control Center</h1>
+            <h1 class="admin-title">🛠️ Admin Control Center</h1>
             <button onclick="logout()" class="logout-btn">लॉगआउट</button>
         </header>
 
@@ -231,38 +230,33 @@
     </div>
 
 <script>
-    // 1. अपनी पसंद का सीक्रेट एडमिन पासवर्ड यहाँ सेट करें
     const SECRET_PASSWORD = "admin123"; 
-
-    // 2. आपका असली Google Web App URL यहाँ लगा हुआ है
     const scriptURL = 'https://google.com';
 
-    // लॉगिन चेक करने का फंक्शन
-    window.checkPassword = function() {
+    // एरर फिक्स: फंक्शन को बिल्कुल सीधे डिक्लेअर किया गया है ताकि HTML ऑनक्लिक इसे ढूंढ सके
+    function checkPassword() {
         const passwordInput = document.getElementById('adminPassword').value;
         if (passwordInput === SECRET_PASSWORD) {
             document.getElementById('loginScreen').style.display = 'none';
             document.getElementById('adminDashboard').style.display = 'block';
-            loadMessages(); // लॉगिन होते ही संदेश लोड करें
+            loadMessages(); 
         } else {
             alert("गलत पासवर्ड! कृपया दोबारा कोशिश करें।");
         }
-    };
+    }
 
-    // एंटर की (Enter Key) दबाने पर भी लॉगिन हो जाए
+    // कीबोर्ड के 'Enter' बटन से लॉगिन करने के लिए
     document.getElementById('adminPassword').addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') window.checkPassword();
+        if (e.key === 'Enter') checkPassword();
     });
 
-    // लॉगआउट फंक्शन
-    window.logout = function() {
+    function logout() {
         document.getElementById('adminPassword').value = '';
         document.getElementById('adminDashboard').style.display = 'none';
         document.getElementById('loginScreen').style.display = 'block';
-    };
+    }
 
-    // टैब स्विच करने का फंक्शन
-    window.switchTab = function(tabId, btn) {
+    function switchTab(tabId, btn) {
         document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
         
@@ -270,9 +264,8 @@
         btn.classList.add('active');
 
         if(tabId === 'messagesTab') loadMessages();
-    };
+    }
 
-    // गूगल शीट से छात्रों के मैसेज लोड करके टेबल में दिखाने का फंक्शन
     async function loadMessages() {
         const tbody = document.getElementById('messagesTableBody');
         if (!tbody) return;
@@ -288,7 +281,6 @@
             }
             
             tbody.innerHTML = '';
-            // नए मैसेज सबसे ऊपर दिखाने के लिए लिस्ट को उल्टा (Reverse) करना
             data.reverse().forEach(row => {
                 const tr = document.createElement('tr');
                 tr.style.borderBottom = '1px solid rgba(255, 255, 255, 0.05)';
@@ -309,7 +301,6 @@
         }
     }
 
-    // एडमिन...
     const uploadNotesForm = document.getElementById('uploadNotesForm');
     const updateBtn = document.getElementById('updateBtn');
 
@@ -321,3 +312,21 @@
             updateBtn.innerText = "अपडेट हो रहा है...";
 
             const category = document.getElementById('noteCategory').value;
+            const title = document.getElementById('noteTitle').value;
+            const driveLink = document.getElementById('noteDriveLink').value;
+
+            try {
+                await fetch(scriptURL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: "updateNotes",
+                        category: category,
+                        title: title,
+                        driveLink: driveLink
+                    })
+                });
+
+                alert("बधाई हो! वेबसाइट का डिब्बा सफलतापूर्वक लाइव अपडेट हो गया है।");
+                uploadNotesForm.reset();
