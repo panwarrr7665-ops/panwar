@@ -6,187 +6,231 @@
     <title>Help Through Science Guruji</title>
     
     <style>
-        /* पूरी साइट का बेसिक सेटअप और एजुकेशनल बैकग्राउंड */
+        /* पूरी साइट का प्रीमियम और मॉडर्न सेटअप */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
         }
+        
         body {
-            background-color: #fcfcfc;
-            color: #333;
-            /* सुंदर एजुकेशन बैकग्राउंड इमेज जो सीधी और साफ़ दिखेगी */
-            background-image: linear-gradient(rgba(252, 252, 252, 0.93), rgba(252, 252, 252, 0.93)), url('https://unsplash.com');
+            background-color: #0f172a; /* प्रीमियम डार्क स्लेट बैकग्राउंड जो आँखों को बहुत अच्छा लगता है */
+            color: #f8fafc;
+            /* पूरी स्क्रीन पर एक ही सुंदर और सीधी प्रीमियम एजुकेशनल इमेज, जो डार्क थीम के साथ परफेक्ट मैच होगी */
+            background-image: linear-gradient(rgba(15, 23, 42, 0.90), rgba(15, 23, 42, 0.90)), url('https://unsplash.com');
             background-attachment: fixed;
             background-size: cover;
             background-position: center;
+            background-repeat: no-repeat;
+            min-height: 100vh;
         }
 
-        /* 1. ऊपर का हेडर (Navbar) स्टाइलिंग */
+        /* 1. ऊपर का आधुनिक हेडर (Navbar) स्टाइलिंग */
         .navbar {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 15px 5%;
-            background-color: #ffffff;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            padding: 18px 5%;
+            background: rgba(30, 41, 59, 0.7); /* ग्लास इफ़ेक्ट */
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
             position: sticky;
             top: 0;
             z-index: 1000;
         }
 
-        /* वेबसाइट का नाम और लोगो कंटेनर */
+        /* गोल डायरेक्ट इमोजी लोगो और नाम का नया स्टाइल */
         .logo-container {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
             text-decoration: none;
         }
+        .logo-circle {
+            background: linear-gradient(135deg, #ff4e50, #f9d423); /* सुंदर चमकदार ग्रेडिएंट */
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(249, 212, 35, 0.3);
+        }
         .logo-emoji {
-            font-size: 28px;
+            font-size: 24px;
         }
         .nav-logo {
-            color: #8B1E1E;
+            color: #ffffff;
             font-size: 22px;
-            font-weight: 700;
+            font-weight: 800;
             letter-spacing: 0.5px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
 
-        /* बीच का सर्च बार (Search Bar) */
+        /* बीच का प्रीमियम सर्च बार (Search Bar) */
         .search-container {
             display: flex;
             align-items: center;
-            background-color: #f1f5f9;
-            border: 1px solid #cbd5e1;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 50px;
-            padding: 8px 18px;
-            width: 35%;
-            max-width: 400px;
+            padding: 10px 20px;
+            width: 38%;
+            max-width: 450px;
+            transition: all 0.3s ease;
+        }
+        .search-container:focus-within {
+            border-color: #f9d423;
+            box-shadow: 0 0 15px rgba(249, 212, 35, 0.2);
+            background: rgba(15, 23, 42, 0.8);
         }
         .search-container input {
             border: none;
             background: transparent;
             outline: none;
             width: 100%;
-            font-size: 14px;
-            color: #333;
+            font-size: 15px;
+            color: #ffffff;
+        }
+        .search-container input::placeholder {
+            color: #94a3b8;
         }
         .search-container .search-icon {
-            margin-right: 8px;
-            font-size: 15px;
+            margin-right: 10px;
+            font-size: 16px;
         }
 
         /* कोने का 3-डॉट्स मेनू बटन */
         .menu-dots {
-            font-size: 22px;
-            color: #333;
+            font-size: 24px;
+            color: #94a3b8;
             cursor: pointer;
-            padding: 5px 12px;
+            padding: 8px 15px;
             border-radius: 50px;
-            transition: background 0.2s;
+            transition: all 0.2s;
             font-weight: bold;
         }
         .menu-dots:hover {
-            background-color: #f1f5f9;
+            background-color: rgba(255, 255, 255, 0.08);
+            color: #ffffff;
         }
 
         /* मुख्य सेक्शन और टाइटल स्टाइलिंग */
         .students-section {
             text-align: center;
-            padding: 60px 20px;
+            padding: 70px 20px;
             max-width: 1200px;
             margin: 0 auto;
         }
         .section-title {
-            color: #8B1E1E;
-            font-size: 32px;
-            margin-bottom: 8px;
-            font-weight: 700;
-            letter-spacing: 0.5px;
+            background: linear-gradient(to right, #ffffff, #cbd5e1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 40px;
+            margin-bottom: 12px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
         }
         .section-subtitle {
-            color: #666;
-            font-size: 15px;
-            margin-bottom: 50px;
+            color: #94a3b8;
+            font-size: 16px;
+            margin-bottom: 60px;
+            font-weight: 500;
         }
 
         /* चारों BOX को एक लाइन में सेट करने के लिए ग्रिड */
         .cards-container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 25px;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 30px;
             padding: 10px;
         }
 
-        /* सिंगल बॉक्स (Card) की स्टाइलिंग */
+        /* सिंगल प्रीमियम बॉक्स (Card) की स्टाइलिंग - ग्लास इफ़ेक्ट */
         .card {
-            background: #ffffff;
-            border: 1px solid #e2e8f0;
-            border-radius: 20px;
-            padding: 40px 25px;
+            background: rgba(30, 41, 59, 0.4.5);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-radius: 24px;
+            padding: 45px 25px;
             text-align: center;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
-            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
             display: flex;
             flex-direction: column;
             align-items: center;
+            position: relative;
+            overflow: hidden;
         }
         .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
+            transform: translateY(-8px);
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
         }
 
-        /* इमोजी के पीछे का गोल डिब्बा */
+        /* इमोजी के पीछे का गोल प्रीमियम डिब्बा */
         .icon-wrapper {
-            width: 65px;
-            height: 65px;
-            border-radius: 16px;
+            width: 70px;
+            height: 70px;
+            border-radius: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 32px;
+            font-size: 34px;
             margin-bottom: 25px;
+            transition: transform 0.3s ease;
+        }
+        .card:hover .icon-wrapper {
+            transform: scale(1.1) rotate(5deg);
         }
 
-        /* हर बॉक्स का अलग बॉर्डर और बैकग्राउंड रंग */
-        .icon-orange { background-color: #FFF6ED; border: 2px solid #D97706; }
-        .icon-blue { background-color: #EFF6FF; border: 2px solid #2563EB; }
-        .icon-cyan { background-color: #ECFEFF; border: 2px solid #0891B2; }
-        .icon-gold { background-color: #FEFCE8; border: 2px solid #CA8A04; }
+        /* हर बॉक्स का अलग बॉर्डर और बैकग्राउंड रंग (ग्लोइंग इफ़ेक्ट) */
+        .icon-orange { background: rgba(249, 115, 22, 0.1); border: 2px solid #f97316; box-shadow: 0 0 20px rgba(249, 115, 22, 0.15); }
+        .icon-blue { background: rgba(59, 130, 246, 0.1); border: 2px solid #3b82f6; box-shadow: 0 0 20px rgba(59, 130, 246, 0.15); }
+        .icon-cyan { background: rgba(6, 182, 212, 0.1); border: 2px solid #06b6d4; box-shadow: 0 0 20px rgba(6, 182, 212, 0.15); }
+        .icon-gold { background: rgba(234, 179, 8, 0.1); border: 2px solid #eab308; box-shadow: 0 0 20px rgba(234, 179, 8, 0.15); }
 
         /* टेक्स्ट के रंग */
-        .text-orange { color: #D97706; }
-        .text-blue { color: #2563EB; }
-        .text-cyan { color: #0891B2; }
-        .text-gold { color: #CA8A04; }
+        .text-orange { color: #fdba74; }
+        .text-blue { color: #93c5fd; }
+        .text-cyan { color: #67e8f9; }
+        .text-gold { color: #fde047; }
 
         /* हेडिंग और डिस्क्रिप्शन */
         .card-title {
-            font-size: 20px;
-            font-weight: 600;
+            font-size: 22px;
+            font-weight: 700;
             margin-bottom: 12px;
+            color: #ffffff;
         }
         .card-desc {
-            color: #666;
-            font-size: 13.5px;
+            color: #94a3b8;
+            font-size: 14px;
             line-height: 1.6;
             margin-bottom: 30px;
             min-height: 45px;
         }
 
-        /* Know More लिंक स्टाइलिंग */
+        /* Know More प्रीमियम बटन स्टाइलिंग */
         .know-more {
             font-size: 14px;
             text-decoration: none;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
-            transition: opacity 0.2s;
+            transition: all 0.2s;
             margin-top: auto;
+            padding: 8px 20px;
+            border-radius: 50px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
-        .know-more:hover {
-            text-decoration: underline;
-            opacity: 0.8;
+        .card:hover .know-more {
+            background: #ffffff;
+            color: #0f172a !important;
+            box-shadow: 0 4px 15px rgba(255,255,255,0.2);
         }
 
         /* मोबाइल के लिए रिस्पॉन्सिव डिज़ाइन */
@@ -199,6 +243,9 @@
             .search-container {
                 width: 100%;
             }
+            .section-title {
+                font-size: 32px;
+            }
         }
     </style>
 </head>
@@ -206,12 +253,14 @@
 
 <header class="navbar">
     <a href="#" class="logo-container">
-        <span class="logo-emoji">🔬</span>
+        <!-- गोल डायरेक्ट इमोजी लोगो -->
+        <div class="logo-circle">
+            <span class="logo-emoji">🔬</span>
+        </div>
         <span class="nav-logo">Help Through Science Guruji</span>
     </a>
     <div class="search-container">
         <span class="search-icon">🔍</span>
-        <!-- लाइव सर्च करने के लिए id="searchInput" जोड़ा गया है -->
         <input type="text" id="searchInput" placeholder="Search notes, PDFs...">
     </div>
     <div class="menu-dots">⋮</div>
@@ -221,53 +270,54 @@
     <h2 class="section-title">Hello, Dear Students</h2>
     <p class="section-subtitle">Learn anytime, anywhere with us</p>
 
-    <!-- सर्च फ़िल्टर सही से काम करे इसलिए यहाँ class="card" वाले डिब्बे हैं -->
     <div class="cards-container">
         <div class="card">
             <div class="icon-wrapper icon-orange"><span>📁</span></div>
-            <h3 class="card-title text-orange">Class Notes & PDF</h3>
+            <h3 class="card-title">Class Notes & PDF</h3>
             <p class="card-desc" id="desc_class_notes">Notes of Other Subject & PDF.</p>
             <a class="know-more text-orange" onclick="openCategory('class_notes')">Know More</a>
         </div>
 
         <div class="card">
             <div class="icon-wrapper icon-blue"><span>📖</span></div>
-            <h3 class="card-title text-blue">Other Study Material</h3>
+            <h3 class="card-title">Other Study Material</h3>
             <p class="card-desc" id="desc_study_material">Additional Questions And Explanation About Human Body.</p>
             <a class="know-more text-blue" onclick="openCategory('study_material')">Know More</a>
         </div>
 
         <div class="card">
             <div class="icon-wrapper icon-cyan"><span>📥</span></div>
-            <h3 class="card-title text-cyan">Downloads</h3>
+            <h3 class="card-title">Downloads</h3>
             <p class="card-desc" id="desc_downloads">Access to files, resources, and materials.</p>
             <a class="know-more text-cyan" onclick="openCategory('downloads')">Know More</a>
         </div>
 
         <div class="card">
             <div class="icon-wrapper icon-gold"><span>💡</span></div>
-            <h3 class="card-title text-gold">Suggested Notes</h3>
+            <h3 class="card-title">Suggested Notes</h3>
             <p class="card-desc" id="desc_suggested_notes">Recommended Important Notes And Diagrams.</p>
             <a class="know-more text-gold" onclick="openCategory('suggested_notes')">Know More</a>
         </div>
     </div>
 </section>
 
-<section style="max-width: 600px; margin: 50px auto; padding: 30px; background: #fff; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); text-align: center; position: relative; z-index: 10;">
-    <h2 style="color: #8B1E1E; margin-bottom: 10px; font-size: 26px;">Contact Us</h2>
-    <p style="color: #666; margin-bottom: 25px; font-size: 14px;">If you have any questions, feel free to drop a message!</p>
+<!-- प्रीमियम ग्लास डिज़ाइन कांटेक्ट फॉर्म -->
+<section style="max-width: 600px; margin: 60px auto; padding: 40px 30px; background: rgba(30, 41, 59, 0.45); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); text-align: center; position: relative; z-index: 10;">
+    <h2 style="color: #ffffff; margin-bottom: 10px; font-size: 28px; font-weight: 800;">Contact Us</h2>
+    <p style="color: #94a3b8; margin-bottom: 30px; font-size: 15px; font-weight: 500;">If you have any questions, feel free to drop a message!</p>
     
-    <form id="contactForm" style="display: flex; flex-direction: column; gap: 15px;">
-        <input type="text" id="name" placeholder="Your Name" required style="padding: 12px 15px; border: 1px solid #cbd5e1; border-radius: 8px; outline: none;">
-        <input type="email" id="email" placeholder="Your Email" required style="padding: 12px 15px; border: 1px solid #cbd5e1; border-radius: 8px; outline: none;">
-        <textarea id="message" placeholder="Your Message" rows="5" required style="padding: 12px 15px; border: 1px solid #cbd5e1; border-radius: 8px; outline: none; resize: none;"></textarea>
-        <button type="submit" id="submitBtn" style="background-color: #8B1E1E; color: white; border: none; padding: 12px; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer;">Send Message</button>
+    <form id="contactForm" style="display: flex; flex-direction: column; gap: 20px;">
+        <input type="text" id="name" placeholder="Your Name" required style="padding: 14px 18px; background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; color: #ffffff; outline: none; font-size: 15px; transition: all 0.3s;">
+        <input type="email" id="email" placeholder="Your Email" required style="padding: 14px 18px; background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; color: #ffffff; outline: none; font-size: 15px; transition: all 0.3s;">
+        <textarea id="message" placeholder="Your Message" rows="5" required style="padding: 14px 18px; background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; color: #ffffff; outline: none; font-size: 15px; resize: none; transition: all 0.3s;"></textarea>
+        
+        <button type="submit" id="submitBtn" style="background: linear-gradient(135deg, #ff4e50, #f9d423); color: #0f172a; border: none; padding: 14px; border-radius: 12px; font-size: 16px; font-weight: 800; cursor: pointer; box-shadow: 0 4px 15px rgba(249, 212, 35, 0.2); transition: all 0.3s;">Send Message</button>
     </form>
 </section>
 
 <script>
     // आपका असली Google Web App URL
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbxkHWvRv6eSpefXgtxWLeSxzYj8zYbx07OzPpo9y6yl_P_h5ayxXbGRI-n5ALEs7HHm/exec';
+    const scriptURL = 'https://google.com';
 
     let notesDataStore = {};
 
@@ -298,23 +348,29 @@
         if (link) {
             window.open(link, '_blank');
         } else {
-            alert("इस केटेगरी में एडमिन द्वारा अभी कोई फाइल अपलोड नहीं की गई है!");
+            alert("इस केटेगरी में एडमिन द्वारा अभी कोई ... ");
         }
     };
 
     // 3. लाइव सर्च बार फ़िल्टर (Search Box Functionality)
     const searchInput = document.getElementById('searchInput');
     if (searchInput) {
+        // इनपुट बॉक्स के फोकस इफ़ेक्ट की स्टाइलिंग जावास्क्रिप्ट से संभालना
+        searchInput.addEventListener('focus', () => {
+            searchInput.parentElement.style.borderColor = '#f9d423';
+        });
+        searchInput.addEventListener('blur', () => {
+            searchInput.parentElement.style.borderColor = 'rgba(255, 255, 255, 0.15)';
+        });
+
         searchInput.addEventListener('input', function(e) {
             const searchText = e.target.value.toLowerCase().trim();
             const cards = document.querySelectorAll('.card');
 
             cards.forEach(card => {
-                // कार्ड के अंदर की हेडिंग और डिस्क्रिप्शन का टेक्स्ट निकालना
                 const titleText = card.querySelector('.card-title').innerText.toLowerCase();
                 const descText = card.querySelector('.card-desc').innerText.toLowerCase();
 
-                // अगर सर्च किया गया शब्द टाइटल या डिस्क्रिप्शन में है तो दिखाओ, वरना छुपाओ
                 if (titleText.includes(searchText) || descText.includes(searchText)) {
                     card.style.display = 'flex';
                 } else {
@@ -366,7 +422,7 @@
         });
     }
 
-    // 5. थ्री-डॉट्स मेनू का पुराना क्लिक हैंडलर (जैसा आपके ओरिजिनल कोड में था)
+    // 5. थ्री-डॉट्स मेनू का पुराना क्लिक हैंडलर (सिर्फ अलर्ट दिखाने के लिए)
     const menuDots = document.querySelector('.menu-dots');
     if (menuDots) {
         menuDots.addEventListener('click', () => {
