@@ -463,109 +463,85 @@
 </div>
 
 <script>
-    // 🔴 ⚠️ यहाँ अपना Apps Script वाला लिंक पेस्ट कर दीजिए
-    const APPS_SCRIPT_WEB_URL = 'https://script.google.com/macros/s/AKfycbxHIR8KqNEqSpK3kfcPLpseQolCGV8oydS_w3ricyds5muFBL_ZHrOqUlHAnR6CBqXB/exec';
+           <!-- आपके पुराने चारों कार्ड्स (Boxes) का बंद होने वाला टैग यहाँ है -->
+    </div> 
 
-    let allBookParagraphs = []; // गूगल डॉक के सारे पैराग्राफ यहाँ स्टोर होंगे
-    let currentParagraphIndex = 0; // अभी हम किस पैराग्राफ पर हैं
-    const WORDS_PER_PAGE = 300; // 🎯 एक बार में करीब कितने शब्दों का पेज दिखाना है
-
-    async function loadTextFromAppsScript() {
-        try {
-            const response = await fetch(APPS_SCRIPT_WEB_URL);
-            const data = await response.json();
-
-            if (data && data.text_content) {
-                let originalText = data.text_content;
-
-                // 🔍 [IMAGE: link] टैग्स को पहले ही असली HTML इमेज टैग्स में बदल देना
-                let textWithImages = originalText.replace(/\[IMAGE:\s*([^\]]+)\]/g, function(match, url) {
-                    return `</p><div style="text-align:center; margin:30px 0; width:100%;">
-                                <img src="${url.trim()}" style="max-width:100%; width:auto; height:auto; max-height:550px; border-radius:16px; border:1px solid rgba(255,255,255,0.1); box-shadow:0 10px 30px rgba(0,0,0,0.4); display:block; margin:0 auto;">
-                                <p style="color:#94a3b8; font-size:14px; font-style:italic; margin-top:10px;">चित्र: विवरण से संबंधित डायग्राम</p>
-                            </div><p>`;
-                });
-
-                // पूरे टेक्स्ट को पैराग्राफ्स (\n) के आधार पर टुकड़ों में बांटना
-                allBookParagraphs = textWithImages.split('\n').filter(p => p.trim() !== '');
-                
-                // स्क्रीन साफ करना और पहला पेज लोड करना
-                document.getElementById('apps-script-text').innerHTML = '';
-                currentParagraphIndex = 0;
-                
-                showNextPageOfBook(); // पहला 300 शब्दों का पेज दिखाओ
-            }
-        } catch (error) {
-            console.error("डेटा लोड करने में एरर:", error);
-            document.getElementById('apps-script-text').innerHTML = "<p style='color:#ef4444; text-align:center;'>❌ नोट्स लोड नहीं हो सके।</p>";
-        }
-    }
-
-    // 🎯 यह जादुई फंक्शन शब्दों को गिनकर अगला 300 वर्ड का पेज जोड़ेगा
-    function showNextPageOfBook() {
-        let textContainer = document.getElementById('apps-script-text');
-        let btn = document.getElementById('appsScriptBtn');
-        let overlay = document.getElementById('apps-script-fade');
+    <!-- 🟢 मुकेश पंवार स्पेशल - 100% सीक्रेट लाइव गूगल डॉक्स मल्टी-पेज शो मोर सेक्शन शुरू -->
+    <div style="margin: 40px auto; max-width: 100%; width: 100%; padding: 0 5%; box-sizing: border-box; font-family: 'Inter', sans-serif;">
         
-        let wordCountThisStep = 0;
-        let htmlToAppend = '';
-        let startParagraph = currentParagraphIndex;
-
-        // जब तक 300 शब्द पूरे न हों या पैराग्राफ खत्म न हों, तब तक टेक्स्ट जोड़ते जाओ
-        while (currentParagraphIndex < allBookParagraphs.length && wordCountThisStep < WORDS_PER_PAGE) {
-            let pText = allBookParagraphs[currentParagraphIndex];
+        <div style="background: rgba(30, 41, 59, 0.45); border: 1px solid rgba(255, 255, 255, 0.08); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-radius: 24px; padding: 15px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); position: relative; width: 100%;">
             
-            // शब्दों की गिनती करना (साधारण स्पेस काउंटर)
-            let wordsInP = pText.split(/\s+/).length;
-            wordCountThisStep += wordsInP;
+            <h2 style="color: #ffffff; font-size: 22px; font-weight: 700; margin-bottom: 20px; text-align: center; letter-spacing: 0.5px;">
+                📖 Live Textbook & Diagrams
+            </h2>
             
-            htmlToAppend += `<p style="margin-bottom:15px;">${pText}</p>`;
-            currentParagraphIndex++;
-        }
+            <!-- 🗂️ मुख्य विंडो बॉक्स: शुरुआत में यह बिल्कुल गूगल डॉक के 1 पेज (लगभग 550px की हाइट) पर लॉक रहेगा -->
+            <div id="docs-window-wrapper" style="max-height: 550px; overflow: hidden; position: relative; border-radius: 16px; transition: max-height 0.6s cubic-bezier(0.16, 1, 0.3, 1); width: 100%;">
+                
+                <!-- 🌐 यह आपके Google Doc को बिल्कुल फुल स्क्रीन में और डार्क मोड में ढालकर लाइव दिखाएगा -->
+                <iframe id="googleDocsIframe" src="https://google.com" 
+                        style="width: 100%; height: 6000px; border: none; background: #ffffff; filter: invert(0.9) hue-rotate(180deg); box-shadow: inset 0 0 20px rgba(0,0,0,0.1); display: block;">
+                </iframe>
+                
+                <!-- 🌗 नीचे से पेज धुंधला (Fade) दिखने के लिए डार्क स्लेट ग्लास इफ़ेक्ट -->
+                <div id="docs-fade-overlay" style="position: absolute; bottom: 0; left: 0; width: 100%; height: 120px; background: linear-gradient(transparent, #131d2f); pointer-events: none;"></div>
+            </div>
 
-        // वेबसाइट के अंदर नया पेज नीचे जोड़ना (पुरानी चीज़ें डिलीट नहीं होंगी, नीचे जुड़ती जाएंगी)
-        if (startParagraph === 0) {
-            textContainer.innerHTML = htmlToAppend;
-        } else {
-            // नए जोड़े गए कंटेंट का पहला एलिमेंट ढूंढने के लिए एक अस्थायी div
-            let tempDiv = document.createElement('div');
-            tempDiv.innerHTML = htmlToAppend;
-            textContainer.appendChild(tempDiv);
+            <!-- 🔄 सिंगल शो मोर कंट्रोल बटन -->
+            <div style="text-align: center; margin-top: 25px;">
+                <button id="docsShowMoreBtn" onclick="handleDocsPageScroll()" style="background: linear-gradient(135deg, #ff4e50, #f9d423); color: #0f172a; border: none; padding: 12px 35px; font-size: 15px; font-weight: 700; border-radius: 50px; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(249, 212, 35, 0.3);">
+                    Show More 👇 (Read Next Page)
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // 🎯 प्रति पेज हाइट सेट करना (550px गूगल डॉक के 1 पूरे पेज या 500 शब्दों के बराबर होता है)
+        const DOC_HEIGHT_PER_PAGE = 550; 
+        let currentVisibleDocHeight = DOC_HEIGHT_PER_PAGE; // अभी स्क्रीन पर कितनी हाइट दिख रही है
+
+        function handleDocsPageScroll() {
+            const wrapper = document.getElementById('docs-window-wrapper');
+            const btn = document.getElementById('docsShowMoreBtn');
+            const overlay = document.getElementById('docs-fade-overlay');
             
-            // स्मूथली स्क्रॉल करके यूजर को उस नए पैराग्राफ पर ले जाना जहाँ से नया पेज शुरू हुआ है
-            tempDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
+            // अधिकतम हाइट (कल को आप बहुत बड़ा चैप्टर लिखेंगे तो यह हाइट बढ़ा सकते हैं)
+            const maxEstimatedHeight = 5500; 
 
-        // चेक करना कि क्या आगे और भी किताब बची है?
-        if (currentParagraphIndex < allBookParagraphs.length) {
-            btn.style.display = 'inline-block';
-            btn.innerHTML = 'Show More 👇 (Load Next Page)';
-            overlay.style.display = 'block'; // और टेक्स्ट है तो नीचे धुंधलापन दिखाओ
-        } else {
-            // अगर पूरी किताब खत्म हो गई, तो बटन को "Show Less" बना दो ताकि वापस छोटा कर सकें
-            btn.innerHTML = 'Reset / Close Book 👆';
-            overlay.style.display = 'none'; // अब धुंधलापन हटा दो
-        }
-    }
+            if (currentVisibleDocHeight < maxEstimatedHeight) {
+                // 🎯 हर बार बटन दबाने पर अगला पूरा 1 पेज (550px / 500 शब्द) नीचे और खुल जाएगा
+                currentVisibleDocHeight += DOC_HEIGHT_PER_PAGE;
+                wrapper.style.maxHeight = currentVisibleDocHeight + 'px';
+                
+                // नया पेज खुलते ही स्क्रीन को हल्के से नीचे खिसकाना ताकि यूजर अगले पेज पर आ जाए
+                setTimeout(() => {
+                    window.scrollBy({ top: DOC_HEIGHT_PER_PAGE - 80, behavior: 'smooth' });
+                }, 100);
 
-    // जब पूरी किताब खत्म हो जाए और छात्र बटन दबाए तो रीसेट करने का लॉजिक
-    function toggleAppsScriptContent() {
-        if (currentParagraphIndex >= allBookParagraphs.length) {
-            // वापस पहले पेज पर ले जाओ
-            document.getElementById('apps-script-text').innerHTML = '';
-            currentParagraphIndex = 0;
-            showNextPageOfBook();
-            document.getElementById('full-screen-wrapper').scrollIntoView({ behavior: 'smooth' });
-        } else {
-            showNextPageOfBook();
+                btn.innerHTML = 'Show More 👇 (Read Next Page)';
+            }
+
+            // 🔄 अगर छात्र काफी नीचे आ चुका है, तो बटन को रीसेट (Close Book) विकल्प दे दें
+            if (currentVisibleDocHeight >= 3300) {
+                btn.innerHTML = 'Reset / Close Book 👆';
+                overlay.style.display = 'none'; // धुंधलापन हटा दो
+                
+                // रीसेट बटन दबाने पर वापस किताब बंद करके पहले पेज पर ले जाओ
+                btn.onclick = function() {
+                    currentVisibleDocHeight = DOC_HEIGHT_PER_PAGE;
+                    wrapper.style.maxHeight = DOC_HEIGHT_PER_PAGE + 'px';
+                    overlay.style.display = 'block';
+                    btn.innerHTML = 'Show More 👇 (Read Next Page)';
+                    wrapper.scrollIntoView({ behavior: 'smooth' });
+                    
+                    // बटन का काम वापस सामान्य स्क्रॉल पर सेट करना
+                    btn.setAttribute('onclick', 'handleDocsPageScroll()');
+                };
+            }
         }
-    }
     
-    // बटन का क्लिक इवेंट बदल देना ताकि यह हमारे नए लॉजिक से चले
-    document.getElementById('appsScriptBtn').setAttribute('onclick', 'toggleAppsScriptContent()');
-
-    window.addEventListener('DOMContentLoaded', loadTextFromAppsScript);
-
 </script>
 <!-- मुकेश पंवार स्पेशल प्रीमियम फूटर (साइट का अंत) -->
 <footer class="site-footer">
