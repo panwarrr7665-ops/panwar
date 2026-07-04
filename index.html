@@ -200,7 +200,6 @@
             margin-bottom: 30px;
             min-height: 45px;
         }
-
         /* Know More प्रीमियम बटन स्टाइलिंग */
         .know-more {
             font-size: 14px;
@@ -422,17 +421,19 @@
     <div class="footer-welcome">THANKS❤️</div>
     <p class="footer-info">यह एक आधुनिक ऑनलाइन एजुकेशनल प्लेटफॉर्म है, जहाँ छात्रों को बेहतरीन विज्ञान और अन्य विषयों के नोट्स और स्टडी मटेरियल बिल्कुल आसान भाषा में उपलब्ध कराए जाते हैं।</p>
     <div class="footer-address">
-        © Help Through Science Guruji | एड्रेस: राजस्थान, भारत | Powered by Vercel & GitHub
+        © Help Through Science Guruji | एड्रेस: भारत | Powered by PANWAR GROUP
     </div>
 </footer>
 <script>
     // ⚠️ अपना असली Google Web App URL यहाँ 'https://google.com' की जगह पेस्ट करें
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbzqmlL7m8RKgGKIfFdiW4F4tDisskXIe-l8AStDAYwRwc3um6WpQeudyO5PYzNyPsI/exec';
+    const scriptURL = 'https://google.com';
+
     let notesDataStore = {};
 
     // 1. वेबसाइट लोड होते ही गूगल शीट से नोट्स का लाइव डेटा फेच करना
     async function loadLiveNotes() {
         try {
+            // CORS एरर से बचने के लिए सिंपल GET रिक्वेस्ट बिना किसी एक्स्ट्रा हेडर के
             const response = await fetch(`${scriptURL}?action=getNotes`);
             const data = await response.json();
             
@@ -450,8 +451,6 @@
             });
         } catch (error) {
             console.error("नोट्स डेटा लोड करने में विफल:", error);
-            // टेस्टिंग के लिए डमी डेटा (यदि बैकएंड सेट न हो):
-            notesDataStore['class_notes'] = { link: 'https://google.com', title: 'विज्ञान कक्षा 10 नोट्स (Hindi)' };
         }
     }
 
