@@ -416,6 +416,64 @@
     </form>
 </section>
 
+       <!-- आपके पुराने कोड के चारों कार्ड्स का कंटेनर यहाँ बंद हो रहा है -->
+        </div> 
+
+        <!-- 🟢 यहाँ पर आपको पूरा नया "Show More" वाला कोड पेस्ट करना है -->
+        <div style="margin: 60px auto; max-width: 900px; width: 100%; padding: 0 20px; font-family: sans-serif; color: #cbd5e1; line-height: 1.8; font-size: 16px;">
+            
+            <!-- पार्ट 1: हमेशा दिखेगा -->
+            <div id="text-part-1">
+                <h2 style="color: #ffffff; font-size: 24px; margin-bottom: 15px; font-weight: 700;">📖 Chapter 1: Science Introduction</h2>
+                <p>विज्ञान वह व्यवस्थित ज्ञान या विद्या है जो विचार, अवलोकन, अध्ययन और प्रयोग से मिलती है। यह किसी भी विषय के तथ्यों के व्यवस्थित अध्ययन को कहते हैं। यहाँ आपकी पुस्तक का पहला भाग हमेशा छात्रों को स्क्रीन पर सीधा दिखाई देगा।</p>
+                <div id="media-holder-1" style="margin-top: 15px; text-align: center;"></div>
+            </div>
+
+            <!-- पार्ट 2: पहले 'Show More' पर खुलेगा -->
+            <div id="text-part-2" style="display: none; margin-top: 15px;">
+                <p style="color: #fde047; font-weight: 700;">भौतिक विज्ञान (Physics) और रासायनिक विज्ञान (Chemistry):</p>
+                <p>यहाँ पर आपका बहुत सारा दूसरा टेक्स्ट आ जाएगा। इसमें आप जितनी चाहें उतनी लाइन्स, पैराग्राफ या डायग्राम के बारे में लिख सकते हैं। यह हिस्सा तब तक छुपा रहेगा जब तक छात्र पहले बटन पर क्लिक नहीं कर देता।</p>
+                <div id="media-holder-2" style="margin-top: 15px; text-align: center;"></div>
+            </div>
+
+            <!-- पार्ट 3: दूसरे 'Show More' पर खुलेगा -->
+            <div id="text-part-3" style="display: none; margin-top: 15px;">
+                <p style="color: #67e8f9; font-weight: 700;">जीव विज्ञान (Biology) और मुख्य निष्कर्ष (जैसे: मानव हृदय/Heart):</p>
+                <p>यह आपकी पुस्तक या नोट्स का तीसरा और सबसे आखरी भाग है। जब छात्र दूसरी बार 'Show More' दबाएगा, तब यह पूरा लंबा टेक्स्ट स्क्रीन पर खुलकर आ जाएगा और छात्र इसे आराम से पढ़ सकेंगे।</p>
+                <div id="media-holder-3" style="margin-top: 15px; text-align: center;"></div>
+            </div>
+
+            <!-- बटन -->
+            <div style="text-align: center; margin-top: 25px;">
+                <button id="showMoreBtn" onclick="handleShowMore()" style="background: linear-gradient(135deg, #ff4e50, #f9d423); color: #0f172a; border: none; padding: 10px 25px; font-size: 15px; font-weight: 700; border-radius: 50px; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(249, 212, 35, 0.2);">
+                    Show More 👇
+                </button>
+            </div>
+        </div>
+
+        <script>
+            let currentStep = 1;
+            function handleShowMore() {
+                const part2 = document.getElementById('text-part-2');
+                const part3 = document.getElementById('text-part-3');
+                const btn = document.getElementById('showMoreBtn');
+                if (currentStep === 1) {
+                    part2.style.display = 'block';
+                    btn.innerHTML = 'Show More 👇 (Part 2)';
+                    currentStep = 2;
+                } else if (currentStep === 2) {
+                    part3.style.display = 'block';
+                    btn.innerHTML = 'Show Less 👆'; 
+                    currentStep = 3;
+                } else if (currentStep === 3) {
+                    part2.style.display = 'none';
+                    part3.style.display = 'none';
+                    btn.innerHTML = 'Show More 👇';
+                    currentStep = 1;
+                    document.getElementById('text-part-1').scrollIntoView({ behavior: 'smooth' });
+                }
+            }
+
 <!-- मुकेश पंवार स्पेशल प्रीमियम फूटर (साइट का अंत) -->
 <footer class="site-footer">
     <div class="footer-welcome">THANKS</div>
@@ -605,63 +663,6 @@
 
 </body>
 </html>
-            <!-- आपके पुराने कोड के चारों कार्ड्स का कंटेनर यहाँ बंद हो रहा है -->
-        </div> 
-
-        <!-- 🟢 यहाँ पर आपको पूरा नया "Show More" वाला कोड पेस्ट करना है -->
-        <div style="margin: 60px auto; max-width: 900px; width: 100%; padding: 0 20px; font-family: sans-serif; color: #cbd5e1; line-height: 1.8; font-size: 16px;">
-            
-            <!-- पार्ट 1: हमेशा दिखेगा -->
-            <div id="text-part-1">
-                <h2 style="color: #ffffff; font-size: 24px; margin-bottom: 15px; font-weight: 700;">📖 Chapter 1: Science Introduction</h2>
-                <p>विज्ञान वह व्यवस्थित ज्ञान या विद्या है जो विचार, अवलोकन, अध्ययन और प्रयोग से मिलती है। यह किसी भी विषय के तथ्यों के व्यवस्थित अध्ययन को कहते हैं। यहाँ आपकी पुस्तक का पहला भाग हमेशा छात्रों को स्क्रीन पर सीधा दिखाई देगा।</p>
-                <div id="media-holder-1" style="margin-top: 15px; text-align: center;"></div>
-            </div>
-
-            <!-- पार्ट 2: पहले 'Show More' पर खुलेगा -->
-            <div id="text-part-2" style="display: none; margin-top: 15px;">
-                <p style="color: #fde047; font-weight: 700;">भौतिक विज्ञान (Physics) और रासायनिक विज्ञान (Chemistry):</p>
-                <p>यहाँ पर आपका बहुत सारा दूसरा टेक्स्ट आ जाएगा। इसमें आप जितनी चाहें उतनी लाइन्स, पैराग्राफ या डायग्राम के बारे में लिख सकते हैं। यह हिस्सा तब तक छुपा रहेगा जब तक छात्र पहले बटन पर क्लिक नहीं कर देता।</p>
-                <div id="media-holder-2" style="margin-top: 15px; text-align: center;"></div>
-            </div>
-
-            <!-- पार्ट 3: दूसरे 'Show More' पर खुलेगा -->
-            <div id="text-part-3" style="display: none; margin-top: 15px;">
-                <p style="color: #67e8f9; font-weight: 700;">जीव विज्ञान (Biology) और मुख्य निष्कर्ष (जैसे: मानव हृदय/Heart):</p>
-                <p>यह आपकी पुस्तक या नोट्स का तीसरा और सबसे आखरी भाग है। जब छात्र दूसरी बार 'Show More' दबाएगा, तब यह पूरा लंबा टेक्स्ट स्क्रीन पर खुलकर आ जाएगा और छात्र इसे आराम से पढ़ सकेंगे।</p>
-                <div id="media-holder-3" style="margin-top: 15px; text-align: center;"></div>
-            </div>
-
-            <!-- बटन -->
-            <div style="text-align: center; margin-top: 25px;">
-                <button id="showMoreBtn" onclick="handleShowMore()" style="background: linear-gradient(135deg, #ff4e50, #f9d423); color: #0f172a; border: none; padding: 10px 25px; font-size: 15px; font-weight: 700; border-radius: 50px; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(249, 212, 35, 0.2);">
-                    Show More 👇
-                </button>
-            </div>
-        </div>
-
-        <script>
-            let currentStep = 1;
-            function handleShowMore() {
-                const part2 = document.getElementById('text-part-2');
-                const part3 = document.getElementById('text-part-3');
-                const btn = document.getElementById('showMoreBtn');
-                if (currentStep === 1) {
-                    part2.style.display = 'block';
-                    btn.innerHTML = 'Show More 👇 (Part 2)';
-                    currentStep = 2;
-                } else if (currentStep === 2) {
-                    part3.style.display = 'block';
-                    btn.innerHTML = 'Show Less 👆'; 
-                    currentStep = 3;
-                } else if (currentStep === 3) {
-                    part2.style.display = 'none';
-                    part3.style.display = 'none';
-                    btn.innerHTML = 'Show More 👇';
-                    currentStep = 1;
-                    document.getElementById('text-part-1').scrollIntoView({ behavior: 'smooth' });
-                }
-            }
 
     </div>
 </footer>
