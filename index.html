@@ -612,10 +612,10 @@
             }
         });
     }
-    // ⚠️ अपनी गूगल ऐप्स स्क्रिप्ट का यूआरएल यहाँ डालें
-    const myGoogleDocScriptURL = 'https://script.google.com/macros/s/AKfycbxSujADWkin7k4AF_F1V0wGqj3mMU8NHMXFD6UOqpze-aebXPf1Yte9VQHT4-B_AhgV/exec';
+  // ⚠️ अपनी गूगल ऐप्स स्क्रिप्ट का यूआरएल यहाँ डालें
+    const myGoogleDocScriptURL = 'https://script.google.com/macros/s/AKfycbxbCZVL6gH12EZ2o9QEfifvQ1_UBJL4gy3CN6SJxh8DyWVFg69kA-ByPIYaD-oKvcvQ/exec';
 
-    // पेज लोड होते ही गूगल डॉक का डेटा सीधे स्पेस में दिखाने का लॉजिक
+    // पेज लोड होते ही गूगल डॉक का डेटा सीधे स्पेस में दिखाने का लॉजिक (क्रमानुसार)
     async function fetchGoogleDocData() {
         const docBody = document.getElementById('googleDocBody');
         const docTitle = document.getElementById('googleDocTitle');
@@ -625,52 +625,72 @@
             const data = await res.json();
             
             docTitle.innerText = data.title || "📖 Live Google Docs Notes";
-            let rawText = data.textContent || "";
-            const wordsArray = rawText.split(/\s+/);
-
-            // 📝 500 शब्दों की लिमिट और 'Show More' का फ़िक्स लॉजिक
-            if (wordsArray.length > 500) {
-                const preview = wordsArray.slice(0, 500).join(" ");
-                const hidden = wordsArray.slice(500).join(" ");
+            let fullCombinedHTML = "";
+            
+            if (data.elementsOrder && data.elementsOrder.length > 0) {
+                data.elementsOrder.forEach(el => {
+                    if (el.type === 'text' && el.content.trim() !== "") {
+                        fullCombinedHTML += `<p style="margin-bottom: 15px;">${el.content}</p>`;
+                    } else if (el.type === 'image') {
+                        fullCombinedHTML += `<div style="margin:25px 0; text-align:center;"><img src="${el.content}" style="max-width:100%; border-radius:16px; border:2px solid rgba(255,255,255,0.1); box-shadow:0 10px 30px rgba(0,0,0,0.3); margin-bottom:15px;"></div>`;
+                    }
+                });
+            } else {
+                let rawText = data.textContent || "";
+                let textParts = rawText.split("\n\n");
                 
-                let contentHTML = `<div>${preview}</div>`;
-                
-                // 🖼️ डायग्राम इमेजेस को टेक्स्ट के नीचे जोड़ना
-                if (data.images && data.images.length > 0) {
-                    contentHTML += `<div style="margin:30px 0; text-align:center;"><h4 style="color:#ffffff; margin-bottom:15px; font-weight:700;">🖼️ Live Diagrams</h4>`;
-                    data.images.forEach(img => {
-                        contentHTML += `<img src="${img}" style="max-width:100%; border-radius:16px; border:2px solid rgba(255,255,255,0.1); margin-bottom:15px; box-shadow:0 10px 30px rgba(0,0,0,0.3);">`;
-                    });
-                    contentHTML += `</div>`;
-                }
+                textParts.forEach((part, index) => {
+                    if(part.trim() !== "") {
+                        fullCombinedHTML += `<p style="margin-bottom: 15px;">${part}</p>`;
+                    }
+                    if (data.images && data.images[index]) {
+                        fullCombinedHTML += `<div style="margin:25px 0; text-align:center;"><img src="${data.images[index]}" style="max-width:100%; border-radius:16px; border:2px solid rgba(255,255,255,0.1); box-shadow:0 10px 30px rgba(0,0,0,0.3); margin-bottom:15px;"></div>`;
+                    }
+                });
+            }
 
-                // छुपा हुआ टेक्स्ट और बटन
-                contentHTML += `
-                    <div id="hiddenDocContent" style="display:none; margin-top:15px;">${hidden}</div>
+            const totalWords = (data.textContent || "").split(/\s+/).length;
+
+            if (totalWords > 500) {
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = fullCombinedHTML;
+                const allChildNodes = Array.from(tempDiv.childNodes);
+                
+                let previewHTML = "";
+                let hiddenHTML = "";
+                let currentWordCount = 0;
+                let splitDone = false;
+
+                allChildNodes.forEach(node => {
+                    if (!splitDone) {
+                        previewHTML += node.nodeType === 3 ? node.textContent : node.outerHTML;
+                        if (node.textContent) {
+                            currentWordCount += node.textContent.split(/\s+/).length;
+                        }
+                        if (currentWordCount >= 500) {
+                            splitDone = true;
+                        }
+                    } else {
+                        hiddenHTML += node.nodeType === 3 ? node.textContent : node.outerHTML;
+                    }
+                });
+
+                docBody.innerHTML = `
+                    <div class="doc-text-wrapper">${previewHTML}</div>
+                    <div id="hiddenDocContent" style="display:none; margin-top:15px;">${hiddenHTML}</div>
                     <div style="text-align:center;">
                         <button id="toggleDocBtn" onclick="handleDocToggle()" class="show-more-btn">📖 Show More Notes</button>
                     </div>
                 `;
-                docBody.innerHTML = contentHTML;
             } else {
-                // अगर 500 से कम शब्द हैं
-                let contentHTML = `<div>${rawText}</div>`;
-                if (data.images && data.images.length > 0) {
-                    contentHTML += `<div style="margin:30px 0; text-align:center;">`;
-                    data.images.forEach(img => {
-                        contentHTML += `<img src="${img}" style="max-width:100%; border-radius:16px; margin-bottom:15px;">`;
-                    });
-                    contentHTML += `</div>`;
-                }
-                docBody.innerHTML = contentHTML;
+                docBody.innerHTML = `<div class="doc-text-wrapper">${fullCombinedHTML}</div>`;
             }
         } catch (err) {
             console.error(err);
-            docBody.innerHTML = "<div style='text-align:center; padding:20px; color:#ff4e50;'>❌ गूगल डॉक से लाइव नोट्स लोड नहीं हो सकें।</div>";
+            docBody.innerHTML = "<div style='text-align:center; padding:20px; color:#ff4e50;'>❌ गूगल डॉक से लाइव नोट्स लोड नहीं हो सके।</div>";
         }
     }
 
-    // बटन क्लिक होने पर पूरा नोट्स दिखाने या छुपाने का फ़ंक्शन
     window.handleDocToggle = function() {
         const hiddenArea = document.getElementById('hiddenDocContent');
         const actionBtn = document.getElementById('toggleDocBtn');
@@ -689,8 +709,8 @@
         }
     };
 
-    // साइट खुलते ही इसे रन करना
     window.addEventListener('DOMContentLoaded', fetchGoogleDocData);
+
 
     // 4. कांटेक्ट फॉर्म को गूगल शीट से जोड़ने का फ़िक्स स्क्रिप्ट
     const contactForm = document.getElementById('contactForm');
