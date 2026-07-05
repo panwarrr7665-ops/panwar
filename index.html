@@ -285,7 +285,7 @@
             background: linear-gradient(135deg, #ff4e50, #f9d423); color: #0f172a; box-shadow: 0 4px 15px rgba(249, 212, 35, 0.2);
         }
 
-        /* मुकेश पंवार स्पेशल प्रीमियम फूटर स्टाइलिंग */
+        /*स्पेशल प्रीमियम फूटर स्टाइलिंग */
         .site-footer {
             margin-top: auto;
             background: rgba(30, 41, 59, 0.7);
@@ -328,6 +328,54 @@
             .popup-content { height: 85vh; padding: 20px; }
             .pdf-frame { height: 100%; }
         }
+
+    /* 📚 लाइव स्टडी स्पेस का प्रीमियम डिज़ाइन */
+        .live-doc-container {
+            display: none;
+            background: rgba(30, 41, 59, 0.45);
+            border: 2px dashed #3b82f6;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-radius: 24px;
+            padding: 30px;
+            margin: 40px auto;
+            max-width: 1200px;
+            width: 100%;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        .live-doc-title {
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            text-transform: uppercase;
+        }
+        .live-doc-body {
+            font-size: 16px;
+            line-height: 1.8;
+            color: #cbd5e1;
+            white-space: pre-wrap;
+        }
+        .live-doc-btn {
+            background: linear-gradient(135deg, #ff4e50, #f9d423);
+            color: #0f172a;
+            border: none;
+            padding: 12px 30px;
+            font-size: 15px;
+            font-weight: 800;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(249, 212, 35, 0.2);
+            transition: all 0.3s;
+            margin-top: 20px;
+        }
+        .live-doc-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(249, 212, 35, 0.4);
+        }
+
     </style>
 </head>
 <body>
@@ -399,6 +447,13 @@
         <div class="popup-btn-container">
             <a id="popupDownloadBtn" class="action-btn download-action-btn" href="#" target="_blank">Download Notes</a>
         </div>
+    </div>
+</div>
+<!-- 🔄 यहाँ पर आपको यह पढ़ाई वाला खाली स्पेस पेस्ट करना है 👇 -->
+<div id="liveDocsContainer" class="live-doc-container">
+    <h2 id="liveDocTitle" class="live-doc-title">📖 Live Study Material Space</h2>
+    <div id="liveDocBody" class="live-doc-body">
+        <!-- गूगल डॉक्स से जो भी नोट्स या डायग्राम आएगा, वो सीधे यहाँ दिखेगा -->
     </div>
 </div>
 
@@ -530,6 +585,90 @@
         document.getElementById('pdfViewer').src = '';
         const textDiv = document.getElementById('popupTextNotes');
         if (textDiv) textDiv.innerText = '';
+    };
+     // ⚠️ सिर्फ गूगल डॉक्स का डेटा (टेक्स्ट + डायग्राम) देने वाली Apps Script का लिंक यहाँ डालें
+    const docScriptURL = 'https://script.google.com/macros/s/AKfycbwQzNr6BSjK2uI2DR329pHexsnNmfg0c75gf8sW9Rm4ACXRi1idF32OTn3RoKabG8sg/exec';
+
+    // ⚡ डिब्बे पर क्लिक करते ही सीधे नीचे खाली स्पेस में गूगल डॉक्स का टेक्स्ट और डायग्राम लोड करने का लॉजिक
+    window.openCategory = function(categoryName) {
+        const liveContainer = document.getElementById('liveDocsContainer');
+        const liveTitle = document.getElementById('liveDocTitle');
+        const liveBody = document.getElementById('liveDocBody');
+        
+        // क्लिक करते ही स्पेस दिखाई देगा और स्क्रीन स्क्रोल होगी
+        liveContainer.style.display = 'block';
+        liveContainer.scrollIntoView({ behavior: 'smooth' });
+        
+        liveBody.innerHTML = "<div style='text-align:center; padding:20px; font-weight:700; color:#f9d423;'>गूगल डॉक से नोट्स और डायग्राम लाइव लोड हो रहे हैं...</div>";
+
+        // सीधे गूगल डॉक की स्क्रिप्ट से टेक्स्ट और इमेज फेच करना
+        fetch(docScriptURL)
+            .then(res => res.json())
+            .then(data => {
+                liveTitle.innerText = data.title || "Study Material";
+                let mainTextContent = data.textContent || "";
+                const allWords = mainTextContent.split(/\s+/);
+
+                // 📝 500 शब्दों की लिमिट और 'Show More' का पूरा लॉजिक
+                if (allWords.length > 500) {
+                    const previewText = allWords.slice(0, 500).join(" ");
+                    const hiddenText = allWords.slice(500).join(" ");
+                    
+                    let renderedHTML = `<div>${previewText}</div>`;
+                    
+                    // 🖼️ इमेज डायग्राम्स को 500 शब्दों के तुरंत बाद जोड़ना
+                    if (data.images && data.images.length > 0) {
+                        renderedHTML += `<div style="margin:30px 0; text-align:center;"><h4 style="color:#ffffff; margin-bottom:15px; font-weight:700;">🖼️ Google Docs Live Diagram</h4>`;
+                        data.images.forEach(imgUrl => {
+                            renderedHTML += `<img src="${imgUrl}" alt="Diagram" style="max-width:100%; border-radius:16px; border:2px solid #3b82f6; margin-bottom:15px; box-shadow:0 8px 24px rgba(59,130,246,0.2);">`;
+                        });
+                        renderedHTML += `</div>`;
+                    }
+
+                    // बचा हुआ छुपा हुआ टेक्स्ट और 'Show More' बटन जोड़ना
+                    renderedHTML += `
+                        <div id="extendedDocContent" style="display:none; margin-top:15px;">${hiddenText}</div>
+                        <div style="text-align:center;">
+                            <button id="readMoreDocBtn" onclick="toggleFullDocContent()" class="live-doc-btn">📖 Show More Notes</button>
+                        </div>
+                    `;
+                    liveBody.innerHTML = renderedHTML;
+                } else {
+                    // अगर नोट्स 500 शब्दों से छोटे हैं तो पूरा डेटा एक साथ दिखाना
+                    let renderedHTML = `<div>${mainTextContent}</div>`;
+                    if (data.images && data.images.length > 0) {
+                        renderedHTML += `<div style="margin:30px 0; text-align:center;"><h4 style="color:#ffffff; margin-bottom:15px; font-weight:700;">🖼️ Google Docs Live Diagram</h4>`;
+                        data.images.forEach(imgUrl => {
+                            renderedHTML += `<img src="${imgUrl}" alt="Diagram" style="max-width:100%; border-radius:16px; border:2px solid #3b82f6; margin-bottom:15px; box-shadow:0 8px 24px rgba(59,130,246,0.2);">`;
+                        });
+                        renderedHTML += `</div>`;
+                    }
+                    liveBody.innerHTML = renderedHTML;
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                liveBody.innerHTML = "<div style='text-align:center; padding:20px; font-weight:700; color:#ff4e50;'>❌ सर्वर से लाइव डेटा लोड करने में समस्या आई! कृपया अपना Apps Script URL चेक करें।</div>";
+            });
+    };
+
+    // 'Show More' और 'Show Less' स्विच करने का फ़ंक्शन
+    window.toggleFullDocContent = function() {
+        const extendedContent = document.getElementById('extendedDocContent');
+        const readBtn = document.getElementById('readMoreDocBtn');
+        if (extendedContent.style.display === 'none') {
+            extendedContent.style.display = 'block';
+            readBtn.innerText = "✖ Show Less Notes";
+            readBtn.style.background = "rgba(30, 41, 59, 0.8)";
+            readBtn.style.color = "#ffffff";
+            readBtn.style.border = "1px solid #3b82f6";
+        } else {
+            extendedContent.style.display = 'none';
+            readBtn.innerText = "📖 Show More Notes";
+            readBtn.style.background = "linear-gradient(135deg, #ff4e50, #f9d423)";
+            readBtn.style.color = "#0f172a";
+            readBtn.style.border = "none";
+        }
     };
 
     // 3. लाइव सर्च बार फ़िल्टर
