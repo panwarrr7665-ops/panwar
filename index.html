@@ -424,6 +424,15 @@
         <button type="submit" id="submitBtn" style="background: linear-gradient(135deg, #ff4e50, #f9d423); color: #0f172a; border: none; padding: 14px; border-radius: 12px; font-size: 16px; font-weight: 800; cursor: pointer; box-shadow: 0 4px 15px rgba(249, 212, 35, 0.2); transition: all 0.3s;">Send Message</button>
     </form>
 </section>
+  <div id="inlineDocsContainer" style="display: none; max-width: 900px; margin: 40px auto; padding: 35px; background: rgba(30, 41, 59, 0.6); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.3); color: #f8fafc; text-align: left;">
+      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; margin-bottom: 25px;">
+        <h3 id="inlineDocTitle" style="font-size: 24px; font-weight: 800; color: #ffffff;">Notes Title</h3>
+        <!-- नोट्स बंद करने का बटन -->
+        <span onclick="closeInlineNotes()" style="font-size: 32px; color: #94a3b8; cursor: pointer; font-weight: bold; transition: 0.2s;" onmouseover="this.style.color='#ffffff'" onmouseout="this.style.color='#94a3b8'">&times;</span>
+    </div>
+    <!-- इसी जगह पर गूगल डॉक के शब्द और डायग्राम लाइव प्रिंट होंगे -->
+    <div id="inlineDocBody" style="font-size: 16px; line-height: 1.8; color: #cbd5e1;"></div>
+</div>
 
 <!-- मुकेश पंवार स्पेशल प्रीमियम फूटर (साइट का अंत) -->
 <footer class="site-footer">
