@@ -401,6 +401,15 @@
         </div>
     </div>
 </div>
+<!-- गूगल डॉक्स का डेटा सीधे इसी स्पेस में लोड होने के लिए नया कंटेनर -->
+<div id="inlineDocsContainer" style="display: none; max-width: 900px; margin: 40px auto; padding: 30px; background: rgba(30, 41, 59, 0.45); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); color: #f8fafc;">
+    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; margin-bottom: 20px;">
+        <h3 id="inlineDocTitle" style="font-size: 24px; font-weight: 800; color: #ffffff;">Notes Title</h3>
+        <!-- नोट्स बंद करने का छोटा बटन -->
+        <span onclick="closeInlineNotes()" style="font-size: 28px; color: #94a3b8; cursor: pointer; font-weight: bold;">&times;</span>
+    </div>
+    <div id="inlineDocBody" style="font-size: 16px; line-height: 1.8; color: #cbd5e1;"></div>
+</div>
 
 <!-- कांटेक्ट फॉर्म सेक्शन -->
 <section style="max-width: 600px; margin: 60px auto; padding: 40px 30px; background: rgba(30, 41, 59, 0.45); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); text-align: center; position: relative; z-index: 10;">
@@ -489,7 +498,7 @@
             }
 
             // 🔍 चेक करना कि गूगल ड्राइव का लिंक है या सीधे शब्द लिखे हैं
-            if (item.link.includes('https://script.google.com/macros/s/AKfycbyL8R9IQF4F-J3rQE3_2bk-mOJsBQVvWyjs_H1MsgIS2I7uVOWzAv-BPG8HA2dOGwNR/exec')) {
+            if (item.link.includes('://google.com')) {
                 let fileId = "";
                 const match = item.link.match(/\/d\/([^/]+)/);
                 if (match && match) {
@@ -508,90 +517,14 @@
                     window.open(item.link, '_blank');
                     return;
                 }
-                       } else {
-                // 📄 गूगल डॉक्स और टेक्स्ट मोड का नया एडवांस सेटअप (टेक्स्ट + डायग्राम + 500 शब्द लिमिट)
-                if (item.link.includes('://google.com')) {
-                    pdfViewer.style.display = 'none';
-                    popupDownloadBtn.style.display = 'none';
-                    textDiv.style.display = 'block';
-                    textDiv.innerHTML = "<div style='text-align:center; padding:20px; font-weight:700; color:#0f172a;'>नोट्स और डायग्राम लोड हो रहे हैं...</div>";
-
-                    // गूगल डॉक को HTML फॉर्मेट में बदलना ताकि इमेज/डायग्राम भी आए
-                    const htmlUrl = item.link.replace(/\/edit.*|\/preview.*/, '/export?format=html');
-
-                    fetch(htmlUrl)
-                        .then(res => res.text())
-                        .then(htmlData => {
-                            const parser = new DOMParser();
-                            const doc = parser.parseFromString(htmlData, 'text/html');
-                            
-                            const bodyText = doc.body.innerText || "";
-                            const allWords = bodyText.split(/\s+/);
-
-                            // ⏳ अगर शब्द 500 से ज़्यादा हैं तो Show More बटन दिखाना
-                            if (allWords.length > 500) {
-                                textDiv.innerHTML = `<div id="docContentContainer" style="max-height: 400px; overflow: hidden; position: relative;">${doc.body.innerHTML}</div>`;
-                                
-                                // नीचे धुंधला इफ़ेक्ट (Fade Shadow) देना ताकि लुक प्रीमियम लगे
-                                const shadow = document.createElement('div');
-                                shadow.id = "docShadow";
-                                shadow.style.cssText = "position: absolute; bottom: 0; left: 0; width: 100%; height: 60px; background: linear-gradient(transparent, #ffffff); pointer-events: none;";
-                                document.getElementById('docContentContainer').appendChild(shadow);
-
-                                // 'Show More' बटन बनाना
-                                let showMoreBtn = document.getElementById('popupShowMoreBtn');
-                                if (!showMoreBtn) {
-                                    showMoreBtn = document.createElement('button');
-                                    showMoreBtn.id = 'popupShowMoreBtn';
-                                    showMoreBtn.style.cssText = "background: #0f172a; color: #ffffff; border: none; padding: 12px 30px; border-radius: 50px; font-weight: 700; cursor: pointer; margin: 20px auto 10px auto; display: block; box-shadow: 0 4px 10px rgba(0,0,0,0.2); font-size: 15px;";
-                                    textDiv.after(showMoreBtn);
-                                }
-                                showMoreBtn.style.display = 'block';
-                                showMoreBtn.innerText = "Show More (आगे पढ़ें और डायग्राम देखें) ➔";
-
-                                // बटन दबाने पर पूरा डॉक और डायग्राम खुल जायेगा
-                                showMoreBtn.onclick = function() {
-                                    const container = document.getElementById('docContentContainer');
-                                    if (container) {
-                                        container.style.maxHeight = 'none'; 
-                                        const sh = document.getElementById('docShadow');
-                                        if (sh) sh.style.display = 'none'; 
-                                    }
-                                    showMoreBtn.style.display = 'none'; 
-                                };
-                            } else {
-                                // अगर 500 से कम शब्द हैं तो सीधे पूरा दिखाएं
-                                textDiv.innerHTML = doc.body.innerHTML;
-                                const showMoreBtn = document.getElementById('popupShowMoreBtn');
-                                if (showMoreBtn) showMoreBtn.style.display = 'none';
-                            }
-
-                            // 🖼️ डायग्राम (इमेजेस) को मोबाइल स्क्रीन के लिए ऑटो-फिट करना
-                            const docImages = textDiv.querySelectorAll('img');
-                            docImages.forEach(img => {
-                                img.style.maxWidth = '100%';
-                                img.style.height = 'auto';
-                                img.style.display = 'block';
-                                img.style.margin = '15px auto';
-                                img.style.borderRadius = '12px';
-                                img.style.boxShadow = '0 4px 15px rgba(0,0,0,0.1)';
-                            });
-                        })
-                        .catch(err => {
-                            console.error(err);
-                            textDiv.innerHTML = "<div style='color:red; text-align:center; padding:20px;'>गूगल डॉक लोड करने में समस्या आई। कृपया लिंक की Share सेटिंग Anyone with link पर सेट करें।</div>";
-                        });
-                } else {
-                    // अगर सामान्य टेक्स्ट है (गूगल डॉक लिंक नहीं है)
-                    pdfViewer.style.display = 'none';
-                    popupDownloadBtn.style.display = 'none';
-                    textDiv.style.display = 'block';
-                    textDiv.innerText = item.link;
-                    const showMoreBtn = document.getElementById('popupShowMoreBtn');
-                    if (showMoreBtn) showMoreBtn.style.display = 'none';
-                }
+            } else {
+                // ✍️ यह टेक्स्ट मोड है: PDF और下載 बटन छुपाओ, सीधे शब्द दिखाओ
+                pdfViewer.style.display = 'none';
+                popupDownloadBtn.style.display = 'none';
+                textDiv.style.display = 'block';
+                
+                textDiv.innerText = item.link; // यहाँ शीट से सीधे लिखे शब्द आ जायेंगे
             }
-
 
             // डिब्बा स्क्रीन पर दिखाना
             document.getElementById('notesPopup').style.display = 'flex';
@@ -604,9 +537,8 @@
     window.closeNotesPopup = function() {
         document.getElementById('notesPopup').style.display = 'none';
         document.getElementById('pdfViewer').src = '';
-        const showMoreBtn = document.getElementById('popupShowMoreBtn');
-        if (showMoreBtn) showMoreBtn.style.display = 'none';
-
+        const textDiv = document.getElementById('popupTextNotes');
+        if (textDiv) textDiv.innerText = '';
     };
 
     // 3. लाइव सर्च बार फ़िल्टर
@@ -678,6 +610,95 @@
             }
         });
     }
+
+ // ⚡ सिर्फ Google Docs से सीधे स्पेस में लोड करने वाला फाइनल फंक्शन
+    window.openCategory = function(categoryName) {
+        // ⚠️ यहाँ अपनी गूगल डॉक वाली Apps Script का Web App URL डालें
+        const docScriptURL = 'https://script.google.com/macros/s/AKfycbwO2skbfT4VhMGaMNu9gD-lTy-AsTRIrNvdsz36c8eQOZf8m-1x5gytKFFJUb4SWuNl/exec';
+
+        const inlineContainer = document.getElementById('inlineDocsContainer');
+        const inlineTitle = document.getElementById('inlineDocTitle');
+        const inlineDocBody = document.getElementById('inlineDocBody');
+        
+        inlineTitle.innerText = "Loading...";
+        inlineDocBody.innerHTML = "<div style='text-align:center; padding:20px; font-weight:700; color:#ffffff;'>गूगल डॉक से नोट्स और डायग्राम लाइव लोड हो रहे हैं...</div>";
+        
+        inlineContainer.style.display = 'block';
+        inlineContainer.scrollIntoView({ behavior: 'smooth' });
+
+        // सीधे गूगल डॉक की स्क्रिप्ट से डेटा फेच करना
+        fetch(docScriptURL)
+            .then(res => res.json())
+            .then(data => {
+                inlineTitle.innerText = data.title;
+                
+                const allWords = data.textContent.split(/\s+/);
+                
+                // डायग्राम्स (इमेजेस) का HTML तैयार करना
+                let imagesHtml = "";
+                if(data.images && data.images.length > 0) {
+                    data.images.forEach(img => {
+                        imagesHtml += `<img src="data:${img.mimeType};base64,${img.base64}" style="max-width:100%; height:auto; display:block; margin:20px auto; border-radius:12px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); background:#fff; padding:5px;" />`;
+                    });
+                }
+
+                // ⏳ हर 500 शब्दों पर Show More बटन का लॉजिक
+                if (allWords.length > 500) {
+                    const first500 = allWords.slice(0, 500).join(" ");
+                    
+                    inlineDocBody.innerHTML = `
+                        <div id="docInlineContent" style="max-height: 450px; overflow: hidden; position: relative; white-space: pre-wrap;">${first500}</div>
+                    `;
+                    
+                    // नीचे धुंधला इफ़ेक्ट (Fade effect) देना
+                    const shadow = document.createElement('div');
+                    shadow.id = "docInlineShadow";
+                    shadow.style.cssText = "position: absolute; bottom: 0; left: 0; width: 100%; height: 70px; background: linear-gradient(transparent, #1e293b); pointer-events: none;";
+                    document.getElementById('docInlineContent').appendChild(shadow);
+
+                    // 'Show More' बटन बनाना
+                    let showMoreBtn = document.getElementById('inlineShowMoreBtn');
+                    if (!showMoreBtn) {
+                        showMoreBtn = document.createElement('button');
+                        showMoreBtn.id = 'inlineShowMoreBtn';
+                        showMoreBtn.style.cssText = "background: linear-gradient(135deg, #ff4e50, #f9d423); color: #0f172a; border: none; padding: 12px 35px; border-radius: 50px; font-weight: 800; cursor: pointer; margin: 25px auto 10px auto; display: block; box-shadow: 0 4px 15px rgba(249,212,35,0.2); font-size: 15px;";
+                        inlineDocBody.after(showMoreBtn);
+                    }
+                    showMoreBtn.style.display = 'block';
+                    showMoreBtn.innerText = "Show More (पूरे नोट्स और डायग्राम देखें) ➔";
+
+                    // बटन दबाते ही पूरा टेक्स्ट और सारे डायग्राम नीचे लोड हो जाएंगे
+                    showMoreBtn.onclick = function() {
+                        const contentDiv = document.getElementById('docInlineContent');
+                        if (contentDiv) {
+                            contentDiv.style.maxHeight = 'none';
+                            contentDiv.innerHTML = data.textContent + "<br/>" + imagesHtml; // पूरा टेक्स्ट + डायग्राम
+                            const sh = document.getElementById('docInlineShadow');
+                            if (sh) sh.style.display = 'none';
+                        }
+                        showMoreBtn.style.display = 'none';
+                    };
+                } else {
+                    // अगर शब्द 500 से कम हैं तो टेक्स्ट और डायग्राम सीधे पूरा दिखाएं
+                    inlineDocBody.style.whiteSpace = "pre-wrap";
+                    inlineDocBody.innerHTML = data.textContent + "<br/>" + imagesHtml;
+                    const showMoreBtn = document.getElementById('inlineShowMoreBtn');
+                    if (showMoreBtn) showMoreBtn.style.display = 'none';
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                inlineDocBody.innerHTML = "<div style='color:#ef4444; text-align:center;'>गूगल डॉक स्क्रिप्ट से कनेक्ट करने में समस्या आई। Deployment सेटिंग्स चेक करें।</div>";
+            });
+    };
+
+    window.closeInlineNotes = function() {
+        document.getElementById('inlineDocsContainer').style.display = 'none';
+        document.getElementById('inlineDocBody').innerHTML = '';
+        const showMoreBtn = document.getElementById('inlineShowMoreBtn');
+        if (showMoreBtn) showMoreBtn.style.display = 'none';
+   };
+
 </script>
 
 </body>
