@@ -489,7 +489,7 @@
             }
 
             // 🔍 चेक करना कि गूगल ड्राइव का लिंक है या सीधे शब्द लिखे हैं
-            if (item.link.includes('://google.com')) {
+            if (item.link.includes('https://script.google.com/macros/s/AKfycbyL8R9IQF4F-J3rQE3_2bk-mOJsBQVvWyjs_H1MsgIS2I7uVOWzAv-BPG8HA2dOGwNR/exec')) {
                 let fileId = "";
                 const match = item.link.match(/\/d\/([^/]+)/);
                 if (match && match) {
@@ -508,14 +508,90 @@
                     window.open(item.link, '_blank');
                     return;
                 }
-            } else {
-                // ✍️ यह टेक्स्ट मोड है: PDF और下載 बटन छुपाओ, सीधे शब्द दिखाओ
-                pdfViewer.style.display = 'none';
-                popupDownloadBtn.style.display = 'none';
-                textDiv.style.display = 'block';
-                
-                textDiv.innerText = item.link; // यहाँ शीट से सीधे लिखे शब्द आ जायेंगे
+                       } else {
+                // 📄 गूगल डॉक्स और टेक्स्ट मोड का नया एडवांस सेटअप (टेक्स्ट + डायग्राम + 500 शब्द लिमिट)
+                if (item.link.includes('://google.com')) {
+                    pdfViewer.style.display = 'none';
+                    popupDownloadBtn.style.display = 'none';
+                    textDiv.style.display = 'block';
+                    textDiv.innerHTML = "<div style='text-align:center; padding:20px; font-weight:700; color:#0f172a;'>नोट्स और डायग्राम लोड हो रहे हैं...</div>";
+
+                    // गूगल डॉक को HTML फॉर्मेट में बदलना ताकि इमेज/डायग्राम भी आए
+                    const htmlUrl = item.link.replace(/\/edit.*|\/preview.*/, '/export?format=html');
+
+                    fetch(htmlUrl)
+                        .then(res => res.text())
+                        .then(htmlData => {
+                            const parser = new DOMParser();
+                            const doc = parser.parseFromString(htmlData, 'text/html');
+                            
+                            const bodyText = doc.body.innerText || "";
+                            const allWords = bodyText.split(/\s+/);
+
+                            // ⏳ अगर शब्द 500 से ज़्यादा हैं तो Show More बटन दिखाना
+                            if (allWords.length > 500) {
+                                textDiv.innerHTML = `<div id="docContentContainer" style="max-height: 400px; overflow: hidden; position: relative;">${doc.body.innerHTML}</div>`;
+                                
+                                // नीचे धुंधला इफ़ेक्ट (Fade Shadow) देना ताकि लुक प्रीमियम लगे
+                                const shadow = document.createElement('div');
+                                shadow.id = "docShadow";
+                                shadow.style.cssText = "position: absolute; bottom: 0; left: 0; width: 100%; height: 60px; background: linear-gradient(transparent, #ffffff); pointer-events: none;";
+                                document.getElementById('docContentContainer').appendChild(shadow);
+
+                                // 'Show More' बटन बनाना
+                                let showMoreBtn = document.getElementById('popupShowMoreBtn');
+                                if (!showMoreBtn) {
+                                    showMoreBtn = document.createElement('button');
+                                    showMoreBtn.id = 'popupShowMoreBtn';
+                                    showMoreBtn.style.cssText = "background: #0f172a; color: #ffffff; border: none; padding: 12px 30px; border-radius: 50px; font-weight: 700; cursor: pointer; margin: 20px auto 10px auto; display: block; box-shadow: 0 4px 10px rgba(0,0,0,0.2); font-size: 15px;";
+                                    textDiv.after(showMoreBtn);
+                                }
+                                showMoreBtn.style.display = 'block';
+                                showMoreBtn.innerText = "Show More (आगे पढ़ें और डायग्राम देखें) ➔";
+
+                                // बटन दबाने पर पूरा डॉक और डायग्राम खुल जायेगा
+                                showMoreBtn.onclick = function() {
+                                    const container = document.getElementById('docContentContainer');
+                                    if (container) {
+                                        container.style.maxHeight = 'none'; 
+                                        const sh = document.getElementById('docShadow');
+                                        if (sh) sh.style.display = 'none'; 
+                                    }
+                                    showMoreBtn.style.display = 'none'; 
+                                };
+                            } else {
+                                // अगर 500 से कम शब्द हैं तो सीधे पूरा दिखाएं
+                                textDiv.innerHTML = doc.body.innerHTML;
+                                const showMoreBtn = document.getElementById('popupShowMoreBtn');
+                                if (showMoreBtn) showMoreBtn.style.display = 'none';
+                            }
+
+                            // 🖼️ डायग्राम (इमेजेस) को मोबाइल स्क्रीन के लिए ऑटो-फिट करना
+                            const docImages = textDiv.querySelectorAll('img');
+                            docImages.forEach(img => {
+                                img.style.maxWidth = '100%';
+                                img.style.height = 'auto';
+                                img.style.display = 'block';
+                                img.style.margin = '15px auto';
+                                img.style.borderRadius = '12px';
+                                img.style.boxShadow = '0 4px 15px rgba(0,0,0,0.1)';
+                            });
+                        })
+                        .catch(err => {
+                            console.error(err);
+                            textDiv.innerHTML = "<div style='color:red; text-align:center; padding:20px;'>गूगल डॉक लोड करने में समस्या आई। कृपया लिंक की Share सेटिंग Anyone with link पर सेट करें।</div>";
+                        });
+                } else {
+                    // अगर सामान्य टेक्स्ट है (गूगल डॉक लिंक नहीं है)
+                    pdfViewer.style.display = 'none';
+                    popupDownloadBtn.style.display = 'none';
+                    textDiv.style.display = 'block';
+                    textDiv.innerText = item.link;
+                    const showMoreBtn = document.getElementById('popupShowMoreBtn');
+                    if (showMoreBtn) showMoreBtn.style.display = 'none';
+                }
             }
+
 
             // डिब्बा स्क्रीन पर दिखाना
             document.getElementById('notesPopup').style.display = 'flex';
@@ -528,8 +604,9 @@
     window.closeNotesPopup = function() {
         document.getElementById('notesPopup').style.display = 'none';
         document.getElementById('pdfViewer').src = '';
-        const textDiv = document.getElementById('popupTextNotes');
-        if (textDiv) textDiv.innerText = '';
+        const showMoreBtn = document.getElementById('popupShowMoreBtn');
+        if (showMoreBtn) showMoreBtn.style.display = 'none';
+
     };
 
     // 3. लाइव सर्च बार फ़िल्टर
