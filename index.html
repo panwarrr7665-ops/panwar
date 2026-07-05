@@ -17,34 +17,14 @@
         body {
             background-color: #0f172a; /* प्रीमियम डार्क स्लेट बैकग्राउंड */
             color: #f8fafc;
-            position: relative;
+            background-image: linear-gradient(rgba(15, 23, 42, 0.90), rgba(15, 23, 42, 0.90)), url('https://unsplash.com');
+            background-attachment: fixed;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            overflow-x: hidden;
-        }
-
-        /* 🎪 आपके आदेशानुसार: NCERT + RBSE + Science Guruji मूविंग बैकग्राउंड वाटरमार्क */
-        body::before {
-            content: "NCERT • RBSE • SCIENCE GURUJI";
-            position: fixed;
-            top: -10%;
-            left: -10%;
-            width: 200%;
-            height: 200%;
-            font-size: 8vw;
-            font-weight: 900;
-            color: rgba(255, 255, 255, 0.02); /* बहुत ही हल्का ताकि बैकग्राउंड में दिखे */
-            white-space: nowrap;
-            transform: rotate(-15deg);
-            pointer-events: none;
-            z-index: -1;
-            animation: moveBackgroundText 25s linear infinite;
-        }
-
-        @keyframes moveBackgroundText {
-            0% { transform: translate(0, 0) rotate(-15deg); }
-            100% { transform: translate(-10%, -10%) rotate(-15deg); }
         }
 
         /* ऊपर का आधुनिक हेडर (Navbar) स्टाइलिंग (3-dots Removed) */
@@ -61,6 +41,7 @@
             top: 0;
             z-index: 1000;
         }
+
         /* गोल डायरेक्ट इमोजी लोगो और नाम का नया स्टाइल */
         .logo-container {
             display: flex;
@@ -152,6 +133,7 @@
             gap: 30px;
             padding: 10px;
         }
+
         /* सिंगल प्रीमियम बॉक्स (Card) की स्टाइलिंग - ग्लास इफ़ेक्ट */
         .card {
             background: rgba(30, 41, 59, 0.45);
@@ -236,6 +218,7 @@
             color: #0f172a !important;
             box-shadow: 0 4px 15px rgba(255,255,255,0.2);
         }
+
         /* सर्च रिजल्ट न मिलने पर दिखने वाला सुंदर डिब्बा */
         .no-result-box {
             display: none;
@@ -260,7 +243,7 @@
             color: #cbd5e1;
         }
 
-        /* पीडीएफ और सीधे लिखे शब्दों को दिखाने वाला पुराना पॉपअप बॉक्स */
+        /* पीडीएफ और सीधे लिखे शब्दों को दिखाने वाला पॉपअप बॉक्स */
         .notes-popup {
             display: none;
             position: fixed;
@@ -302,24 +285,6 @@
             background: linear-gradient(135deg, #ff4e50, #f9d423); color: #0f172a; box-shadow: 0 4px 15px rgba(249, 212, 35, 0.2);
         }
 
-        /* 📝 आपके आदेशानुसार: नए लाइव क्विज़ ऑप्शन बटन्स की प्रीमियम स्टाइलिंग */
-        .quiz-option-btn {
-            width: 100%;
-            text-align: left;
-            padding: 14px 20px;
-            background: rgba(15, 23, 42, 0.6);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            color: #ffffff;
-            font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        .quiz-option-btn:hover {
-            border-color: #f9d423;
-            background: rgba(30, 41, 59, 0.8);
-        }
         /* मुकेश पंवार स्पेशल प्रीमियम फूटर स्टाइलिंग */
         .site-footer {
             margin-top: auto;
@@ -379,6 +344,7 @@
         <input type="text" id="searchInput" placeholder="सर्च करें नोट्स, महत्वपूर्ण प्रश्न...">
     </div>
 </header>
+
 <section class="students-section">
     <h2 class="section-title">Hello, Dear Students</h2>
     <p class="section-subtitle">Learn anytime, anywhere with us</p>
@@ -424,7 +390,7 @@
     </div>
 </section>
 
-<!-- पीडीएफ और सीधे लिखे शब्दों को दिखाने वाला पुराना पॉपअप बॉक्स ढांचा (सुरक्षित) -->
+<!-- पीडीएफ और सीधा टेक्स्ट दिखाने वाला पॉपअप बॉक्स स्ट्रक्चर -->
 <div id="notesPopup" class="notes-popup">
     <div class="popup-content">
         <span class="close-popup" onclick="closeNotesPopup()">&times;</span>
@@ -435,12 +401,13 @@
         </div>
     </div>
 </div>
-<!-- कांटेक्ट फॉर्म सेक्शन (Proper Working - 30px गैप के साथ) -->
+
+<!-- कांटेक्ट फॉर्म सेक्शन -->
 <section style="max-width: 600px; margin: 60px auto; padding: 40px 30px; background: rgba(30, 41, 59, 0.45); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); text-align: center; position: relative; z-index: 10;">
     <h2 style="color: #ffffff; margin-bottom: 10px; font-size: 28px; font-weight: 800;">Contact Us</h2>
     <p style="color: #94a3b8; margin-bottom: 30px; font-size: 15px; font-weight: 500;">If you have any questions, feel free to drop a message!</p>
     
-    <form id="contactForm" style="display: flex; flex-direction: column; gap: 30px;">
+    <form id="contactForm" style="display: flex; flex-direction: column; gap: 20px;">
         <input type="text" id="name" placeholder="Your Name" required style="padding: 14px 18px; background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; color: #ffffff; outline: none; font-size: 15px; transition: all 0.3s;">
         <input type="email" id="email" placeholder="Your Email" required style="padding: 14px 18px; background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; color: #ffffff; outline: none; font-size: 15px; transition: all 0.3s;">
         <textarea id="message" placeholder="Your Message" rows="5" required style="padding: 14px 18px; background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; color: #ffffff; outline: none; font-size: 15px; resize: none; transition: all 0.3s;"></textarea>
@@ -449,247 +416,195 @@
     </form>
 </section>
 
-<!-- 📄 आपके आदेशानुसार: Contact Us और THANKS के बीच का असली खाली स्पेस (Container) + लाइव क्विज़ बॉक्स -->
-<div id="inlineDocsContainer" style="display: none; max-width: 900px; margin: 40px auto; padding: 35px; background: rgba(30, 41, 59, 0.6); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.3); color: #f8fafc; text-align: left;">
-    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; margin-bottom: 25px;">
-        <h3 id="inlineDocTitle" style="font-size: 24px; font-weight: 800; color: #ffffff;">Notes Title</h3>
-        <span onclick="closeInlineNotes()" style="font-size: 32px; color: #94a3b8; cursor: pointer; font-weight: bold; transition: 0.2s;" onmouseover="this.style.color='#ffffff'" onmouseout="this.style.color='#94a3b8'">&times;</span>
-    </div>
-    
-    <!-- 🖼️ इसी जगह पर गूगल डॉक का पूरा हिंदी टेक्स्ट और डायग्राम लाइव लोड होगा -->
-    <div id="inlineDocBody" style="font-size: 16px; line-height: 1.8; color: #cbd5e1;"></div>
-
-    <!-- 📝 लाइव प्रैक्टिस टेस्ट (MCQ Quiz Box) -->
-    <div id="quizSectionArea" style="display: none; margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 25px;">
-        <h3 style="font-size: 22px; font-weight: 800; color: #f9d423; margin-bottom: 15px;">Live MCQ Practice Test 🧪</h3>
-        <div id="quizQuestionBox" style="font-size: 18px; font-weight: 700; color: #ffffff; margin-bottom: 20px; line-height: 1.5;"></div>
-        <div id="quizOptionsBox" style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px;"></div>
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-            <span id="quizProgressText" style="color: #94a3b8; font-weight: 600;">Question 0 of 0</span>
-            <button id="nextQuizQuestionBtn" onclick="goToNextQuestion()" style="display: none; background: linear-gradient(135deg, #ff4e50, #f9d423); color: #0f172a; border: none; padding: 10px 25px; border-radius: 50px; font-weight: 800; cursor: pointer;">Next Question ➔</button>
-        </div>
-        <div id="quizResultDisplay" style="display: none; text-align: center; padding: 20px;">
-            <span style="font-size: 45px;">🏆</span>
-            <h4 style="font-size: 24px; font-weight: 800; color: #ffffff; margin: 10px 0;">Test Completed!</h4>
-            <p id="finalScoreDisplay" style="font-size: 18px; font-weight: 700; color: #22c55e;"></p>
-        </div>
-    </div>
-</div>
-
+<!-- मुकेश पंवार स्पेशल प्रीमियम फूटर (साइट का अंत) -->
 <footer class="site-footer">
     <div class="footer-welcome">THANKS</div>
     <p class="footer-info">यह एक आधुनिक ऑनलाइन एजुकेशनल प्लेटफॉर्म है, जहाँ छात्रों को बेहतरीन विज्ञान और अन्य विषयों के नोट्स और स्टडी material बिल्कुल आसान भाषा में उपलब्ध कराए जाते हैं।</p>
     <div class="footer-address">
-        © Help Through Science Guruji | एड्रेस: भारत | Powered by PANWAR GROUP
+        © Help Through Science Guruji | एड्रेस: भारत | Powered by PANWAR GROUP<script>
+    // ⚠️ आपका बिल्कुल नया फिक्स Google Web App URL यहाँ पहले से सेट है
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbwF_Krti6-t3t-chlHgPNejxygxqZh0gwtbo9ckIJFemSsmJhaIrDC2VjArrBg1E8LF/exec';
+
+    // वेबसाइट के डिब्बों का डेटा रखने के लिए स्टोर
+    let notesDataStore = {};
+
+    // 1. वेबसाइट लोड होते ही गूगल शीट की सभी शीट्स से लाइव डेटा फ़ेच करना
+    async function loadLiveNotes() {
+        try {
+            // बिना किसी कस्टम हेडर के एकदम सेफ़ गेट रिक्वेस्ट
+            const response = await fetch(`${scriptURL}?action=getNotes`);
+            const data = await response.json();
+            
+            // डेटा को मैप करना (प्रत्येक श्रेणी के पहले आइटम को सीधे उठाना)
+            data.forEach(item => {
+                notesDataStore[item.category] = {
+                    link: item.driveLink,
+                    title: item.title || "Study Material"
+                };
+                
+                // वेबसाइट के डिब्बे पर सीधे हिंदी टाइटल नाम अपडेट करना
+                const descElement = document.getElementById(`desc_${item.category}`);
+                if (descElement && item.title) {
+                    descElement.innerText = item.title;
+                }
+            });
+            console.log("सभी डिब्बों का डेटा सफलतापूर्वक सिंक हुआ:", notesDataStore);
+        } catch (error) {
+            console.error("गूगल शीट से डेटा लोड करने में विफल:", error);
+        }
+    }
+
+    window.addEventListener('DOMContentLoaded', loadLiveNotes);
+
+    // 2. प्रत्येक डिब्बे पर टैप करते ही सीधे पहले डिब्बे की तरह नोट्स खोलने वाला फंक्शन
+    window.openCategory = function(categoryName) {
+        // आपकी सुविधा के लिए कोडिंग नामों को शीट की केटेगरी से 100% मैच करना
+        let key = categoryName; 
+        if (categoryName === 'class_notes') key = 'class_notes';
+        if (categoryName === 'study_material') key = 'study_material';
+        if (categoryName === 'downloads') key = 'downloads';
+        if (categoryName === 'suggested_notes') key = 'suggested_notes';
+
+        const item = notesDataStore[key];
+        if (item && item.link) {
+            const popupTitle = document.getElementById('popupTitle');
+            const pdfViewer = document.getElementById('pdfViewer');
+            const popupDownloadBtn = document.getElementById('popupDownloadBtn');
+            
+            popupTitle.innerText = item.title;
+
+            // पहले से बने हुए टेक्स्ट बॉक्स को ढूँढना या नया बनाना
+            let textDiv = document.getElementById('popupTextNotes');
+            if (!textDiv) {
+                textDiv = document.createElement('div');
+                textDiv.id = 'popupTextNotes';
+                textDiv.style.color = '#0f172a';
+                textDiv.style.fontSize = '16px';
+                textDiv.style.lineHeight = '1.8';
+                textDiv.style.whiteSpace = 'pre-wrap';
+                textDiv.style.maxHeight = '450px';
+                textDiv.style.overflowY = 'auto';
+                textDiv.style.padding = '10px 5px';
+                pdfViewer.after(textDiv);
+            }
+
+            // 🔍 चेक करना कि गूगल ड्राइव का लिंक है या सीधे शब्द लिखे हैं
+            if (item.link.includes('://google.com')) {
+                let fileId = "";
+                const match = item.link.match(/\/d\/([^/]+)/);
+                if (match && match) {
+                    fileId = match;
+                }
+
+                if (fileId) {
+                    // 📄 यह PDF मोड है: शब्द बॉक्स छुपाओ, PDF दिखाओ
+                    textDiv.style.display = 'none';
+                    pdfViewer.style.display = 'block';
+                    popupDownloadBtn.style.display = 'inline-block';
+                    
+                    pdfViewer.src = `https://://google.com/file/d/${fileId}/preview?rm=minimal`;
+                    popupDownloadBtn.href = `https://://google.com/uc?export=download&id=${fileId}`;
+                } else {
+                    window.open(item.link, '_blank');
+                    return;
+                }
+            } else {
+                // ✍️ यह टेक्स्ट मोड है: PDF और下載 बटन छुपाओ, सीधे शब्द दिखाओ
+                pdfViewer.style.display = 'none';
+                popupDownloadBtn.style.display = 'none';
+                textDiv.style.display = 'block';
+                
+                textDiv.innerText = item.link; // यहाँ शीट से सीधे लिखे शब्द आ जायेंगे
+            }
+
+            // डिब्बा स्क्रीन पर दिखाना
+            document.getElementById('notesPopup').style.display = 'flex';
+        } else {
+            alert("इस केटेगरी में अभी कोई नोट्स अपलोड नहीं किए गए हैं या श्रेणी नाम गलत है।");
+        }
+    };
+
+    // पॉपअप बंद करने का सही क्लीनर फंक्शन
+    window.closeNotesPopup = function() {
+        document.getElementById('notesPopup').style.display = 'none';
+        document.getElementById('pdfViewer').src = '';
+        const textDiv = document.getElementById('popupTextNotes');
+        if (textDiv) textDiv.innerText = '';
+    };
+
+    // 3. लाइव सर्च बार फ़िल्टर
+    const searchInput = document.getElementById('searchInput');
+    const noResultBox = document.getElementById('noResultBox');
+
+    if (searchInput) {
+        searchInput.addEventListener('input', function(e) {
+            const searchText = e.target.value.toLowerCase().trim();
+            const cards = document.querySelectorAll('.card');
+            let matchCount = 0;
+
+            cards.forEach(card => {
+                const titleText = card.querySelector('.card-title').innerText.toLowerCase();
+                const descText = card.querySelector('.card-desc').innerText.toLowerCase();
+
+                if (titleText.includes(searchText) || descText.includes(searchText)) {
+                    card.style.display = 'flex';
+                    matchCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            if (matchCount === 0) {
+                noResultBox.style.display = 'block';
+            } else {
+                noResultBox.style.display = 'none';
+            }
+        });
+    }
+
+    // 4. कांटेक्ट फॉर्म को गूगल शीट से जोड़ने का फ़िक्स स्क्रिप्ट
+    const contactForm = document.getElementById('contactForm');
+    const submitBtn = document.getElementById('submitBtn');
+
+    if (contactForm) {
+        contactForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            submitBtn.disabled = true;
+            submitBtn.innerText = "Sending Message...";
+
+            const uName = document.getElementById('name').value;
+            const uEmail = document.getElementById('email').value;
+            const uMsg = document.getElementById('message').value;
+
+            const formData = new URLSearchParams();
+            formData.append('action', 'contactMessage');
+            formData.append('name', uName);
+            formData.append('email', uEmail);
+            formData.append('message', uMsg);
+
+            try {
+                await fetch(scriptURL, {
+                    method: 'POST',
+                    body: formData,
+                    mode: 'no-cors' // सेफ़ नो-कोर्स सबमिशन
+                });
+
+                alert("Success! Your message has been sent successfully. Science Guruji team will contact you soon.");
+                contactForm.reset();
+            } catch (error) {
+                console.error('Error!', error.message);
+                alert("मैसेज नहीं भेजा जा सका, कृपया दोबारा कोशिश करें।");
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerText = "Send Message";
+            }
+        });
+    }
+</script>
+
+</body>
+</html>
+
     </div>
 </footer>
-<script>
-    // ⚠️ आपका मुख्य गूगल वेब ऐप URL (कॉन्टैक्ट मैसेज सेंड करने के लिए)
-    const scriptURL = 'https://google.com';
-    
-    // ⚠️ सिर्फ गूगल डॉक्स का डेटा (टेक्स्ट + डायग्राम + क्विज़) देने वाली Apps Script का नया लिंक यहाँ डालें 👇
-    const docScriptURL = 'https://google.com';
-
-    // चारों डिब्बों का डेटा बिना किसी छेड़खानी के सिंक रखने के लिए डेटा स्टोर
-    let notesDataStore = {
-        'class_notes': { title: 'Class Notes & PDF' },
-        'study_material': { title: 'Other Study Material' },
-        'downloads': { title: 'Downloads' },
-        'suggested_notes': { title: 'Suggested Notes' }
-    };
-
-    let quizDataList = [];
-    let currentQuizIndex = 0;
-    let studentScore = 0;
-    let isAnswerLocked = false;
-
-    // ⚡ सीधे खाली स्पेस में गूगल डॉक्स का टेक्स्ट और डायग्राम लोड करने का लॉजिक
-    window.openCategory = function(categoryName) {
-        const item = notesDataStore[categoryName];
-        const inlineContainer = document.getElementById('inlineDocsContainer');
-        const inlineTitle = document.getElementById('inlineDocTitle');
-        const inlineDocBody = document.getElementById('inlineDocBody');
-        const quizArea = document.getElementById('quizSectionArea');
-        
-        quizArea.style.display = 'none';
-        document.getElementById('quizResultDisplay').style.display = 'none';
-
-        inlineTitle.innerText = item ? item.title : "Notes";
-        inlineDocBody.innerHTML = "<div style='text-align:center; padding:20px; font-weight:700; color:#ffffff;'>गूगल डॉक से नोट्स और डायग्राम लाइव लोड हो रहे हैं...</div>";
-        
-        inlineContainer.style.display = 'block';
-        inlineContainer.scrollIntoView({ behavior: 'smooth' });
-
-        // सीधे गूगल डॉक की नई स्क्रिप्ट से टेक्स्ट और इमेज फेच करना
-        fetch(docScriptURL)
-            .then(res => res.json())
-            .then(data => {
-                inlineTitle.innerText = data.title || inlineTitle.innerText;
-                
-                // 🧠 गूगल डॉक से क्विज़ (MCQ) का लाइव डेटा अलग करना
-                let quizQuestionsArray = [];
-                let mainTextContent = data.textContent;
-                
-                if (data.textContent.includes("---QUIZ START---")) {
-                    const quizParts = data.textContent.split("---QUIZ START---");
-                    mainTextContent = quizParts[0]; 
-                    
-                    const quizRawLines = quizParts[1].split("\n");
-                    let currentQ = null;
-                    
-                    quizRawLines.forEach(line => {
-                        line = line.trim();
-                        if (line.startsWith("Q:") || line.startsWith("q:")) {
-                            if (currentQ) quizQuestionsArray.push(currentQ);
-                            currentQ = { question: line.substring(2).trim(), optionA: "", optionB: "", optionC: "", optionD: "", answer: "" };
-                        } else if (line.startsWith("A:") || line.startsWith("a:")) {
-                            if (currentQ) currentQ.optionA = line.substring(2).trim();
-                        } else if (line.startsWith("B:") || line.startsWith("b:")) {
-                            if (currentQ) currentQ.optionB = line.substring(2).trim();
-                        } else if (line.startsWith("C:") || line.startsWith("c:")) {
-                            if (currentQ) currentQ.optionC = line.substring(2).trim();
-                        } else if (line.startsWith("D:") || line.startsWith("d:")) {
-                            if (currentQ) currentQ.optionD = line.substring(2).trim();
-                        } else if (line.startsWith("ANS:") || line.startsWith("ans:")) {
-                            if (currentQ) currentQ.answer = line.substring(4).trim().toUpperCase();
-                        }
-                    });
-                    if (currentQ) quizQuestionsArray.push(currentQ);
-                    data.quiz = quizQuestionsArray;
-                }
-
-                const allWords = mainTextContent.split(/\s+/);
-                // 500 शब्दों की लिमिट और 'Show More' का पूरा लॉजिक
-                if (allWords.length > 500) {
-                    const previewText = allWords.slice(0, 500).join(" ");
-                    const hiddenText = allWords.slice(500).join(" ");
-                    
-                    let renderedHTML = `<div class="doc-text-wrapper">${previewText}</div>`;
-                    
-                    // इमेज डायग्राम्स को कोड के साथ जोड़ना
-                    if (data.images && data.images.length > 0) {
-                        renderedHTML += `<div style="margin:25px 0; text-align:center;"><h4 style="color:#ffffff; font-family:'Poppins',sans-serif; margin-bottom:15px; font-weight:700;">🖼️ Google Docs Live Diagram</h4>`;
-                        data.images.forEach(imgUrl => {
-                            renderedHTML += `<img src="${imgUrl}" alt="Google Doc Diagram" style="max-width:100%; border-radius:12px; border:2px solid #575cff; margin-bottom:15px; box-shadow:0 8px 24px rgba(87,92,255,0.2);">`;
-                        });
-                        renderedHTML += `</div>`;
-                    }
-
-                    // हिडन पार्ट और बटन जोड़ना
-                    renderedHTML += `
-                        <div id="extendedDocContent" style="display:none;" class="doc-text-wrapper">${hiddenText}</div>
-                        <div style="text-align:center; margin-top:25px;">
-                            <button id="readMoreDocBtn" onclick="toggleFullDocContent()" style="background:linear-gradient(135deg, #575cff 0%, #a445b2 100%); color:#ffffff; border:none; padding:12px 28px; font-size:15px; font-weight:700; border-radius:30px; cursor:pointer; font-family:'Poppins',sans-serif; box-shadow:0 4px 15px rgba(87,92,255,0.4); transition:all 0.3s ease;">📖 Show More Notes</button>
-                        </div>
-                    `;
-                    inlineDocBody.innerHTML = renderedHTML;
-                } else {
-                    // अगर नोट्स छोटे हैं तो पूरा डेटा एक साथ दिखाना
-                    let renderedHTML = `<div class="doc-text-wrapper">${mainTextContent}</div>`;
-                    if (data.images && data.images.length > 0) {
-                        renderedHTML += `<div style="margin:25px 0; text-align:center;"><h4 style="color:#ffffff; font-family:'Poppins',sans-serif; margin-bottom:15px; font-weight:700;">🖼️ Google Docs Live Diagram</h4>`;
-                        data.images.forEach(imgUrl => {
-                            renderedHTML += `<img src="${imgUrl}" alt="Google Doc Diagram" style="max-width:100%; border-radius:12px; border:2px solid #575cff; margin-bottom:15px; box-shadow:0 8px 24px rgba(87,92,255,0.2);">`;
-                        });
-                        renderedHTML += `</div>`;
-                    }
-                    inlineDocBody.innerHTML = renderedHTML;
-                }
-
-                // 🧠 लाइव क्विज़ (MCQ) सेक्शन लोड करने का ट्रिगर लॉजिक
-                if (data.quiz && data.quiz.length > 0) {
-                    quizDataList = data.quiz;
-                    currentQuizIndex = 0;
-                    studentScore = 0;
-                    isAnswerLocked = false;
-                    quizArea.style.display = 'block';
-                    renderLiveQuestion();
-                }
-            })
-            .catch(err => {
-                console.error(err);
-                inlineDocBody.innerHTML = "<div style='text-align:center; padding:20px; font-weight:700; color:#ff4d4d;'>❌ सर्वर से लाइव डेटा लोड करने में समस्या आई! कृपया अपना Apps Script URL चेक करें या दोबारा प्रयास करें।</div>";
-            });
-    };
-
-    // 'Show More' और 'Show Less' स्विच करने का फ़ंक्शन
-    window.toggleFullDocContent = function() {
-        const extendedContent = document.getElementById('extendedDocContent');
-        const readBtn = document.getElementById('readMoreDocBtn');
-        if (extendedContent.style.display === 'none') {
-            extendedContent.style.display = 'block';
-            readBtn.innerText = "✖ Show Less Notes";
-            readBtn.style.background = "#242542";
-            readBtn.style.border = "1px solid #575cff";
-        } else {
-            extendedContent.style.display = 'none';
-            readBtn.innerText = "📖 Show More Notes";
-            readBtn.style.background = "linear-gradient(135deg, #575cff 0%, #a445b2 100%)";
-            readBtn.style.border = "none";
-        }
-    };
-    // 🧠 स्क्रीन पर लाइव प्रश्न और उसके 4 ऑप्शंस रेंडर करने का फ़ंक्शन
-    window.renderLiveQuestion = function() {
-        if (!quizDataList || quizDataList.length === 0) return;
-        
-        isAnswerLocked = false;
-        const currentQ = quizDataList[currentQuizIndex];
-        
-        // प्रोग्रेस बार की गणना
-        const progressPercent = ((currentQuizIndex + 1) / quizDataList.length) * 100;
-        
-        let quizHTML = `
-            <div style="background:#242542; border-radius:12px; height:8px; margin-bottom:20px; overflow:hidden;">
-                <div style="background:linear-gradient(90deg, #575cff, #a445b2); width:${progressPercent}%; height:100%; transition:width 0.4s ease;"></div>
-            </div>
-            <div style="display:flex; justify-content:space-between; margin-bottom:15px; font-weight:600; font-size:14px; color:#a0aec0;">
-                <span>📝 Question ${currentQuizIndex + 1} of ${quizDataList.length}</span>
-                <span>🏆 Score: ${studentScore}</span>
-            </div>
-            <h3 style="color:#ffffff; font-family:'Poppins',sans-serif; font-size:18px; margin-bottom:20px; line-height:1.6; font-weight:600;">${currentQ.question}</h3>
-            <div style="display:grid; grid-template-columns:1fr; gap:12px;">
-                <button onclick="checkLiveAnswer('A', this)" class="quiz-opt-btn" style="text-align:left; background:#1b1c31; border:1px solid #3d405b; color:#ffffff; padding:14px 20px; border-radius:10px; font-size:15px; cursor:pointer; font-family:'Poppins',sans-serif; transition:all 0.2s ease; width:100%; font-weight:500;">A) ${currentQ.optionA}</button>
-                <button onclick="checkLiveAnswer('B', this)" class="quiz-opt-btn" style="text-align:left; background:#1b1c31; border:1px solid #3d405b; color:#ffffff; padding:14px 20px; border-radius:10px; font-size:15px; cursor:pointer; font-family:'Poppins',sans-serif; transition:all 0.2s ease; width:100%; font-weight:500;">B) ${currentQ.optionB}</button>
-                <button onclick="checkLiveAnswer('C', this)" class="quiz-opt-btn" style="text-align:left; background:#1b1c31; border:1px solid #3d405b; color:#ffffff; padding:14px 20px; border-radius:10px; font-size:15px; cursor:pointer; font-family:'Poppins',sans-serif; transition:all 0.2s ease; width:100%; font-weight:500;">C) ${currentQ.optionC}</button>
-                <button onclick="checkLiveAnswer('D', this)" class="quiz-opt-btn" style="text-align:left; background:#1b1c31; border:1px solid #3d405b; color:#ffffff; padding:14px 20px; border-radius:10px; font-size:15px; cursor:pointer; font-family:'Poppins',sans-serif; transition:all 0.2s ease; width:100%; font-weight:500;">D) ${currentQ.optionD}</button>
-            </div>
-            <div id="quizActionWrapper" style="margin-top:20px; text-align:right; display:none;">
-                <button onclick="goToNextLiveQuestion()" style="background:#575cff; color:#ffffff; border:none; padding:10px 24px; font-size:14px; font-weight:700; border-radius:8px; cursor:pointer; font-family:'Poppins',sans-serif; box-shadow:0 4px 12px rgba(87,92,255,0.3); transition:all 0.2s ease;">Next Question ➡️</button>
-            </div>
-        `;
-        document.getElementById('liveQuizRenderBody').innerHTML = quizHTML;
-    };
-
-    // ⚡ छात्र के उत्तर को लॉक करने और सही/गलत का कलर फीडबैक देने का फ़ंक्शन
-    window.checkLiveAnswer = function(selectedLetter, element) {
-        if (isAnswerLocked) return;
-        isAnswerLocked = true;
-        
-        const currentQ = quizDataList[currentQuizIndex];
-        const correctAnswer = currentQ.answer;
-        const allButtons = document.querySelectorAll('.quiz-opt-btn');
-        
-        if (selectedLetter === correctAnswer) {
-            // सही उत्तर देने पर बटन ग्रीन होगा
-            element.style.background = '#10b981';
-            element.style.borderColor = '#10b981';
-            element.style.color = '#ffffff';
-            studentScore++;
-        } else {
-            // गलत उत्तर देने पर चुना हुआ लाल और सही वाला हरा होगा
-            element.style.background = '#ef4444';
-            element.style.borderColor = '#ef4444';
-            element.style.color = '#ffffff';
-            
-            allButtons.forEach(btn => {
-                if (btn.innerText.startsWith(correctAnswer + ")")) {
-                    btn.style.background = '#10b981';
-                    btn.style.borderColor = '#10b981';
-                    btn.style.color = '#ffffff';
-                }
-            });
-        }
-        
-        // अगले बटन को एक्टिव करना
-        document.getElementById('quizActionWrapper').style.display = 'block';
-    };
