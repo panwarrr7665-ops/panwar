@@ -467,7 +467,7 @@
     </form>
 </section>
 
-<!-- मुकेश पंवार स्पेशल प्रीमियम फूटर (साइट का अंत) -->
+<!--  स्पेशल प्रीमियम फूटर (साइट का अंत) -->
 <footer class="site-footer">
     <div class="footer-welcome">THANKS</div>
     <p class="footer-info">यह एक आधुनिक ऑनलाइन एजुकेशनल प्लेटफॉर्म है, जहाँ छात्रों को बेहतरीन विज्ञान और अन्य विषयों के नोट्स और स्टडी material बिल्कुल आसान भाषा में उपलब्ध कराए जाते हैं।</p>
@@ -479,7 +479,7 @@
     // वेबसाइट के डिब्बों का डेटा रखने के लिए स्टोर
     let notesDataStore = {};
 
-    // 1. वेबसाइट लोड होते ही गूगल शीट की सभी शीट्स से लाइव डेटा फ़ेच करना
+    // 1. वेबसाइट 
     async function loadLiveNotes() {
         try {
             // बिना किसी कस्टम हेडर के एकदम सेफ़ गेट रिक्वेस्ट
@@ -632,7 +632,7 @@
             const data = await res.json();
             
             if (docTitle) {
-                docTitle.innerText = data.title || "📖 Live Google Docs Notes";
+                docTitle.innerText = data.title || "📖 Load Notes";
             }
             
             allDocElements = []; // पुराना डेटा साफ़ करें
