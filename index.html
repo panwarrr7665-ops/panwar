@@ -643,7 +643,7 @@
         });
     }
   // ⚠️ अपनी गूगल ऐप्स स्क्रिप्ट का यूआरएल यहाँ डालें
-    const myGoogleDocScriptURL = 'https://script.google.com/macros/s/AKfycbx0G7_T1DKjA2J9cYIlTO4PMceFzecbNl_ibQZ4u3I33He1aXHattTNdZEWriFflAI/exec';
+    const myGoogleDocScriptURL = 'https://script.google.com/macros/s/AKfycbwn2aUepksT6DZuJSPVWfSeLoNb-zZTkb0h-qqBoZyYqNC4ck7Bh4lW2_TRhjVEcI4y/exec';
 
     // 📋 ये वेरिएबल्स याद रखेंगे कि कितना डेटा लोड हो चुका है
     let allDocElements = []; 
@@ -810,6 +810,74 @@
                 submitBtn.innerText = "Send Message";
             }
         });
+    }
+</script>
+<!-- 🕵️‍♂️ पूरी तरह छुपा हुआ एडमिन बॉक्स (नॉर्मल छात्रों को नहीं दिखेगा) -->
+<div id="secretAdminSection" style="display: none; position: fixed; bottom: 20px; right: 20px; z-index: 9999; max-width: 350px; background: rgba(15, 23, 42, 0.95); border: 2px solid #3b82f6; backdrop-filter: blur(10px); padding: 20px; border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.5);">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:8px;">
+        <h4 style="color: #67e8f9; margin:0; font-size:16px;">🔑 Secure Admin Panel</h4>
+        <span onclick="toggleAdminPanel()" style="color:#64748b; cursor:pointer; font-size:18px; font-weight:bold;">×</span>
+    </div>
+    
+    <div style="display: flex; flex-direction: column; gap: 12px;">
+        <input type="password" id="secPassword" placeholder="🔒 Enter Admin Password" style="padding: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: #0f172a; color: white; outline: none; font-size:13px;">
+        <input type="text" id="secLink" placeholder="🔗 YouTube/Update URL" style="padding: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: #0f172a; color: white; outline: none; font-size:13px;">
+        <input type="text" id="secText" value="आज की नई वीडियो यहाँ देखें!" style="padding: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: #0f172a; color: white; outline: none; font-size:13px;">
+        <button onclick="executeSecureUpdate()" id="secBtn" style="background: linear-gradient(135deg, #ff4e50, #f9d423); color: #0f172a; border: none; padding: 10px; font-size: 14px; font-weight: 800; border-radius: 8px; cursor: pointer; transition: 0.3s;">🚀 Update Website</button>
+    </div>
+</div>
+
+<script>
+    // 🤫 जादुई गुप्त चाबी (Secret Key Trigger)
+    let inputSequence = "";
+    window.addEventListener('keydown', (e) => {
+        inputSequence += e.key.toLowerCase();
+        if (inputSequence.endsWith("admin")) { 
+            toggleAdminPanel();
+            inputSequence = ""; 
+        }
+        if (inputSequence.length > 10) inputSequence = inputSequence.substring(5);
+    });
+
+    function toggleAdminPanel() {
+        const panel = document.getElementById('secretAdminSection');
+        if (panel) {
+            panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+            if(panel.style.display === 'block') document.getElementById('secPassword').focus();
+        }
+    }
+
+    // सुरक्षित डेटा सबमिशन (गूगल सर्वर पर वेरिफिकेशन)
+    async function executeSecureUpdate() {
+        const pass = document.getElementById('secPassword').value;
+        const link = document.getElementById('secLink').value;
+        const text = document.getElementById('secText').value;
+        const btn = document.getElementById('secBtn');
+
+        if (!pass) return alert("पासवर्ड डालना अनिवार्य है!");
+
+        btn.disabled = true;
+        btn.innerText = "Verifying & Updating...";
+
+        const targetUrl = `${myGoogleDocScriptURL}?action=updateLink&password=${encodeURIComponent(pass)}&link=${encodeURIComponent(link)}&text=${encodeURIComponent(text)}`;
+
+        try {
+            const res = await fetch(targetUrl);
+            const data = await res.json();
+
+            if (data.status === "success") {
+                alert("✨ सफलता: " + data.message);
+                window.location.reload();
+            } else {
+                alert("❌ विफल: " + data.message);
+            }
+        } catch (err) {
+            console.error(err);
+            alert("अपडेट विफल। कृपया नया URL चेक करें या थोड़ी देर बाद कोशिश करें।");
+        } finally {
+            btn.disabled = false;
+            btn.innerText = "🚀 Update Website";
+        }
     }
 </script>
 
