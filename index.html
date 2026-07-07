@@ -26,6 +26,19 @@
             display: flex;
             flex-direction: column;
         }
+/* 📢 ऊपर चलने वाली वेलकम मैसेज पट्टी का स्टाइल */
+.welcome-ticker {
+    background: linear-gradient(90deg, #ff4e50, #f9d423);
+    color: #0f172a;
+    font-weight: 800;
+    font-size: 14px;
+    padding: 8px 0;
+    text-align: center;
+    position: relative;
+    z-index: 1001; /* हेडर के भी ऊपर रहे */
+    box-shadow: 0 2px 10px rgba(249, 212, 35, 0.2);
+}
+
 
         /* ऊपर का आधुनिक हेडर (Navbar) स्टाइलिंग (3-dots Removed) */
         .navbar {
@@ -375,6 +388,13 @@
     </style>
 </head>
 <body>
+
+<!-- 🏃‍♂️ स्क्रीन पर ऊपर चलने वाला वेलकम मैसेज -->
+<div class="welcome-ticker">
+    <marquee behavior="scroll" direction="left" scrollamount="6">
+        ✨ साइंस गुरुजी की डिजिटल क्लास में आपका स्वागत है! यहाँ आपको कक्षा के सभी महत्वपूर्ण नोट्स, पीडीएफ डायग्राम और लाइव अपडेट्स मिलेंगे। पढ़ते रहिए, आगे बढ़ते रहिए! ✨
+    </marquee>
+</div>
 
 <header class="navbar">
     <a href="#" class="logo-container">
