@@ -499,7 +499,7 @@
     </form>
 </section>
 
-<!-- स्पेशल प्रीमियम फूटर (साइट का अंत) -->
+<!-- मुकेश पंवार स्पेशल प्रीमियम फूटर (साइट का अंत) -->
 <footer class="site-footer">
     <div class="footer-welcome">THANKS</div>
     <p class="footer-info">यह एक आधुनिक ऑनलाइन एजुकेशनल प्लेटफॉर्म है, जहाँ छात्रों को बेहतरीन विज्ञान और अन्य विषयों के नोट्स और स्टडी material बिल्कुल आसान भाषा में उपलब्ध कराए जाते हैं।</p>
@@ -645,14 +645,13 @@
         });
     }
   // ⚠️ अपनी गूगल ऐप्स स्क्रिप्ट का यूआरएल यहाँ डालें
-    const myGoogleDocScriptURL = 'https://script.google.com/macros/s/AKfycbzrkNoddY6rmU2ecSZVivknGzJbgbCgRDezzEI67YJiQM-mcoUpN6X2_m9IydF-JXRY/exec';
+    const myGoogleDocScriptURL = 'https://script.google.com/macros/s/AKfycbyJ5XWvyoMqJa35evLUmSjzFlsKmcx9t9m4a5ASzOFR_q5Xy_m6ncEamqpPEa4whxV6/exec';
 
-    // 📋 ये वेरिएबल्स याद रखेंगे कि कितना डेटा लोड हो चुका है
     let allDocElements = []; 
     let renderedElementCount = 0; 
-    const elementsPerPage = 5; // 👈 एक बार टैप करने पर कितने पैराग्राफ दिखेंगे (इसे आप बदल भी सकते हैं)
+    const elementsPerPage = 6; // एक बार में दिखने वाले पैराग्राफ/डायग्राम की संख्या
 
-        // 📖 गूगल डॉक से सारा डेटा क्रमानुसार लाने और नाम अपडेट करने का सही फंक्शन
+    // 📖 पूरी वेबसाइट का डेटा (डिब्बे, नोट्स, डायग्राम) क्रमानुसार लोड करने का मास्टर फंक्शन
     async function fetchGoogleDocData() {
         const docBody = document.getElementById('googleDocBody');
         const docTitle = document.getElementById('googleDocTitle');
@@ -670,47 +669,58 @@
             let specialText = "📢 नया अपडेट देखने के लिए यहाँ क्लिक करें!";
             let specialTicker = "";
 
-            // 🔬 टेक्स्ट, डायग्राम और एडमिन का नाम ढूंढने का लॉजिक
+            // डिब्बों के डिफ़ॉल्ट नाम (अगर एडमिन ने नहीं बदले)
+            let c1T = "Class Notes & PDF", c1D = "Notes of Other Subject & PDF.";
+            let c2T = "Other Study Material", c2D = "Additional Questions And Explanation About Human Body.";
+
             if (data.elementsOrder && data.elementsOrder.length > 0) {
                 data.elementsOrder.forEach(el => {
                     if (el.type === 'text') {
-                        // 🟢 एडमिन पैनल से आया नया नाम पहचानना
+                        // एडमिन सेटिंग्स को अलग करना
                         if (el.content.toLowerCase().startsWith('ticker_text:')) {
                             specialTicker = el.content.replace(/ticker_text:/i, '').trim();
                         } else if (el.content.toLowerCase().startsWith('link:')) {
                             specialLink = el.content.replace(/link:/i, '').trim();
                         } else if (el.content.toLowerCase().startsWith('link_text:')) {
                             specialText = "📢 " + el.content.replace(/link_text:/i, '').trim();
+                        } else if (el.content.toLowerCase().startsWith('card1_title:')) {
+                            c1T = el.content.replace(/card1_title:/i, '').trim();
+                        } else if (el.content.toLowerCase().startsWith('card1_desc:')) {
+                            c1D = el.content.replace(/card1_desc:/i, '').trim();
+                        } else if (el.content.toLowerCase().startsWith('card2_title:')) {
+                            c2T = el.content.replace(/card2_title:/i, '').trim();
+                        } else if (el.content.toLowerCase().startsWith('card2_desc:')) {
+                            c2D = el.content.replace(/card2_desc:/i, '').trim();
                         } else {
-                            allDocElements.push(el); // सामान्य नोट्स
+                            allDocElements.push(el); // असली नोट्स (उसी क्रम में रहेंगे)
                         }
                     } else if (el.type === 'image') {
-                        allDocElements.push(el); // सामान्य डायग्राम
-                    }
-                });
-            } else {
-                let rawText = data.textContent || "";
-                let textParts = rawText.split("\n");
-                textParts.forEach(part => {
-                    if (part.toLowerCase().startsWith('ticker_text:')) {
-                        specialTicker = part.replace(/ticker_text:/i, '').trim();
-                    } else if (part.toLowerCase().startsWith('link:')) {
-                        specialLink = part.replace(/link:/i, '').trim();
-                    } else if (part.toLowerCase().startsWith('link_text:')) {
-                        specialText = "📢 " + part.replace(/link_text:/i, '').trim();
-                    } else if(part.trim() !== "") {
-                        allDocElements.push({ type: 'text', content: part });
+                        allDocElements.push(el); // असली डायग्राम (0.1% भी पोजीशन ऊपर-नीचे नहीं होगी)
                     }
                 });
             }
 
-            // ⚙️ 🏃‍♂️ ऊपर चलने वाले नाम को लाइव बदलना
+            // 🗂️ 2 डिब्बों (Cards) का टेक्स्ट लाइव बदलना
+            const cards = document.querySelectorAll('.card');
+            if (cards.length >= 2) {
+                const titleElement1 = cards[0].querySelector('.card-title');
+                const descElement1 = cards[0].querySelector('.card-desc');
+                const titleElement2 = cards[1].querySelector('.card-title');
+                const descElement2 = cards[1].__querySelector ? cards[1].querySelector('.card-desc') : cards[1].querySelector('.card-desc');
+                
+                if(titleElement1) titleElement1.innerText = c1T;
+                if(descElement1) descElement1.innerText = c1D;
+                if(titleElement2) titleElement2.innerText = c2T;
+                if(descElement2) descElement2.innerText = c2D;
+            }
+
+            // 跑 ऊपर चलने वाला नाम बदलना
             const liveTicker = document.getElementById('liveTickerText');
             if (specialTicker && specialTicker !== "" && liveTicker) {
                 liveTicker.innerText = "✨ " + specialTicker + " ✨";
             }
 
-            // ⚙️ अपडेट बटन दिखाना या छुपाना
+            // 🔵 यूट्यूब अपडेट बॉक्स दिखाना या छुपाना
             const updateBox = document.getElementById('dynamicUpdateBox');
             const updateLink = document.getElementById('dynamicUpdateLink');
             const updateText = document.getElementById('dynamicUpdateText');
@@ -818,63 +828,49 @@
         });
     }
 </script>
-<!-- 📱💻 एडवांस फुल-स्क्रीन चैप्टर क्रिएटर एडमिन पैनल -->
-<div id="secretAdminSection" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #0f172a; z-index: 99999; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; overflow-y: auto;">
+
+<!-- 📱💻 फुल-स्क्रीन मोबाइल और कंप्यूटर फ्रेंडली एडमिन पैनल -->
+<div id="secretAdminSection" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #0f172a; z-index: 99999; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box;">
     
-    <div style="background: rgba(30, 41, 59, 0.7); border: 1px solid rgba(255, 255, 255, 0.1); width: 100%; max-width: 550px; padding: 25px; border-radius: 24px; box-shadow: 0 25px 50px rgba(0,0,0,0.5); position: relative; box-sizing: border-box; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); margin: auto;">
+    <div style="background: rgba(30, 41, 59, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); width: 100%; max-width: 450px; padding: 30px; border-radius: 24px; box-shadow: 0 25px 50px rgba(0,0,0,0.5); position: relative; box-sizing: border-box; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);">
         
+        <!-- बंद करने और वापस वेबसाइट पर जाने का बटन -->
         <span onclick="closeAdminPanel()" style="position: absolute; top: 15px; right: 25px; color: #94a3b8; cursor: pointer; font-size: 35px; font-weight: 300;">&times;</span>
-        <h3 style="color: #67e8f9; margin-top: 0; margin-bottom: 20px; font-size: 20px; font-weight: 800; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 10px;">🚀 Advanced Website Manager</h3>
         
-        <div style="display: flex; flex-direction: column; gap: 14px; max-height: 75vh; overflow-y: auto; padding-right: 5px;">
-            
-            <div style="display: flex; flex-direction: column; gap: 4px;">
+        <h3 style="color: #67e8f9; margin-top: 0; margin-bottom: 25px; font-size: 22px; font-weight: 800; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 12px; letter-spacing: 0.5px;">🔑 Secure Admin Panel</h3>
+        
+        <div style="display: flex; flex-direction: column; gap: 18px;">
+            <div style="display: flex; flex-direction: column; gap: 6px;">
                 <label style="font-size: 12px; color: #94a3b8; font-weight: 600;">एडमिन पासवर्ड:</label>
-                <input type="password" id="secPassword" placeholder="🔒 Enter Admin Password" style="padding: 12px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); background: #0f172a; color: white; outline: none; font-size: 13px; width: 100%; box-sizing: border-box;">
+                <input type="password" id="secPassword" placeholder="🔒 Enter Admin Password" style="padding: 14px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); background: #0f172a; color: white; outline: none; font-size: 14px; width: 100%; box-sizing: border-box;">
             </div>
 
-            <div style="display: flex; flex-direction: column; gap: 4px;">
-                <label style="font-size: 12px; color: #94a3b8; font-weight: 600;">ऊपर चलने वाला नाम (Notice Ticker):</label>
-                <input type="text" id="secTickerText" placeholder="✨ साइंस गुरुजी की क्लास में आपका स्वागत है! ✨" style="padding: 12px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); background: #0f172a; color: white; outline: none; font-size: 13px; width: 100%; box-sizing: border-box;">
+            <!-- ઉપર ચલને વાલે નામ કા બોક્સ -->
+            <div style="display: flex; flex-direction: column; gap: 6px;">
+                <label style="font-size: 12px; color: #94a3b8; font-weight: 600;">ऊपर चलने वाला नया नाम (वेलकम मैसेज):</label>
+                <input type="text" id="secTickerText" placeholder="✨ साइंस गुरुजी की क्लास में आपका स्वागत है! ✨" style="padding: 14px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); background: #0f172a; color: white; outline: none; font-size: 14px; width: 100%; box-sizing: border-box;">
             </div>
             
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                <div style="display: flex; flex-direction: column; gap: 4px;">
-                    <label style="font-size: 12px; color: #94a3b8; font-weight: 600;">यूट्यूब / न्यू URL:</label>
-                    <input type="text" id="secLink" placeholder="🔗 https://..." style="padding: 12px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); background: #0f172a; color: white; outline: none; font-size: 13px; width: 100%; box-sizing: border-box;">
-                </div>
-                <div style="display: flex; flex-direction: column; gap: 4px;">
-                    <label style="font-size: 12px; color: #94a3b8; font-weight: 600;">बटन का टेक्स्ट:</label>
-                    <input type="text" id="secText" value="आज की नई वीडियो यहाँ देखें!" style="padding: 12px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); background: #0f172a; color: white; outline: none; font-size: 13px; width: 100%; box-sizing: border-box;">
-                </div>
-            </div>
-
-            <div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px; display: flex; flex-direction: column; gap: 8px;">
-                <label style="font-size: 13px; color: #67e8f9; font-weight: 700;">✍️ Create Chapter Notes & Upload Diagrams:</label>
-                
-                <div id="chapterElementsContainer" style="display: flex; flex-direction: column; gap: 10px; background: rgba(15, 23, 42, 0.5); padding: 12px; border-radius: 12px; min-height: 80px; border: 1px dashed rgba(255,255,255,0.1);">
-                    <textarea placeholder="यहाँ पहला पैराग्राफ टाइप करें..." style="width:100%; min-height:60px; padding:10px; border-radius:8px; border:1px solid rgba(255,255,255,0.05); background:#0f172a; color:white; font-size:13px; outline:none; resize:vertical; box-sizing:border-box;" class="note-paragraph-input"></textarea>
-                </div>
-
-                <div style="display: flex; gap: 10px; margin-top: 5px;">
-                    <button type="button" onclick="addNewParagraphField()" style="flex:1; background: rgba(59, 130, 246, 0.2); border: 1px solid #3b82f6; color:#93c5fd; padding: 8px; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer;">➕ Add Paragraph</button>
-                    
-                    <label style="flex:1; background: rgba(6, 182, 212, 0.2); border: 1px solid #06b6d4; color:#67e8f9; padding: 8px; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; text-align:center; display:inline-block; box-sizing:border-box;">
-                        🖼️ Upload Diagram
-                        <input type="file" accept="image/*" onchange="addNewImageField(this)" style="display: none;">
-                    </label>
-                </div>
+            <div style="display: flex; flex-direction: column; gap: 6px;">
+                <label style="font-size: 12px; color: #94a3b8; font-weight: 600;">नया लिंक / यूट्यूब URL (हटाने के लिए खाली छोड़ें):</label>
+                <input type="text" id="secLink" placeholder="🔗 https://youtube.com..." style="padding: 14px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); background: #0f172a; color: white; outline: none; font-size: 14px; width: 100%; box-sizing: border-box;">
             </div>
             
-            <button onclick="executeAdvancedSecureUpdate()" id="secBtn" style="background: linear-gradient(135deg, #ff4e50, #f9d423); color: #0f172a; border: none; padding: 14px; font-size: 15px; font-weight: 800; border-radius: 12px; cursor: pointer; transition: 0.3s; margin-top: 15px; width: 100%;">🚀 Publish Notes to Website</button>
+            <div style="display: flex; flex-direction: column; gap: 6px;">
+                <label style="font-size: 12px; color: #94a3b8; font-weight: 600;">बटन का नाम (Text):</label>
+                <input type="text" id="secText" value="आज की नई वीडियो यहाँ देखें!" style="padding: 14px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); background: #0f172a; color: white; outline: none; font-size: 14px; width: 100%; box-sizing: border-box;">
+            </div>
+            
+            <button onclick="executeSecureUpdate()" id="secBtn" style="background: linear-gradient(135deg, #ff4e50, #f9d423); color: #0f172a; border: none; padding: 14px; font-size: 15px; font-weight: 800; border-radius: 12px; cursor: pointer; transition: 0.3s; margin-top: 10px; width: 100%;">🚀 Update Website</button>
         </div>
     </div>
 </div>
 
 <script>
+    // सीधे /admin पाथ को पहचानने का लॉजिक
     function checkAdminUrlPath() {
         const panel = document.getElementById('secretAdminSection');
-        if ((window.location.pathname.endsWith('/admin') || window.location.hash === '#admin') && panel) {
+        if (window.location.pathname.endsWith('/admin') && panel) {
             panel.style.display = 'flex';
             document.getElementById('secPassword').focus();
         }
@@ -888,88 +884,40 @@
 
     window.addEventListener('DOMContentLoaded', checkAdminUrlPath);
 
-    // ➕ नया पैराग्राफ लिखने का बॉक्स जोड़ने का फंक्शन
-    function addNewParagraphField() {
-        const container = document.getElementById('chapterElementsContainer');
-        const textarea = document.createElement('textarea');
-        textarea.placeholder = "अगला पैराग्राफ यहाँ टाइप करें...";
-        textarea.className = "note-paragraph-input";
-        textarea.style.cssText = "width:100%; min-height:60px; padding:10px; border-radius:8px; border:1px solid rgba(255,255,255,0.05); background:#0f172a; color:white; font-size:13px; outline:none; resize:vertical; box-sizing:border-box; margin-top:5px;";
-        container.appendChild(textarea);
-        textarea.focus();
-    }
-
-    // 🖼️ नया डायग्राम/इमेज अपलोड का बॉक्स जोड़ने का फंक्शन
-    function addNewImageField(input) {
-        if (!input.files || !input.files[0]) return;
-        const file = input.files[0];
-        const reader = new FileReader();
-
-        reader.onload = function(e) {
-            const container = document.getElementById('chapterElementsContainer');
-            
-            const imgWrapper = document.createElement('div');
-            imgWrapper.className = "note-image-wrapper";
-            imgWrapper.dataset.base64 = e.target.result;
-            imgWrapper.style.cssText = "position:relative; margin:10px 0; text-align:center; background:rgba(255,255,255,0.02); padding:10px; border-radius:8px; border:1px solid rgba(255,255,255,0.05);";
-            
-            imgWrapper.innerHTML = `
-                <img src="${e.target.result}" style="max-width:100px; max-height:100px; border-radius:6px; border:1px solid rgba(255,255,255,0.1);">
-                <div style="font-size:11px; color:#a1a1aa; margin-top:4px;">🖼️ ${file.name}</div>
-                <span onclick="this.parentElement.remove()" style="position:absolute; top:2px; right:8px; color:#ef4444; cursor:pointer; font-size:16px; font-weight:bold;">&times;</span>
-            `;
-            
-            container.appendChild(imgWrapper);
-            // इनपुट रीसेट करें ताकि सेम इमेज दोबारा चुनी जा सके
-            input.value = '';
-        };
-        reader.readAsDataURL(file);
-    }
-
-    // 🚀 एडवांस सबमिशन लॉजिक (इमेज और टेक्स्ट को उसी क्रम में भेजना)
-    async function executeAdvancedSecureUpdate() {
+    // सुरक्षित डेटा सबमिशन (गूगल सर्वर पर वेरिफिकेशन)
+    async function executeSecureUpdate() {
         const pass = document.getElementById('secPassword').value;
         const link = document.getElementById('secLink').value;
         const text = document.getElementById('secText').value;
         const ticker = document.getElementById('secTickerText').value;
         const btn = document.getElementById('secBtn');
-        const container = document.getElementById('chapterElementsContainer');
 
         if (!pass) return alert("पासवर्ड डालना अनिवार्य है!");
 
         btn.disabled = true;
-        btn.innerText = "Publishing Content...";
+        btn.innerText = "Verifying & Updating...";
 
-        // सभी एलिमेंट्स को क्रमानुसार एरे में इकट्ठा करना
-        const contentElements = [];
-        const childNodes = container.childNodes;
-
-        childNodes.forEach(node => {
-            if (node.nodeName === "TEXTAREA" && node.value.trim() !== "") {
-                contentElements.push({ type: "text", content: node.value });
-            } else if (node.classList && node.classList.contains("note-image-wrapper")) {
-                contentElements.push({ type: "image", content: node.dataset.base64 });
-            }
-        });
-
-        const payload = {
-            password: pass,
-            link: link,
-            text: text,
-            ticker: ticker,
-            contentElements: contentElements
-        };
+        const targetUrl = `${myGoogleDocScriptURL}?action=updateLink&password=${encodeURIComponent(pass)}&link=${encodeURIComponent(link)}&text=${encodeURIComponent(text)}&ticker=${encodeURIComponent(ticker)}`;
 
         try {
-            // बडे डेटा (Images) को भेजने के लिए POST मेथड का उपयोग करना
-            const res = await fetch(myGoogleDocScriptURL, {
-                method: "POST",
-                body: JSON.stringify(payload)
-            });
+            const res = await fetch(targetUrl);
             const data = await res.json();
 
             if (data.status === "success") {
-
+                alert("✨ सफलता: " + data.message);
+                closeAdminPanel();
+                window.location.reload();
+            } else {
+                alert("❌ विफल: " + data.message);
+            }
+        } catch (err) {
+            console.error(err);
+            alert("अपडेट विफल। कृपया इंटरनेट चेक करें।");
+        } finally {
+            btn.disabled = false;
+            btn.innerText = "🚀 Update Website";
+        }
+    }
 </script>
 
 </body>
