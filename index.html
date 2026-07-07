@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Help Through Science Guruji</title>
+
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4960138720718272"
+       crossorigin="anonymous"></script>
     
     <style>
         /* पूरी साइट का प्रीमियम और मॉडर्न सेटअप */
@@ -26,6 +29,22 @@
             display: flex;
             flex-direction: column;
         }
+        /* 📢 ऊपर चलने वाली वेलकम मैसेज पट्टी का प्रीमियम स्टाइल */
+        .welcome-ticker {
+            background: linear-gradient(90deg, #ff4e50, #f9d423);
+            color: #0f172a;
+            font-weight: 800;
+            font-size: 14px;
+            padding: 10px 0;
+            text-align: center;
+            position: relative;
+            z-index: 1001; /* हेडर के भी ऊपर रहे */
+            box-shadow: 0 4px 20px rgba(249, 212, 35, 0.4);
+            border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
 
         /* ऊपर का आधुनिक हेडर (Navbar) स्टाइलिंग (3-dots Removed) */
         .navbar {
@@ -432,12 +451,20 @@
             <div class="no-result-text">क्षमा करें, इसके बारे में अभी जानकारी उपलब्ध नहीं है।</div>
         </div>
     </div>
+
+<!-- 🏃‍♂️ स्क्रीन पर ऊपर चलने वाला डायनामिक वेलकम मैसेज -->
+<div class="welcome-ticker">
+    <marquee id="liveTickerText" behavior="scroll" direction="left" scrollamount="6">
+        ✨ साइंस गुरुजी की डिजिटल क्लास में आपका स्वागत है! पढ़ते रहिए, आगे बढ़ते रहिए! ✨
+    </marquee>
+</div>
+
 </section>
 <!-- 🔄 यहाँ पर यह हमेशा खुला रहने वाला स्पेस आएगा 👇 -->
 <div class="permanent-study-space">
-    <h2 id="googleDocTitle" class="space-title">📖 Live Google Docs Notes</h2>
+    <h2 id="googleDocTitle" class="space-title">📖 Loading Notes</h2>
     <div id="googleDocBody" class="space-body">
-        <div style="text-align:center; padding:20px; color:#94a3b8;">गूगल डॉक से नोट्स लाइव लोड हो रहे हैं...</div>
+        <div style="text-align:center; padding:20px; color:#94a3b8;">नोट्स लोड हो रहे हैं...</div>
     </div>
 </div>
 
@@ -613,7 +640,7 @@
         });
     }
   // ⚠️ अपनी गूगल ऐप्स स्क्रिप्ट का यूआरएल यहाँ डालें
-    const myGoogleDocScriptURL = 'https://script.google.com/macros/s/AKfycbyWqNYGFkodMQBXUpEYygH_qJM5EiqaHJHOuwXRwPX67O3euqE1nVYq7UkxT3BomGQr/exec';
+    const myGoogleDocScriptURL = 'https://script.google.com/macros/s/AKfycbzZGWUY8ir0GJSvFIa1jOfYQzdsr7g64nF3-L-ChlU35vBt0V8fLpCPILSCsPfAJapl/exec';
 
     // 📋 ये वेरिएबल्स याद रखेंगे कि कितना डेटा लोड हो चुका है
     let allDocElements = []; 
