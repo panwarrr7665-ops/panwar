@@ -646,56 +646,93 @@
     let renderedElementCount = 0; 
     const elementsPerPage = 5; // 👈 एक बार टैप करने पर कितने पैराग्राफ दिखेंगे (इसे आप बदल भी सकते हैं)
 
-    // गूगल डॉक से सारा डेटा एक साथ लाने वाला फंक्शन
+        // 📖 गूगल डॉक से सारा डेटा क्रमानुसार लाने और नाम अपडेट करने का सही फंक्शन
     async function fetchGoogleDocData() {
         const docBody = document.getElementById('googleDocBody');
         const docTitle = document.getElementById('googleDocTitle');
         
-        if (!docBody) return; // सेफ्टी चेक
+        if (!docBody) return;
         
         try {
             const res = await fetch(myGoogleDocScriptURL);
             const data = await res.json();
             
-            if (docTitle) {
-                docTitle.innerText = data.title || "📖 Live Google Docs Notes";
-            }
-            
-            allDocElements = []; // पुराना डेटा साफ़ करें
-            
-            // डेटा को लिस्ट (Array) में सेट करना
+            if (docTitle) docTitle.innerText = data.title || "📚 Special Digital Notes";
+            allDocElements = []; 
+
+            let specialLink = "";
+            let specialText = "📢 नया अपडेट देखने के लिए यहाँ क्लिक करें!";
+            let specialTicker = "";
+
+            // 🔬 टेक्स्ट, डायग्राम और एडमिन का नाम ढूंढने का लॉजिक
             if (data.elementsOrder && data.elementsOrder.length > 0) {
-                allDocElements = data.elementsOrder;
+                data.elementsOrder.forEach(el => {
+                    if (el.type === 'text') {
+                        // 🟢 एडमिन पैनल से आया नया नाम पहचानना
+                        if (el.content.toLowerCase().startsWith('ticker_text:')) {
+                            specialTicker = el.content.replace(/ticker_text:/i, '').trim();
+                        } else if (el.content.toLowerCase().startsWith('link:')) {
+                            specialLink = el.content.replace(/link:/i, '').trim();
+                        } else if (el.content.toLowerCase().startsWith('link_text:')) {
+                            specialText = "📢 " + el.content.replace(/link_text:/i, '').trim();
+                        } else {
+                            allDocElements.push(el); // सामान्य नोट्स
+                        }
+                    } else if (el.type === 'image') {
+                        allDocElements.push(el); // सामान्य डायग्राम
+                    }
+                });
             } else {
                 let rawText = data.textContent || "";
-                let textParts = rawText.split("\n\n");
-                
-                textParts.forEach((part, index) => {
-                    if(part.trim() !== "") {
+                let textParts = rawText.split("\n");
+                textParts.forEach(part => {
+                    if (part.toLowerCase().startsWith('ticker_text:')) {
+                        specialTicker = part.replace(/ticker_text:/i, '').trim();
+                    } else if (part.toLowerCase().startsWith('link:')) {
+                        specialLink = part.replace(/link:/i, '').trim();
+                    } else if (part.toLowerCase().startsWith('link_text:')) {
+                        specialText = "📢 " + part.replace(/link_text:/i, '').trim();
+                    } else if(part.trim() !== "") {
                         allDocElements.push({ type: 'text', content: part });
-                    }
-                    if (data.images && data.images[index]) {
-                        allDocElements.push({ type: 'image', content: data.images[index] });
                     }
                 });
             }
 
-            // स्क्रीन पर अंदरूनी ढांचा तैयार करना
+            // ⚙️ 🏃‍♂️ ऊपर चलने वाले नाम को लाइव बदलना
+            const liveTicker = document.getElementById('liveTickerText');
+            if (specialTicker && specialTicker !== "" && liveTicker) {
+                liveTicker.innerText = "✨ " + specialTicker + " ✨";
+            }
+
+            // ⚙️ अपडेट बटन दिखाना या छुपाना
+            const updateBox = document.getElementById('dynamicUpdateBox');
+            const updateLink = document.getElementById('dynamicUpdateLink');
+            const updateText = document.getElementById('dynamicUpdateText');
+
+            if (specialLink && specialLink !== "" && updateBox) {
+                updateLink.href = specialLink;
+                updateText.innerText = specialText;
+                updateBox.style.display = "block";
+            } else if (updateBox) {
+                updateBox.style.display = "none";
+            }
+
             docBody.innerHTML = `
-                <div id="docVisualContainer" class="doc-text-wrapper"></div>
+                <div id="docVisualContainer" class="doc-text-wrapper" style="text-align: left;"></div>
                 <div style="text-align:center; margin-top: 25px;">
                     <button id="toggleDocBtn" onclick="renderMoreDocContent()" class="show-more-btn">📖 Show More Notes</button>
                 </div>
             `;
 
             renderedElementCount = 0; 
-            renderMoreDocContent(); // 🚀 पहली बार का कंटेंट लोड करें
+            renderMoreDocContent(); 
 
         } catch (err) {
             console.error(err);
-            docBody.innerHTML = "<div style='text-align:center; padding:20px; color:#ff4e50;'>❌ गूगल डॉक से लाइव नोट्स लोड नहीं हो सके।</div>";
+            docBody.innerHTML = "<div style='text-align:center; padding:20px; color:#ff4e50;'>❌ सर्वर से लाइव नोट्स लोड नहीं हो सके।</div>";
         }
     }
+
 
     // 🔄 बार-बार "Show More" टैप करने पर आगे का डेटा जोड़ने वाला असली लॉजिक
     window.renderMoreDocContent = function() {
