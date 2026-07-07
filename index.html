@@ -394,6 +394,12 @@
     </style>
 </head>
 <body>
+<!-- 🏃‍♂️ स्क्रीन पर ऊपर चलने वाला डायनामिक वेलकम मैसेज -->
+<div class="welcome-ticker">
+    <marquee id="liveTickerText" behavior="scroll" direction="left" scrollamount="6">
+        ✨ साइंस गुरुजी की डिजिटल क्लास में आपका स्वागत है! पढ़ते रहिए, आगे बढ़ते रहिए! ✨
+    </marquee>
+</div>
 
 <header class="navbar">
     <a href="#" class="logo-container">
@@ -451,13 +457,6 @@
             <div class="no-result-text">क्षमा करें, इसके बारे में अभी जानकारी उपलब्ध नहीं है।</div>
         </div>
     </div>
-
-<!-- 🏃‍♂️ स्क्रीन पर ऊपर चलने वाला डायनामिक वेलकम मैसेज -->
-<div class="welcome-ticker">
-    <marquee id="liveTickerText" behavior="scroll" direction="left" scrollamount="6">
-        ✨ साइंस गुरुजी की डिजिटल क्लास में आपका स्वागत है! पढ़ते रहिए, आगे बढ़ते रहिए! ✨
-    </marquee>
-</div>
 
 </section>
 <!-- 🔄 यहाँ पर यह हमेशा खुला रहने वाला स्पेस आएगा 👇 -->
@@ -640,7 +639,7 @@
         });
     }
   // ⚠️ अपनी गूगल ऐप्स स्क्रिप्ट का यूआरएल यहाँ डालें
-    const myGoogleDocScriptURL = 'https://script.google.com/macros/s/AKfycbzZGWUY8ir0GJSvFIa1jOfYQzdsr7g64nF3-L-ChlU35vBt0V8fLpCPILSCsPfAJapl/exec';
+    const myGoogleDocScriptURL = 'https://script.google.com/macros/s/AKfycbyMYcUDPgEVNnhZZzFAK1NtQ2JHvapf1HB_gythx99PGMO92jD8PTniipMbcObufVhP/exec';
 
     // 📋 ये वेरिएबल्स याद रखेंगे कि कितना डेटा लोड हो चुका है
     let allDocElements = []; 
