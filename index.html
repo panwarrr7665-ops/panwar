@@ -776,8 +776,96 @@
     }
 </script>
 
+<!-- 📱💻 फुल-स्क्रीन मोबाइल और कंप्यूटर फ्रेंडली एडमिन पैनल -->
+<div id="secretAdminSection" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #0f172a; z-index: 99999; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box;">
+    
+    <div style="background: rgba(30, 41, 59, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); width: 100%; max-width: 450px; padding: 30px; border-radius: 24px; box-shadow: 0 25px 50px rgba(0,0,0,0.5); position: relative; box-sizing: border-box; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);">
+        
+        <!-- बंद करने और वापस वेबसाइट पर जाने का बटन -->
+        <span onclick="closeAdminPanel()" style="position: absolute; top: 15px; right: 25px; color: #94a3b8; cursor: pointer; font-size: 35px; font-weight: 300;">&times;</span>
+        
+        <h3 style="color: #67e8f9; margin-top: 0; margin-bottom: 25px; font-size: 22px; font-weight: 800; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 12px; letter-spacing: 0.5px;">🔑 Secure Admin Panel</h3>
+        
+        <div style="display: flex; flex-direction: column; gap: 18px;">
+            <div style="display: flex; flex-direction: column; gap: 6px;">
+                <label style="font-size: 12px; color: #94a3b8; font-weight: 600;">एडमिन पासवर्ड:</label>
+                <input type="password" id="secPassword" placeholder="🔒 Enter Admin Password" style="padding: 14px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); background: #0f172a; color: white; outline: none; font-size: 14px; width: 100%; box-sizing: border-box;">
+            </div>
+
+            <!-- ઉપર ચલને વાલે નામ કા બોક્સ -->
+            <div style="display: flex; flex-direction: column; gap: 6px;">
+                <label style="font-size: 12px; color: #94a3b8; font-weight: 600;">ऊपर चलने वाला नया नाम (वेलकम मैसेज):</label>
+                <input type="text" id="secTickerText" placeholder="✨ साइंस गुरुजी की क्लास में आपका स्वागत है! ✨" style="padding: 14px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); background: #0f172a; color: white; outline: none; font-size: 14px; width: 100%; box-sizing: border-box;">
+            </div>
+            
+            <div style="display: flex; flex-direction: column; gap: 6px;">
+                <label style="font-size: 12px; color: #94a3b8; font-weight: 600;">नया लिंक / यूट्यूब URL (हटाने के लिए खाली छोड़ें):</label>
+                <input type="text" id="secLink" placeholder="🔗 https://youtube.com..." style="padding: 14px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); background: #0f172a; color: white; outline: none; font-size: 14px; width: 100%; box-sizing: border-box;">
+            </div>
+            
+            <div style="display: flex; flex-direction: column; gap: 6px;">
+                <label style="font-size: 12px; color: #94a3b8; font-weight: 600;">बटन का नाम (Text):</label>
+                <input type="text" id="secText" value="आज की नई वीडियो यहाँ देखें!" style="padding: 14px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); background: #0f172a; color: white; outline: none; font-size: 14px; width: 100%; box-sizing: border-box;">
+            </div>
+            
+            <button onclick="executeSecureUpdate()" id="secBtn" style="background: linear-gradient(135deg, #ff4e50, #f9d423); color: #0f172a; border: none; padding: 14px; font-size: 15px; font-weight: 800; border-radius: 12px; cursor: pointer; transition: 0.3s; margin-top: 10px; width: 100%;">🚀 Update Website</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // सीधे /admin पाथ को पहचानने का लॉजिक
+    function checkAdminUrlPath() {
+        const panel = document.getElementById('secretAdminSection');
+        if (window.location.pathname.endsWith('/admin') && panel) {
+            panel.style.display = 'flex';
+            document.getElementById('secPassword').focus();
+        }
+    }
+
+    function closeAdminPanel() {
+        const panel = document.getElementById('secretAdminSection');
+        if (panel) panel.style.display = 'none';
+        window.history.replaceState({}, document.title, '/');
+    }
+
+    window.addEventListener('DOMContentLoaded', checkAdminUrlPath);
+
+    // सुरक्षित डेटा सबमिशन (गूगल सर्वर पर वेरिफिकेशन)
+    async function executeSecureUpdate() {
+        const pass = document.getElementById('secPassword').value;
+        const link = document.getElementById('secLink').value;
+        const text = document.getElementById('secText').value;
+        const ticker = document.getElementById('secTickerText').value;
+        const btn = document.getElementById('secBtn');
+
+        if (!pass) return alert("पासवर्ड डालना अनिवार्य है!");
+
+        btn.disabled = true;
+        btn.innerText = "Verifying & Updating...";
+
+        const targetUrl = `${myGoogleDocScriptURL}?action=updateLink&password=${encodeURIComponent(pass)}&link=${encodeURIComponent(link)}&text=${encodeURIComponent(text)}&ticker=${encodeURIComponent(ticker)}`;
+
+        try {
+            const res = await fetch(targetUrl);
+            const data = await res.json();
+
+            if (data.status === "success") {
+                alert("✨ सफलता: " + data.message);
+                closeAdminPanel();
+                window.location.reload();
+            } else {
+                alert("❌ विफल: " + data.message);
+            }
+        } catch (err) {
+            console.error(err);
+            alert("अपडेट विफल। कृपया इंटरनेट चेक करें।");
+        } finally {
+            btn.disabled = false;
+            btn.innerText = "🚀 Update Website";
+        }
+    }
+</script>
+
 </body>
 </html>
-
-    </div>
-</footer>
