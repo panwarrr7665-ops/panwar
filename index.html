@@ -398,6 +398,13 @@
         ✨ साइंस गुरुजी की डिजिटल क्लास में आपका स्वागत है! यहाँ आपको कक्षा के सभी महत्वपूर्ण नोट्स, पीडीएफ डायग्राम और लाइव अपडेट्स मिलेंगे। पढ़ते रहिए, आगे बढ़ते रहिए! ✨
     </marquee>
 </div>
+    
+    <!-- 🔵 यह है वो छोटा सा डायनामिक अपडेट बॉक्स जो लिंक होने पर ही दिखेगा -->
+<div id="dynamicUpdateBox" style="display: none; text-align: center; margin: 15px auto; max-width: 1200px; width: 90%;">
+    <a id="dynamicUpdateLink" href="#" target="_blank" style="display: inline-block; background: rgba(59, 130, 246, 0.2); border: 1px solid #3b82f6; color: #67e8f9; padding: 8px 20px; border-radius: 50px; text-decoration: none; font-size: 14px; font-weight: 700; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.2); transition: all 0.3s;">
+        📢 <span id="dynamicUpdateText">नया अपडेट देखने के लिए यहाँ क्लिक करें!</span>
+    </a>
+</div>
 
 <header class="navbar">
     <a href="#" class="logo-container">
@@ -641,7 +648,7 @@
     // 📋 ये वेरिएबल्स याद रखेंगे कि कितना डेटा लोड हो चुका है
     let allDocElements = []; 
     let renderedElementCount = 0; 
-    const elementsPerPage = 5; // 👈 एक बार टैप करने पर कितने पैराग्राफ दिखेंगे (इसे आप बदल भी सकते हैं)
+    const elementsPerPage = 5; // 👈 एक बार टैप करने पर कितने पैराग्राफ दिखेंगे 
 
     // गूगल डॉक से सारा डेटा एक साथ लाने वाला फंक्शन
     async function fetchGoogleDocData() {
@@ -659,6 +666,39 @@
             }
             
             allDocElements = []; // पुराना डेटा साफ़ करें
+                        // 🔍 गूगल डॉक के अंदर से लिंक और टेक्स्ट ढूंढने का लॉजिक
+            let specialLink = "";
+            let specialText = "📢 नया अपडेट देखने के लिए यहाँ क्लिक करें!";
+
+            // हम आपके डॉक के सभी पैराग्राफ्स में चेक करेंगे कि कहीं आपने "link:" तो नहीं लिखा है
+            if (data.elementsOrder && data.elementsOrder.length > 0) {
+                data.elementsOrder.forEach(el => {
+                    if (el.type === 'text' && el.content.toLowerCase().startsWith('link:')) {
+                        // अगर डॉक में लिखा है -> link: https://youtube.com...
+                        specialLink = el.content.replace(/link:/i, '').trim();
+                    }
+                    if (el.type === 'text' && el.content.toLowerCase().startsWith('link_text:')) {
+                        // अगर आप बटन का नाम बदलना चाहें -> link_text: यूट्यूब वीडियो देखें
+                        specialText = "📢 " + el.content.replace(/link_text:/i, '').trim();
+                    }
+                });
+            }
+
+            // ⚙️ बॉक्स को दिखाने या छुपाने का फैसला
+            const updateBox = document.getElementById('dynamicUpdateBox');
+            const updateLink = document.getElementById('dynamicUpdateLink');
+            const updateText = document.getElementById('dynamicUpdateText');
+
+            if (specialLink && specialLink !== "") {
+                // अगर गूगल डॉक में लिंक मिला, तो बॉक्स दिखाओ और लिंक सेट करो
+                updateLink.href = specialLink;
+                updateText.innerText = specialText;
+                updateBox.style.display = "block";
+            } else {
+                // अगर गूगल डॉक में कोई लिंक नहीं है, तो बॉक्स को स्क्रीन से पूरी तरह गायब कर दो
+                updateBox.style.display = "none";
+            }
+
             
             // डेटा को लिस्ट (Array) में सेट करना
             if (data.elementsOrder && data.elementsOrder.length > 0) {
