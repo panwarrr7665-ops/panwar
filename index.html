@@ -4,9 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Help Through Science Guruji</title>
-
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4960138720718272"
-     crossorigin="anonymous"></script>
     
     <style>
         /* पूरी साइट का प्रीमियम और मॉडर्न सेटअप */
@@ -29,19 +26,6 @@
             display: flex;
             flex-direction: column;
         }
-/* 📢 ऊपर चलने वाली वेलकम मैसेज पट्टी का स्टाइल */
-.welcome-ticker {
-    background: linear-gradient(90deg, #ff4e50, #f9d423);
-    color: #0f172a;
-    font-weight: 800;
-    font-size: 14px;
-    padding: 8px 0;
-    text-align: center;
-    position: relative;
-    z-index: 1001; /* हेडर के भी ऊपर रहे */
-    box-shadow: 0 2px 10px rgba(249, 212, 35, 0.2);
-}
-
 
         /* ऊपर का आधुनिक हेडर (Navbar) स्टाइलिंग (3-dots Removed) */
         .navbar {
@@ -392,20 +376,6 @@
 </head>
 <body>
 
-<!-- 🏃‍♂️ स्क्रीन पर ऊपर चलने वाला वेलकम मैसेज -->
-<div class="welcome-ticker">
-    <marquee behavior="scroll" direction="left" scrollamount="6">
-        ✨ साइंस गुरुजी की डिजिटल क्लास में आपका स्वागत है! यहाँ आपको कक्षा के सभी महत्वपूर्ण नोट्स, पीडीएफ डायग्राम और लाइव अपडेट्स मिलेंगे। पढ़ते रहिए, आगे बढ़ते रहिए! ✨
-    </marquee>
-</div>
-    
-    <!-- 🔵 यह है वो छोटा सा डायनामिक अपडेट बॉक्स जो लिंक होने पर ही दिखेगा -->
-<div id="dynamicUpdateBox" style="display: none; text-align: center; margin: 15px auto; max-width: 1200px; width: 90%;">
-    <a id="dynamicUpdateLink" href="#" target="_blank" style="display: inline-block; background: rgba(59, 130, 246, 0.2); border: 1px solid #3b82f6; color: #67e8f9; padding: 8px 20px; border-radius: 50px; text-decoration: none; font-size: 14px; font-weight: 700; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.2); transition: all 0.3s;">
-        📢 <span id="dynamicUpdateText">नया अपडेट देखने के लिए यहाँ क्लिक करें!</span>
-    </a>
-</div>
-
 <header class="navbar">
     <a href="#" class="logo-container">
         <div class="logo-circle">
@@ -497,7 +467,7 @@
     </form>
 </section>
 
-<!--  स्पेशल प्रीमियम फूटर (साइट का अंत) -->
+<!-- मुकेश पंवार स्पेशल प्रीमियम फूटर (साइट का अंत) -->
 <footer class="site-footer">
     <div class="footer-welcome">THANKS</div>
     <p class="footer-info">यह एक आधुनिक ऑनलाइन एजुकेशनल प्लेटफॉर्म है, जहाँ छात्रों को बेहतरीन विज्ञान और अन्य विषयों के नोट्स और स्टडी material बिल्कुल आसान भाषा में उपलब्ध कराए जाते हैं।</p>
@@ -509,7 +479,7 @@
     // वेबसाइट के डिब्बों का डेटा रखने के लिए स्टोर
     let notesDataStore = {};
 
-    // 1. वेबसाइट 
+    // 1. वेबसाइट लोड होते ही गूगल शीट की सभी शीट्स से लाइव डेटा फ़ेच करना
     async function loadLiveNotes() {
         try {
             // बिना किसी कस्टम हेडर के एकदम सेफ़ गेट रिक्वेस्ट
@@ -643,12 +613,12 @@
         });
     }
   // ⚠️ अपनी गूगल ऐप्स स्क्रिप्ट का यूआरएल यहाँ डालें
-    const myGoogleDocScriptURL = 'https://script.google.com/macros/s/AKfycbwn2aUepksT6DZuJSPVWfSeLoNb-zZTkb0h-qqBoZyYqNC4ck7Bh4lW2_TRhjVEcI4y/exec';
+    const myGoogleDocScriptURL = 'https://script.google.com/macros/s/AKfycbx0G7_T1DKjA2J9cYIlTO4PMceFzecbNl_ibQZ4u3I33He1aXHattTNdZEWriFflAI/exec';
 
     // 📋 ये वेरिएबल्स याद रखेंगे कि कितना डेटा लोड हो चुका है
     let allDocElements = []; 
     let renderedElementCount = 0; 
-    const elementsPerPage = 5; // 👈 एक बार टैप करने पर कितने पैराग्राफ दिखेंगे 
+    const elementsPerPage = 5; // 👈 एक बार टैप करने पर कितने पैराग्राफ दिखेंगे (इसे आप बदल भी सकते हैं)
 
     // गूगल डॉक से सारा डेटा एक साथ लाने वाला फंक्शन
     async function fetchGoogleDocData() {
@@ -662,43 +632,10 @@
             const data = await res.json();
             
             if (docTitle) {
-                docTitle.innerText = data.title || "📖 Load Notes";
+                docTitle.innerText = data.title || "📖 Live Google Docs Notes";
             }
             
             allDocElements = []; // पुराना डेटा साफ़ करें
-                        // 🔍 गूगल डॉक के अंदर से लिंक और टेक्स्ट ढूंढने का लॉजिक
-            let specialLink = "";
-            let specialText = "📢 नया अपडेट देखने के लिए यहाँ क्लिक करें!";
-
-            // हम आपके डॉक के सभी पैराग्राफ्स में चेक करेंगे कि कहीं आपने "link:" तो नहीं लिखा है
-            if (data.elementsOrder && data.elementsOrder.length > 0) {
-                data.elementsOrder.forEach(el => {
-                    if (el.type === 'text' && el.content.toLowerCase().startsWith('link:')) {
-                        // अगर डॉक में लिखा है -> link: https://youtube.com...
-                        specialLink = el.content.replace(/link:/i, '').trim();
-                    }
-                    if (el.type === 'text' && el.content.toLowerCase().startsWith('link_text:')) {
-                        // अगर आप बटन का नाम बदलना चाहें -> link_text: यूट्यूब वीडियो देखें
-                        specialText = "📢 " + el.content.replace(/link_text:/i, '').trim();
-                    }
-                });
-            }
-
-            // ⚙️ बॉक्स को दिखाने या छुपाने का फैसला
-            const updateBox = document.getElementById('dynamicUpdateBox');
-            const updateLink = document.getElementById('dynamicUpdateLink');
-            const updateText = document.getElementById('dynamicUpdateText');
-
-            if (specialLink && specialLink !== "") {
-                // अगर गूगल डॉक में लिंक मिला, तो बॉक्स दिखाओ और लिंक सेट करो
-                updateLink.href = specialLink;
-                updateText.innerText = specialText;
-                updateBox.style.display = "block";
-            } else {
-                // अगर गूगल डॉक में कोई लिंक नहीं है, तो बॉक्स को स्क्रीन से पूरी तरह गायब कर दो
-                updateBox.style.display = "none";
-            }
-
             
             // डेटा को लिस्ट (Array) में सेट करना
             if (data.elementsOrder && data.elementsOrder.length > 0) {
@@ -812,42 +749,55 @@
         });
     }
 </script>
-<!-- 🕵️‍♂️ पूरी तरह छुपा हुआ एडमिन बॉक्स (नॉर्मल छात्रों को नहीं दिखेगा) -->
-<div id="secretAdminSection" style="display: none; position: fixed; bottom: 20px; right: 20px; z-index: 9999; max-width: 350px; background: rgba(15, 23, 42, 0.95); border: 2px solid #3b82f6; backdrop-filter: blur(10px); padding: 20px; border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.5);">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:8px;">
-        <h4 style="color: #67e8f9; margin:0; font-size:16px;">🔑 Secure Admin Panel</h4>
-        <span onclick="toggleAdminPanel()" style="color:#64748b; cursor:pointer; font-size:18px; font-weight:bold;">×</span>
-    </div>
+<!-- 📱💻 फुल-स्क्रीन मोबाइल और कंप्यूटर फ्रेंडली एडमिन पैनल -->
+<div id="secretAdminSection" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #0f172a; z-index: 99999; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box;">
     
-    <div style="display: flex; flex-direction: column; gap: 12px;">
-        <input type="password" id="secPassword" placeholder="🔒 Enter Admin Password" style="padding: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: #0f172a; color: white; outline: none; font-size:13px;">
-        <input type="text" id="secLink" placeholder="🔗 YouTube/Update URL" style="padding: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: #0f172a; color: white; outline: none; font-size:13px;">
-        <input type="text" id="secText" value="आज की नई वीडियो यहाँ देखें!" style="padding: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: #0f172a; color: white; outline: none; font-size:13px;">
-        <button onclick="executeSecureUpdate()" id="secBtn" style="background: linear-gradient(135deg, #ff4e50, #f9d423); color: #0f172a; border: none; padding: 10px; font-size: 14px; font-weight: 800; border-radius: 8px; cursor: pointer; transition: 0.3s;">🚀 Update Website</button>
+    <div style="background: rgba(30, 41, 59, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); width: 100%; max-width: 450px; padding: 30px; border-radius: 24px; box-shadow: 0 25px 50px rgba(0,0,0,0.5); position: relative; box-sizing: border-box; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);">
+        
+        <!-- बंद करने और वापस वेबसाइट पर जाने का बटन -->
+        <span onclick="closeAdminPanel()" style="position: absolute; top: 15px; right: 25px; color: #94a3b8; cursor: pointer; font-size: 35px; font-weight: 300;">&times;</span>
+        
+        <h3 style="color: #67e8f9; margin-top: 0; margin-bottom: 25px; font-size: 22px; font-weight: 800; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 12px; letter-spacing: 0.5px;">🔑 Secure Admin Panel</h3>
+        
+        <div style="display: flex; flex-direction: column; gap: 18px;">
+            <div style="display: flex; flex-direction: column; gap: 6px;">
+                <label style="font-size: 12px; color: #94a3b8; font-weight: 600;">एडमिन पासवर्ड:</label>
+                <input type="password" id="secPassword" placeholder="🔒 Enter Admin Password" style="padding: 14px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); background: #0f172a; color: white; outline: none; font-size: 14px; width: 100%; box-sizing: border-box;">
+            </div>
+            
+            <div style="display: flex; flex-direction: column; gap: 6px;">
+                <label style="font-size: 12px; color: #94a3b8; font-weight: 600;">नया लिंक / यूट्यूब URL (हटाने के लिए खाली छोड़ें):</label>
+                <input type="text" id="secLink" placeholder="🔗 https://youtube.com..." style="padding: 14px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); background: #0f172a; color: white; outline: none; font-size: 14px; width: 100%; box-sizing: border-box;">
+            </div>
+            
+            <div style="display: flex; flex-direction: column; gap: 6px;">
+                <label style="font-size: 12px; color: #94a3b8; font-weight: 600;">बटन का नाम (Text):</label>
+                <input type="text" id="secText" value="आज की नई वीडियो यहाँ देखें!" style="padding: 14px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); background: #0f172a; color: white; outline: none; font-size: 14px; width: 100%; box-sizing: border-box;">
+            </div>
+            
+            <button onclick="executeSecureUpdate()" id="secBtn" style="background: linear-gradient(135deg, #ff4e50, #f9d423); color: #0f172a; border: none; padding: 14px; font-size: 15px; font-weight: 800; border-radius: 12px; cursor: pointer; transition: 0.3s; margin-top: 10px; width: 100%;">🚀 Update Website</button>
+        </div>
     </div>
 </div>
 
 <script>
-    // 🤫 जादुई गुप्त चाबी (Secret Key Trigger)
-    let inputSequence = "";
-    window.addEventListener('keydown', (e) => {
-        inputSequence += e.key.toLowerCase();
-        if (inputSequence.endsWith("admin")) { 
-            toggleAdminPanel();
-            inputSequence = ""; 
-        }
-        if (inputSequence.length > 10) inputSequence = inputSequence.substring(5);
-    });
-
-    function toggleAdminPanel() {
+    // 🌐 सीधे /admin पाथ को पहचानने का नया लॉजिक
+    function checkAdminUrlPath() {
         const panel = document.getElementById('secretAdminSection');
-        if (panel) {
-            panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
-            if(panel.style.display === 'block') document.getElementById('secPassword').focus();
+        if (window.location.pathname.endsWith('/admin') && panel) {
+            panel.style.display = 'flex';
+            document.getElementById('secPassword').focus();
         }
     }
 
-    // सुरक्षित डेटा सबमिशन (गूगल सर्वर पर वेरिफिकेशन)
+    function closeAdminPanel() {
+        const panel = document.getElementById('secretAdminSection');
+        if (panel) panel.style.display = 'none';
+        window.history.replaceState({}, document.title, '/');
+    }
+
+    window.addEventListener('DOMContentLoaded', checkAdminUrlPath);
+
     async function executeSecureUpdate() {
         const pass = document.getElementById('secPassword').value;
         const link = document.getElementById('secLink').value;
@@ -867,13 +817,14 @@
 
             if (data.status === "success") {
                 alert("✨ सफलता: " + data.message);
+                closeAdminPanel();
                 window.location.reload();
             } else {
                 alert("❌ विफल: " + data.message);
             }
         } catch (err) {
             console.error(err);
-            alert("अपडेट विफल। कृपया नया URL चेक करें या थोड़ी देर बाद कोशिश करें।");
+            alert("अपडेट विफल। कृपया इंटरनेट चेक करें।");
         } finally {
             btn.disabled = false;
             btn.innerText = "🚀 Update Website";
