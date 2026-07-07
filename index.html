@@ -615,100 +615,97 @@
   // ⚠️ अपनी गूगल ऐप्स स्क्रिप्ट का यूआरएल यहाँ डालें
     const myGoogleDocScriptURL = 'https://script.google.com/macros/s/AKfycbxbCZVL6gH12EZ2o9QEfifvQ1_UBJL4gy3CN6SJxh8DyWVFg69kA-ByPIYaD-oKvcvQ/exec';
 
-    // पेज लोड होते ही गूगल डॉक का डेटा सीधे स्पेस में दिखाने का लॉजिक (क्रमानुसार)
+    // 📋 ये वेरिएबल्स याद रखेंगे कि कितना डेटा लोड हो चुका है
+    let allDocElements = []; 
+    let renderedElementCount = 0; 
+    const elementsPerPage = 5; // 👈 एक बार टैप करने पर कितने पैराग्राफ दिखेंगे (इसे आप बदल भी सकते हैं)
+
+    // गूगल डॉक से सारा डेटा एक साथ लाने वाला फंक्शन
     async function fetchGoogleDocData() {
         const docBody = document.getElementById('googleDocBody');
         const docTitle = document.getElementById('googleDocTitle');
+        
+        if (!docBody) return; // सेफ्टी चेक
         
         try {
             const res = await fetch(myGoogleDocScriptURL);
             const data = await res.json();
             
-            docTitle.innerText = data.title || "📖 Live Google Docs Notes";
-            let fullCombinedHTML = "";
+            if (docTitle) {
+                docTitle.innerText = data.title || "📖 Live Google Docs Notes";
+            }
             
+            allDocElements = []; // पुराना डेटा साफ़ करें
+            
+            // डेटा को लिस्ट (Array) में सेट करना
             if (data.elementsOrder && data.elementsOrder.length > 0) {
-                data.elementsOrder.forEach(el => {
-                    if (el.type === 'text' && el.content.trim() !== "") {
-                        fullCombinedHTML += `<p style="margin-bottom: 15px;">${el.content}</p>`;
-                    } else if (el.type === 'image') {
-                        fullCombinedHTML += `<div style="margin:25px 0; text-align:center;"><img src="${el.content}" style="max-width:100%; border-radius:16px; border:2px solid rgba(255,255,255,0.1); box-shadow:0 10px 30px rgba(0,0,0,0.3); margin-bottom:15px;"></div>`;
-                    }
-                });
+                allDocElements = data.elementsOrder;
             } else {
                 let rawText = data.textContent || "";
                 let textParts = rawText.split("\n\n");
                 
                 textParts.forEach((part, index) => {
                     if(part.trim() !== "") {
-                        fullCombinedHTML += `<p style="margin-bottom: 15px;">${part}</p>`;
+                        allDocElements.push({ type: 'text', content: part });
                     }
                     if (data.images && data.images[index]) {
-                        fullCombinedHTML += `<div style="margin:25px 0; text-align:center;"><img src="${data.images[index]}" style="max-width:100%; border-radius:16px; border:2px solid rgba(255,255,255,0.1); box-shadow:0 10px 30px rgba(0,0,0,0.3); margin-bottom:15px;"></div>`;
+                        allDocElements.push({ type: 'image', content: data.images[index] });
                     }
                 });
             }
 
-            const totalWords = (data.textContent || "").split(/\s+/).length;
+            // स्क्रीन पर अंदरूनी ढांचा तैयार करना
+            docBody.innerHTML = `
+                <div id="docVisualContainer" class="doc-text-wrapper"></div>
+                <div style="text-align:center; margin-top: 25px;">
+                    <button id="toggleDocBtn" onclick="renderMoreDocContent()" class="show-more-btn">📖 Show More Notes</button>
+                </div>
+            `;
 
-            if (totalWords > 500) {
-                const tempDiv = document.createElement('div');
-                tempDiv.innerHTML = fullCombinedHTML;
-                const allChildNodes = Array.from(tempDiv.childNodes);
-                
-                let previewHTML = "";
-                let hiddenHTML = "";
-                let currentWordCount = 0;
-                let splitDone = false;
+            renderedElementCount = 0; 
+            renderMoreDocContent(); // 🚀 पहली बार का कंटेंट लोड करें
 
-                allChildNodes.forEach(node => {
-                    if (!splitDone) {
-                        previewHTML += node.nodeType === 3 ? node.textContent : node.outerHTML;
-                        if (node.textContent) {
-                            currentWordCount += node.textContent.split(/\s+/).length;
-                        }
-                        if (currentWordCount >= 500) {
-                            splitDone = true;
-                        }
-                    } else {
-                        hiddenHTML += node.nodeType === 3 ? node.textContent : node.outerHTML;
-                    }
-                });
-
-                docBody.innerHTML = `
-                    <div class="doc-text-wrapper">${previewHTML}</div>
-                    <div id="hiddenDocContent" style="display:none; margin-top:15px;">${hiddenHTML}</div>
-                    <div style="text-align:center;">
-                        <button id="toggleDocBtn" onclick="handleDocToggle()" class="show-more-btn">📖 Show More Notes</button>
-                    </div>
-                `;
-            } else {
-                docBody.innerHTML = `<div class="doc-text-wrapper">${fullCombinedHTML}</div>`;
-            }
         } catch (err) {
             console.error(err);
             docBody.innerHTML = "<div style='text-align:center; padding:20px; color:#ff4e50;'>❌ गूगल डॉक से लाइव नोट्स लोड नहीं हो सके।</div>";
         }
     }
 
-    window.handleDocToggle = function() {
-        const hiddenArea = document.getElementById('hiddenDocContent');
+    // 🔄 बार-बार "Show More" टैप करने पर आगे का डेटा जोड़ने वाला असली लॉजिक
+    window.renderMoreDocContent = function() {
+        const visualContainer = document.getElementById('docVisualContainer');
         const actionBtn = document.getElementById('toggleDocBtn');
-        if (hiddenArea.style.display === 'none') {
-            hiddenArea.style.display = 'block';
-            actionBtn.innerText = "✖ Show Less Notes";
+        
+        if (!visualContainer || allDocElements.length === 0) return;
+
+        let htmlChunk = "";
+        // जहां पर गिनती रुकी थी, वहां से आगे के 5 पैराग्राफ निकालना
+        const nextLimit = Math.min(renderedElementCount + elementsPerPage, allDocElements.length);
+
+        for (let i = renderedElementCount; i < nextLimit; i++) {
+            const el = allDocElements[i];
+            if (el.type === 'text' && el.content.trim() !== "") {
+                htmlChunk += `<p style="margin-bottom: 15px;">${el.content}</p>`;
+            } else if (el.type === 'image') {
+                htmlChunk += `<div style="margin:25px 0; text-align:center;"><img src="${el.content}" style="max-width:100%; border-radius:16px; border:2px solid rgba(255,255,255,0.1); box-shadow:0 10px 30px rgba(0,0,0,0.3); margin-bottom:15px;"></div>`;
+            }
+        }
+
+        // 'beforeend' का मतलब है पुराने लिखे शब्दों को बिना मिटाए उसके नीचे नया जोड़ना
+        visualContainer.insertAdjacentHTML('beforeend', htmlChunk);
+        renderedElementCount = nextLimit; // गिनती को आगे बढ़ाएं
+
+        // 🛑 जब गूगल डॉक के सारे शब्द खत्म हो जाएं, तो बटन को बंद कर दें
+        if (renderedElementCount >= allDocElements.length && actionBtn) {
+            actionBtn.innerText = "✨ All Notes Loaded";
+            actionBtn.disabled = true;
             actionBtn.style.background = "rgba(30, 41, 59, 0.8)";
-            actionBtn.style.color = "#ffffff";
-            actionBtn.style.border = "1px solid rgba(255,255,255,0.2)";
-        } else {
-            hiddenArea.style.display = 'none';
-            actionBtn.innerText = "📖 Show More Notes";
-            actionBtn.style.background = "linear-gradient(135deg, #ff4e50, #f9d423)";
-            actionBtn.style.color = "#0f172a";
-            actionBtn.style.border = "none";
+            actionBtn.style.color = "#888";
+            actionBtn.style.cursor = "not-allowed";
         }
     };
 
+    // पेज खुलते ही कोड चालू करें
     window.addEventListener('DOMContentLoaded', fetchGoogleDocData);
 
 
