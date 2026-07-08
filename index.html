@@ -886,7 +886,8 @@
         btn.disabled = true;
         btn.innerText = "Verifying & Updating...";
 
-        const targetUrl = `${myGoogleDocScriptURL}?action=updateLink&password=${encodeURIComponent(pass)}&link=${encodeURIComponent(link)}&text=${encodeURIComponent(text)}&ticker=${encodeURIComponent(ticker)}`;
+        // यह आपकी सभी Rows को लोड करने और लिंक/टेक्स्ट दोनों को चलाने की अनुमति देगा
+const targetUrl = `${myGoogleDocScriptURL}?action=getNotes`;
 
         try {
             const res = await fetch(targetUrl);
