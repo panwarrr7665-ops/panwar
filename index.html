@@ -909,7 +909,15 @@
         }
     }
 </script>
-    <script>
+<script>
+    // ⚠️ आपकी गूगल ऐप्स स्क्रिप्ट का असली यूआरएल (Web App URL)
+    const myGoogleDocScriptURL = 'https://script.google.com/macros/s/AKfycbyI-cubwAQaauukKXmo7NY6VmZ56U51MqEAG18RQdkgA5I6OzXCzjXVJTIqg7p28xvh/exec';
+
+    // 📋 ये वेरिएबल्स याद रखेंगे कि कितना डेटा लोड हो चुका है (पेजिनेशन/Show More के लिए)
+    let globalNotesItems = []; 
+    let renderedNotesCount = 0; 
+    const notesPerPage = 3; // 👈 पहले डिब्बे में एक बार में कितने लेसंस दिखाने हैं (इसे आप बदल भी सकते हैं)
+
     // सीधे /admin पाथ को पहचानने का लॉजिक
     function checkAdminUrlPath() {
         const panel = document.getElementById('secretAdminSection');
@@ -927,7 +935,7 @@
 
     window.addEventListener('DOMContentLoaded', checkAdminUrlPath);
 
-    // सुरक्षित डेटा सबमिशन (गूगल सर्वर पर वेरिफिकेशन)
+    // सुरक्षित डेटा सबमिशन (एडमिन पैनल)
     async function executeSecureUpdate() {
         const pass = document.getElementById('secPassword').value;
         const link = document.getElementById('secLink').value;
@@ -962,118 +970,140 @@
         }
     }
 
-    // 🎯 चारों डिब्बों में अनलिमिटेड नोट्स और लिंक (कैटगरी के अनुसार ग्रुपिंग) दिखाने का फाइनल मास्टर लॉजिक
+    // 🎯 चारों डिब्बों में डेटा सेट करने और पहले डिब्बे में "Show More" लिस्ट बनाने का मास्टर लॉजिक
     async function loadAllNotesFromSheets() {
         const container = document.querySelector('.cards-container');
         if (!container) return;
 
         try {
-            // गूगल ऐप्स स्क्रिप्ट से डेटा खींचना
             const response = await fetch(`${myGoogleDocScriptURL}?action=getNotes`);
             const data = await response.json();
 
-            if (!data || data.length === 0) {
-                const noResult = document.getElementById('noResultBox');
-                if (noResult) noResult.style.display = 'block';
-                return;
-            }
+            if (!data || data.length === 0) return;
 
-            // 🗂️ चारों मुख्य विभागों (Categories) को अलग-अलग ग्रुप में बांटना
-            const groups = {
-                notes: [],      // NotesData टैब के लिए
-                material: [],   // StudyMaterial टैब के लिए
-                download: [],   // Downloads टैब के लिए
-                suggest: []     // SuggestedNotes टैब के लिए
-            };
+            // चारों विभागों के ग्रुप्स
+            const groups = { notes: [], material: [], download: [], suggest: [] };
 
-            // शीट से आए हर एक आइटम को उसकी सही बाल्टी (कैटगरी) में डालना
+            // 🔥 रूल फिक्स: अगर श्रेणी (category) में कहीं भी 'notes' या 'class' शब्द आएगा (चाहे आगे 1, 2, 5 कुछ भी हो), वह पहले बॉक्स में जाएगा
             data.forEach(item => {
-                const catLower = item.category ? item.category.toLowerCase() : "";
-                if (catLower.includes('material')) {
-                    groups.material.push(item);
-                } else if (catLower.includes('download')) {
-                    groups.download.push(item);
-                } else if (catLower.includes('suggest')) {
-                    groups.suggest.push(item);
-                } else {
-                    // अगर कुछ मैच नहीं हुआ तो वह पहले वाले 'NotesData' डिब्बे में जाएगा
-                    groups.notes.push(item);
-                }
+                const catLower = item.category ? item.category.toLowerCase().trim() : "";
+                if (catLower.includes('material')) groups.material.push(item);
+                else if (catLower.includes('download')) groups.download.push(item);
+                else if (catLower.includes('suggest')) groups.suggest.push(item);
+                else groups.notes.push(item); 
             });
 
-            // 💻 वेबसाइट के पुराने खाली डिब्बे हटाकर नए 4 डायनामिक डिब्बे तैयार करना
+            // ग्लोबल वेरिएबल में पहले डिब्बे का डेटा सेव करना ताकि "Show More" काम कर सके
+            globalNotesItems = groups.notes;
+            renderedNotesCount = 0;
+
+            // पुराने बक्से हटाकर नए 4 डायनामिक बक्से बनाना
             container.innerHTML = '';
 
-            // चारों बॉक्स की सेटिंग्स (रंग, इमोजी और हेडिंग)
             const boxConfigs = [
-                { key: 'notes', title: 'Class Notes & PDF', color: 'icon-orange', text: 'text-orange', emoji: '📚' },
-                { key: 'material', title: 'Study Material', color: 'icon-blue', text: 'text-blue', emoji: '🧪' },
-                { key: 'download', title: 'Downloads', color: 'icon-cyan', text: 'text-cyan', emoji: '📥' },
-                { key: 'suggest', title: 'Suggested Notes', color: 'icon-gold', text: 'text-gold', emoji: '💡' }
+                { key: 'notes', title: 'Class Notes & PDF', color: 'icon-orange', text: 'text-orange', emoji: '📚', isPaginated: true },
+                { key: 'material', title: 'Study Material', color: 'icon-blue', text: 'text-blue', emoji: '🧪', isPaginated: false },
+                { key: 'download', title: 'Downloads', color: 'icon-cyan', text: 'text-cyan', emoji: '📥', isPaginated: false },
+                { key: 'suggest', title: 'Suggested Notes', color: 'icon-gold', text: 'text-gold', emoji: '💡', isPaginated: false }
             ];
 
             boxConfigs.forEach(box => {
-                const itemsInGroup = groups[box.key];
                 let itemsHTML = '';
 
-                if (itemsInGroup.length === 0) {
-                    itemsHTML = `<p style="color: #64748b; font-size: 14px; font-style: italic;">जल्दी ही आ रहा है...</p>`;
-                } else {
-                    // 🔄 LOOP: इस बॉक्स के अंदर जितनी भी Rows गूगल शीट में होंगी, उन सबका छोटा डिब्बा (List Item) बनेगा
-                    itemsInGroup.forEach(item => {
-                        let actionElement = '';
-                        const linkStr = item.driveLink ? item.driveLink.trim() : "";
-
-                        if (linkStr.startsWith('http://') || linkStr.startsWith('https://')) {
-                            // अगर ड्राइव लिंक असली URL है तो बटन बनेगा
-                            actionElement = `<a href="${linkStr}" target="_blank" class="know-more" style="color: inherit; text-decoration: none; margin-top: 5px; display: inline-block;">Know More</a>`;
-                        } else if (linkStr !== "") {
-                            // अगर सिर्फ टेक्स्ट है (जैसे Coming Soon), तो वह साफ़ अक्षरों में दिखेगा
-                            actionElement = `<span style="font-size: 13px; color: #94a3b8; font-weight: 700; background: rgba(255,255,255,0.05); padding: 4px 12px; border-radius: 50px; display: inline-block; margin-top: 5px;">${linkStr}</span>`;
-                        }
-
-                        // हर रो के लिए डिब्बे के अंदर बनने वाली लिस्ट का डिज़ाइन
-                        itemsHTML += `
-                            <div style="width: 100%; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 15px; margin-bottom: 15px; text-align: center;">
-                                <h4 style="font-size: 16px; color: #ffffff; font-weight: 700; margin-bottom: 5px;">${item.title}</h4>
-                                <span class="${box.text}" style="font-size: 11px; font-weight: 800; text-transform: uppercase; display: block; margin-bottom: 5px;">${item.category}</span>
-                                ${actionElement}
-                            </div>
-                        `;
-                    });
+                if (!box.isPaginated) {
+                    // बाकी के 3 डिब्बों के लिए नॉर्मल लिस्ट (बिना Show More के)
+                    const itemsInGroup = groups[box.key];
+                    if (itemsInGroup.length === 0) {
+                        itemsHTML = `<p style="color: #94a3b8; font-size: 14px; font-style: italic; margin-top: 15px;">जल्दी ही आ रहा है...</p>`;
+                    } else {
+                        itemsInGroup.forEach(item => {
+                            itemsHTML += createSingleItemHTML(item, box.text);
+                        });
+                    }
                 }
 
-                // 🗂️ मुख्य बड़े प्रीमियम बॉक्स का डिज़ाइन, जिसके अंदर आपकी पूरी लिस्ट समाएगी
                 const finalCardHTML = `
-                    <div class="card" style="justify-content: flex-start; min-height: 400px; overflow-y: auto;">
+                    <div class="card" id="box-card-${box.key}" style="justify-content: flex-start; height: 580px; overflow-y: auto; padding: 35px 20px;">
                         <div class="icon-wrapper ${box.color}">
                             <span class="logo-emoji">${box.emoji}</span>
                         </div>
-                        <h3 class="card-title" style="margin-bottom: 20px; border-bottom: 2px solid rgba(255,255,255,0.1); padding-bottom: 10px; width: 100%;">${box.title}</h3>
-                        <div style="width: 100%; display: flex; flex-direction: column; align-items: center;">
+                        <h3 style="font-size: 22px; font-weight: 800; color: #ffffff; margin-bottom: 25px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 12px; width: 100%;">${box.title}</h3>
+                        <div id="list-content-${box.key}" style="width: 100%;">
                             ${itemsHTML}
                         </div>
+                        ${box.isPaginated ? `
+                            <div style="text-align:center; width:100%; margin-top: auto; padding-top: 15px;">
+                                <button id="loadMoreNotesBtn" onclick="renderMoreNotesItems('${box.text}')" class="show-more-btn" style="margin-top:0; padding: 10px 25px; font-size: 13px;">📖 Show More Notes</button>
+                            </div>
+                        ` : ''}
                     </div>
                 `;
-
                 container.insertAdjacentHTML('beforeend', finalCardHTML);
             });
 
+            // पहले डिब्बे के शुरुआती नोट्स लोड करना
+            renderMoreNotesItems('text-orange');
+
         } catch (error) {
-            console.error("डेटा लोड करने में समस्या:", error);
+            console.error("डेटा रेंडरिंग एरर:", error);
         }
     }
 
-    // पेज लोड होते ही दोनों फंक्शन्स को एक साथ ट्रिगर करना
-    window.addEventListener('DOMContentLoaded', () => {
-        if (typeof fetchGoogleDocData === 'function') fetchGoogleDocData();
-        loadAllNotesFromSheets();
-    });
-</script>
+    // 🔄 पहले डिब्बे के लिए "Show More" दबाने पर आगे के लेसंस जोड़ने वाला असली लॉजिक
+    window.renderMoreNotesItems = function(textClass) {
+        const listContainer = document.getElementById('list-content-notes');
+        const loadMoreBtn = document.getElementById('loadMoreNotesBtn');
+        
+        if (!listContainer || globalNotesItems.length === 0) {
+            if(listContainer) listContainer.innerHTML = `<p style="color: #94a3b8; font-size: 14px; font-style: italic; margin-top: 15px;">जल्दी ही आ रहा है...</p>`;
+            if(loadMoreBtn) loadMoreBtn.style.display = 'none';
+            return;
+        }
+
+        let htmlChunk = "";
+        const nextLimit = Math.min(renderedNotesCount + notesPerPage, globalNotesItems.length);
+
+        for (let i = renderedNotesCount; i < nextLimit; i++) {
+            htmlChunk += createSingleItemHTML(globalNotesItems[i], textClass);
+        }
+
+        listContainer.insertAdjacentHTML('beforeend', htmlChunk);
+        renderedNotesCount = nextLimit;
+
+        // 🛑 जब गूगल शीट के सारे लेसंस खत्म हो जाएं, तो बटन को बंद/अपडेट कर दें
+        if (renderedNotesCount >= globalNotesItems.length && loadMoreBtn) {
+            loadMoreBtn.innerText = "✨ All Notes Loaded";
+            loadMoreBtn.disabled = true;
+            loadMoreBtn.style.background = "rgba(30, 41, 59, 0.8)";
+            loadMoreBtn.style.color = "#888";
+            loadMoreBtn.style.cursor = "not-allowed";
+        }
+    };
+
+    // 🛠️ हर एक रो (नोट्स आइटम) का HTML स्ट्रक्चर तैयार करने वाला हेल्पर फंक्शन
+    function createSingleItemHTML(item, textClass) {
+        let actionElement = '';
+        const linkStr = item.driveLink ? item.driveLink.trim() : "";
+
+        // 🔗 अगर असली ड्राइव लिंक है तो बटन बनेगा
+        if (linkStr.startsWith('http://') || linkStr.startsWith('https://')) {
+            actionElement = `<a href="${linkStr}" target="_blank" class="know-more" style="color: inherit; text-decoration: none; display: inline-block; margin-top: 10px;">Know More</a>`;
+        } else if (linkStr !== "") {
+            // 🟢 टेक्स्ट फ़िक्स: अगर ड्राइव लिंक में सिर्फ टेक्स्ट (जैसे Coming Soon) या बहुत बड़ा नोट्स है, तो "Read Notes" बटन बनेगा जो सफ़ेद पॉपअप खोलेगा
+            const safeText = encodeURIComponent(linkStr);
+            const safeTitle = encodeURIComponent(item.title);
+            actionElement = `<button onclick="openCustomTextPopup('${safeTitle}', '${safeText}')" class="know-more" style="background:#ffffff; color:#0f172a !important; display: inline-block; margin-top: 10px; border:none; padding:8px 20px; border-radius:50px; font-weight:700; cursor:pointer;">Read Notes</button>`;
+        }
+
+        return `
+            <div style="width: 100%; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 20px; margin-bottom: 20px; text-align: center;">
+                <h4 class="card-title" style="font-size: 18px; margin-bottom: 6px;">${item.title}</h4>
+                <p class="card-desc" style="font-size: 12px; min-height: unset; margin-bottom: 5px;">
+                    श्रेणी: <span class="${textClass}" style="font-weight: 800;">${item.category}</span>
+                </p>
 
 </body>
 </html>
     
-
 </body>
 </html>
