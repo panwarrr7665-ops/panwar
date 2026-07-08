@@ -914,7 +914,7 @@
     const myRealScriptURL = "https://script.google.com/macros/s/AKfycbwF_Krti6-t3t-chlHgPNejxygxqZh0gwtbo9ckIJFemSsmJhaIrDC2VjArrBg1E8LF/exec';
 
     async function loadAllDataFromSheets() {
-        const container = document.querySelector('.cards-container');
+        const container = document.getElementById('notes-container') || document.querySelector('.cards-container') || document.body;
         if (!container) return;
 
         try {
@@ -953,6 +953,7 @@
     }
     window.addEventListener('DOMContentLoaded', loadAllDataFromSheets);
 </script>
+
 
 </body>
 </html>
