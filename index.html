@@ -645,13 +645,14 @@
         });
     }
   // ⚠️ अपनी गूगल ऐप्स स्क्रिप्ट का यूआरएल यहाँ डालें
-    const myGoogleDocScriptURL = 'https://script.google.com/macros/s/AKfycbyJ5XWvyoMqJa35evLUmSjzFlsKmcx9t9m4a5ASzOFR_q5Xy_m6ncEamqpPEa4whxV6/exec';
+    const myGoogleDocScriptURL = 'https://script.google.com/macros/s/AKfycbyXy9DSHtaXGVvL76oLmnyj-ciLMoX0fE1rGAN38PuLGsloARGEsIKAa5PN0x78dp4o/exec';
 
+    // 📋 ये वेरिएबल्स याद रखेंगे कि कितना डेटा लोड हो चुका है
     let allDocElements = []; 
     let renderedElementCount = 0; 
-    const elementsPerPage = 6; // एक बार में दिखने वाले पैराग्राफ/डायग्राम की संख्या
+    const elementsPerPage = 5; // 👈 एक बार टैप करने पर कितने पैराग्राफ दिखेंगे (इसे आप बदल भी सकते हैं)
 
-    // 📖 पूरी वेबसाइट का डेटा (डिब्बे, नोट्स, डायग्राम) क्रमानुसार लोड करने का मास्टर फंक्शन
+        // 📖 गूगल डॉक से सारा डेटा क्रमानुसार लाने और नाम अपडेट करने का सही फंक्शन
     async function fetchGoogleDocData() {
         const docBody = document.getElementById('googleDocBody');
         const docTitle = document.getElementById('googleDocTitle');
@@ -669,58 +670,47 @@
             let specialText = "📢 नया अपडेट देखने के लिए यहाँ क्लिक करें!";
             let specialTicker = "";
 
-            // डिब्बों के डिफ़ॉल्ट नाम (अगर एडमिन ने नहीं बदले)
-            let c1T = "Class Notes & PDF", c1D = "Notes of Other Subject & PDF.";
-            let c2T = "Other Study Material", c2D = "Additional Questions And Explanation About Human Body.";
-
+            // 🔬 टेक्स्ट, डायग्राम और एडमिन का नाम ढूंढने का लॉजिक
             if (data.elementsOrder && data.elementsOrder.length > 0) {
                 data.elementsOrder.forEach(el => {
                     if (el.type === 'text') {
-                        // एडमिन सेटिंग्स को अलग करना
+                        // 🟢 एडमिन पैनल से आया नया नाम पहचानना
                         if (el.content.toLowerCase().startsWith('ticker_text:')) {
                             specialTicker = el.content.replace(/ticker_text:/i, '').trim();
                         } else if (el.content.toLowerCase().startsWith('link:')) {
                             specialLink = el.content.replace(/link:/i, '').trim();
                         } else if (el.content.toLowerCase().startsWith('link_text:')) {
                             specialText = "📢 " + el.content.replace(/link_text:/i, '').trim();
-                        } else if (el.content.toLowerCase().startsWith('card1_title:')) {
-                            c1T = el.content.replace(/card1_title:/i, '').trim();
-                        } else if (el.content.toLowerCase().startsWith('card1_desc:')) {
-                            c1D = el.content.replace(/card1_desc:/i, '').trim();
-                        } else if (el.content.toLowerCase().startsWith('card2_title:')) {
-                            c2T = el.content.replace(/card2_title:/i, '').trim();
-                        } else if (el.content.toLowerCase().startsWith('card2_desc:')) {
-                            c2D = el.content.replace(/card2_desc:/i, '').trim();
                         } else {
-                            allDocElements.push(el); // असली नोट्स (उसी क्रम में रहेंगे)
+                            allDocElements.push(el); // सामान्य नोट्स
                         }
                     } else if (el.type === 'image') {
-                        allDocElements.push(el); // असली डायग्राम (0.1% भी पोजीशन ऊपर-नीचे नहीं होगी)
+                        allDocElements.push(el); // सामान्य डायग्राम
+                    }
+                });
+            } else {
+                let rawText = data.textContent || "";
+                let textParts = rawText.split("\n");
+                textParts.forEach(part => {
+                    if (part.toLowerCase().startsWith('ticker_text:')) {
+                        specialTicker = part.replace(/ticker_text:/i, '').trim();
+                    } else if (part.toLowerCase().startsWith('link:')) {
+                        specialLink = part.replace(/link:/i, '').trim();
+                    } else if (part.toLowerCase().startsWith('link_text:')) {
+                        specialText = "📢 " + part.replace(/link_text:/i, '').trim();
+                    } else if(part.trim() !== "") {
+                        allDocElements.push({ type: 'text', content: part });
                     }
                 });
             }
 
-            // 🗂️ 2 डिब्बों (Cards) का टेक्स्ट लाइव बदलना
-            const cards = document.querySelectorAll('.card');
-            if (cards.length >= 2) {
-                const titleElement1 = cards[0].querySelector('.card-title');
-                const descElement1 = cards[0].querySelector('.card-desc');
-                const titleElement2 = cards[1].querySelector('.card-title');
-                const descElement2 = cards[1].__querySelector ? cards[1].querySelector('.card-desc') : cards[1].querySelector('.card-desc');
-                
-                if(titleElement1) titleElement1.innerText = c1T;
-                if(descElement1) descElement1.innerText = c1D;
-                if(titleElement2) titleElement2.innerText = c2T;
-                if(descElement2) descElement2.innerText = c2D;
-            }
-
-            // 跑 ऊपर चलने वाला नाम बदलना
+            // ⚙️ 🏃‍♂️ ऊपर चलने वाले नाम को लाइव बदलना
             const liveTicker = document.getElementById('liveTickerText');
             if (specialTicker && specialTicker !== "" && liveTicker) {
                 liveTicker.innerText = "✨ " + specialTicker + " ✨";
             }
 
-            // 🔵 यूट्यूब अपडेट बॉक्स दिखाना या छुपाना
+            // ⚙️ अपडेट बटन दिखाना या छुपाना
             const updateBox = document.getElementById('dynamicUpdateBox');
             const updateLink = document.getElementById('dynamicUpdateLink');
             const updateText = document.getElementById('dynamicUpdateText');
